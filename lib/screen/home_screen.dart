@@ -1,27 +1,25 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:karakol_travel/dashboards/model/Db1Model.dart';
 import 'package:karakol_travel/dashboards/model/FoodModel.dart';
 import 'package:karakol_travel/dashboards/model/RelaxationModel.dart';
-import 'package:nb_utils/nb_utils.dart'; //https://pub.dev/packages/nb_utils
-import '../dashboards/DemoDashboard1.dart';
+import 'package:nb_utils/nb_utils.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import '../dashboards/model/HotelModel.dart';
 import '../dashboards/utils/DbColors.dart';
 import '../data/const.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-
-import 'hotel_selection_screen.dart';
+import 'hotel/hotel_selection_screen.dart';
 import 'myTest.dart';
 
 class HomeScreen extends StatefulWidget {
-  static String tag = '/DemoDashboard3';
-
   @override
   _HomeScreen createState() => _HomeScreen();
 }
 
 class _HomeScreen extends State<HomeScreen> {
+  bool isVisible = false;
+
   List<HotelModel> listHotel = [
     HotelModel(
         id: '',
@@ -48,7 +46,7 @@ class _HomeScreen extends State<HomeScreen> {
         rating: 0.0,
         id: '',
         location: '',
-        image_uri: 'images/karakol/hotel/ic_caragat.jpg',
+        image_uri: 'images/karakol/hotel/ic_caragat_4.jpg',
         name: 'Caragat',
         price: 4000),
   ];
@@ -137,7 +135,11 @@ class _HomeScreen extends State<HomeScreen> {
   void initState() {
     super.initState();
 
-    // setStatusBarColor(Colors.white);
+    Future.delayed(const Duration(milliseconds: 400), () {
+      setState(() {
+        isVisible = true;
+      });
+    });
   }
 
   @override
@@ -145,61 +147,55 @@ class _HomeScreen extends State<HomeScreen> {
     List<Widget> imageSliders = imgList
         .map(
           (item) => Container(
-            child: Container(
-              // margin: EdgeInsets.all(5.0),
-              child: ClipRRect(
-                // borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                child: Stack(
-                  children: <Widget>[
-                    Image.asset(
-                      item,
-                      fit: BoxFit.cover,
-                      width: MediaQuery.of(context).size.width,
-                    ),
-                    if (imgList.indexOf(item) == 0)
-                      Container(
-                        // color: Colors.black38,
-                        padding: EdgeInsets.only(bottom: 20, left: 20),
-                        alignment: Alignment.bottomLeft,
-                        child: Text(
-                          'Hotel',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 20.0,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: 'googlesansebold',
-                          ),
-                        ),
-                      ),
-                    if (imgList.indexOf(item) == 1)
-                      Container(
-                        padding: EdgeInsets.only(bottom: 20, left: 20),
-                        alignment: Alignment.bottomLeft,
-                        child: Text(
-                          'Food',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 20.0,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'googlesansebold'),
-                        ),
-                      ),
-                    if (imgList.indexOf(item) == 2)
-                      Container(
-                        padding: EdgeInsets.only(bottom: 20, left: 20),
-                        alignment: Alignment.bottomLeft,
-                        child: Text(
-                          'Relaxation',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 20.0,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'googlesansebold'),
-                        ),
-                      ),
-                  ],
+            child: Stack(
+              children: <Widget>[
+                Image.asset(
+                  item,
+                  fit: BoxFit.cover,
+                  width: MediaQuery.of(context).size.width,
                 ),
-              ),
+                if (imgList.indexOf(item) == 0)
+                  Container(
+                    // color: Colors.black38,
+                    padding: EdgeInsets.only(bottom: 20, left: 20),
+                    alignment: Alignment.bottomLeft,
+                    child: Text(
+                      'Hotel',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'googlesansebold',
+                      ),
+                    ),
+                  ),
+                if (imgList.indexOf(item) == 1)
+                  Container(
+                    padding: EdgeInsets.only(bottom: 20, left: 20),
+                    alignment: Alignment.bottomLeft,
+                    child: Text(
+                      'Food',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'googlesansebold'),
+                    ),
+                  ),
+                if (imgList.indexOf(item) == 2)
+                  Container(
+                    padding: EdgeInsets.only(bottom: 20, left: 20),
+                    alignment: Alignment.bottomLeft,
+                    child: Text(
+                      'Relaxation',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'googlesansebold'),
+                    ),
+                  ),
+              ],
             ),
           ),
         )
@@ -246,302 +242,379 @@ class _HomeScreen extends State<HomeScreen> {
                 height: MediaQuery.of(context).size.height / 2,
                 child: Stack(
                   children: <Widget>[
-                    Container(
-                      padding: EdgeInsets.only(),
-                      child: Column(
-                        children: [
-                          CarouselSlider(
-                            items: imageSliders,
-                            options: CarouselOptions(
-                              // height: MediaQuery.of(context).size.height / 3.5,
-                              autoPlay: true,
-                              disableCenter: false,
-                              viewportFraction: 1,
-                              // aspectRatio: 1.6,
-                              onPageChanged: (index, reason) {
-                                setState(
-                                  () {
-                                    _current = index;
-                                  },
-                                );
-                              },
+                    if (isVisible)
+                      AnimationLimiter(
+                        child: AnimationConfiguration.staggeredList(
+                          position: 1,
+                          delay: Duration(milliseconds: 500),
+                          child: SlideAnimation(
+                            duration: Duration(milliseconds: 2100),
+                            horizontalOffset: 180,
+                            curve: Curves.ease,
+                            child: FadeInAnimation(
+                              curve: Curves.easeOut,
+                              duration: Duration(milliseconds: 2500),
+                              child: Container(
+                                child: Column(
+                                  children: [
+                                    CarouselSlider(
+                                      items: imageSliders,
+                                      options: CarouselOptions(
+                                        autoPlay: true,
+                                        disableCenter: false,
+                                        viewportFraction: 1,
+                                        // aspectRatio: 1.6,
+                                        onPageChanged: (index, reason) {
+                                          setState(
+                                            () {
+                                              _current = index;
+                                            },
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
                             ),
                           ),
-                        ],
+                        ),
                       ),
-                    ),
                   ],
                 ),
               )),
             ),
           ];
         },
-        body: SingleChildScrollView(
-          child: Column(
-            children: <Widget>[
-              InkWell(
-                splashColor: Colors.transparent,
-                highlightColor: Colors.transparent,
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => HotelSelectionScreen()));
-                },
-                child: Container(
-                  padding:
-                      EdgeInsets.only(top: 10, bottom: 20, left: 16, right: 16),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Text(
-                        'Housing',
-                        style: TextStyle(
-                          color: Colors.white.withOpacity(0.9),
-                          fontSize: 20,
-                          fontFamily: 'googlesansebold',
-                        ),
-                      ),
-                      RichText(
-                        text: TextSpan(
-                          children: [
-                            TextSpan(
-                                text: 'View all',
-                                style: primaryTextStyle(
-                                    size: 14,
-                                    color: Colors.white.withOpacity(0.7))),
-                            WidgetSpan(
-                              child: Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 4.0),
-                                child: Icon(
-                                  Icons.keyboard_arrow_right,
-                                  color: Colors.white.withOpacity(0.7),
-                                  size: 16,
-                                ),
-                              ),
+        body: RefreshIndicator(
+          color: black_86,
+          onRefresh: () async {
+            Navigator.pushReplacement(
+                context, MaterialPageRoute(builder: (context) => HomeScreen()));
+          },
+          child: SingleChildScrollView(
+            child: Column(
+              children: <Widget>[
+                if (isVisible)
+                  InkWell(
+                    splashColor: Colors.transparent,
+                    highlightColor: Colors.transparent,
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => HotelSelectionScreen()));
+                    },
+                    child: Container(
+                      padding: EdgeInsets.only(
+                          top: 10, bottom: 20, left: 16, right: 16),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Text(
+                            'Housing',
+                            style: TextStyle(
+                              color: Colors.white.withOpacity(0.9),
+                              fontSize: 20,
+                              fontFamily: 'googlesansebold',
                             ),
-                          ],
-                        ),
-                      )
-                    ],
+                          ),
+                          RichText(
+                            text: TextSpan(
+                              children: [
+                                TextSpan(
+                                    text: 'View all',
+                                    style: primaryTextStyle(
+                                        size: 14,
+                                        color: Colors.white.withOpacity(0.7))),
+                                WidgetSpan(
+                                  child: Padding(
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 4.0),
+                                    child: Icon(
+                                      Icons.keyboard_arrow_right,
+                                      color: Colors.white.withOpacity(0.7),
+                                      size: 16,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
                   ),
-                ),
-              ),
-              SizedBox(
-                height: 220,
-                child: ListView.builder(
-                    padding: EdgeInsets.only(right: 20),
-                    scrollDirection: Axis.horizontal,
-                    itemCount: listHotel.length,
-                    shrinkWrap: true,
-                    itemBuilder: (context, index) {
-                      return InkWell(
-                        splashColor: Colors.transparent,
-                        highlightColor: Colors.transparent,
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      HotelSelectionScreen()));
-                        },
-                        child: Container(
-                          width: MediaQuery.of(context).size.width * 0.35,
-                          margin: EdgeInsets.only(left: 16),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(8.0),
-                                child: Image.asset(listHotel[index].image_uri,
-                                    fit: BoxFit.cover,
-                                    height: 160,
-                                    width: MediaQuery.of(context).size.width),
-                              ),
-                              SizedBox(
-                                height: 4,
-                              ),
-                              Padding(
-                                padding:
-                                    EdgeInsets.only(left: 4, right: 4, top: 4),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    Text(
-                                      listHotel[index].name,
-                                      style: TextStyle(
-                                          fontSize: 13,
-                                          color: Colors.white.withOpacity(0.7)),
+                if (isVisible)
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height / 3.5,
+                    child: AnimationLimiter(
+                      child: ListView.builder(
+                          physics: BouncingScrollPhysics(),
+                          padding: EdgeInsets.only(right: 20),
+                          scrollDirection: Axis.horizontal,
+                          itemCount: listHotel.length,
+                          shrinkWrap: true,
+                          itemBuilder: (context, index) {
+                            return AnimationConfiguration.staggeredList(
+                              position: index,
+                              delay: Duration(milliseconds: 400),
+                              child: SlideAnimation(
+                                duration: Duration(milliseconds: 2000),
+                                horizontalOffset: 140,
+                                curve: Curves.ease,
+                                child: FadeInAnimation(
+                                  curve: Curves.easeOut,
+                                  duration: Duration(milliseconds: 2000),
+                                  child: InkWell(
+                                    splashColor: Colors.transparent,
+                                    highlightColor: Colors.transparent,
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  HotelSelectionScreen()));
+                                    },
+                                    child: Container(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.35,
+                                      margin: EdgeInsets.only(left: 16),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(8.0),
+                                            child: Image.asset(
+                                                listHotel[index].image_uri,
+                                                fit: BoxFit.cover,
+                                                height: MediaQuery.of(context)
+                                                        .size
+                                                        .height /
+                                                    4.8,
+                                                width: MediaQuery.of(context)
+                                                    .size
+                                                    .width),
+                                          ),
+                                          SizedBox(
+                                            height: 4,
+                                          ),
+                                          Padding(
+                                            padding: EdgeInsets.only(
+                                                left: 4, right: 4, top: 4),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: <Widget>[
+                                                Text(
+                                                  listHotel[index].name,
+                                                  style: TextStyle(
+                                                      fontSize: 13,
+                                                      color: Colors.white
+                                                          .withOpacity(0.7)),
+                                                ),
+                                                // style: primaryTextStyle(
+                                              ],
+                                            ),
+                                          )
+                                        ],
+                                      ),
                                     ),
-                                    // style: primaryTextStyle(
-                                  ],
+                                  ),
                                 ),
-                              )
-                            ],
+                              ),
+                            );
+                          }),
+                    ),
+                  ),
+                if (isVisible)
+                  Container(
+                    padding: EdgeInsets.only(
+                        top: 4, bottom: 20, left: 16, right: 16),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text(
+                          'Food',
+                          style: TextStyle(
+                            color: Colors.white.withOpacity(0.9),
+                            fontSize: 20,
+                            fontFamily: 'googlesansebold',
                           ),
                         ),
-                      );
-                    }),
-              ),
-              //Top Trends
-              Container(
-                padding:
-                    EdgeInsets.only(top: 4, bottom: 20, left: 16, right: 16),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Text(
-                      'Food',
-                      style: TextStyle(
-                        color: Colors.white.withOpacity(0.9),
-                        fontSize: 20,
-                        fontFamily: 'googlesansebold',
-                      ),
-                    ),
-                    RichText(
-                      text: TextSpan(
-                        children: [
-                          TextSpan(
-                              text: 'View all',
-                              style: primaryTextStyle(
-                                  size: 14,
-                                  color: Colors.white.withOpacity(0.7))),
-                          WidgetSpan(
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 4.0),
-                              child: Icon(
-                                Icons.keyboard_arrow_right,
-                                color: Colors.white.withOpacity(0.7),
-                                size: 16,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-              ),
-              SizedBox(
-                height: 220,
-                child: ListView.builder(
-                    padding: EdgeInsets.only(right: 20),
-                    scrollDirection: Axis.horizontal,
-                    itemCount: listFood.length,
-                    shrinkWrap: true,
-                    itemBuilder: (context, index) {
-                      return InkWell(
-                        splashColor: Colors.transparent,
-                        highlightColor: Colors.transparent,
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => StackOver()));
-                        },
-                        child: Container(
-                          width: MediaQuery.of(context).size.width * 0.35,
-                          margin: EdgeInsets.only(left: 16),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(8.0),
-                                child: Image.asset(listFood[index].image_uri,
-                                    fit: BoxFit.cover,
-                                    height: 160,
-                                    width: MediaQuery.of(context).size.width),
-                              ),
-                              SizedBox(
-                                height: 4,
-                              ),
-                              Padding(
-                                padding:
-                                    EdgeInsets.only(left: 4, right: 4, top: 4),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    Text(
-                                      listFood[index].name,
-                                      style: TextStyle(
-                                          fontSize: 13,
-                                          color: Colors.white.withOpacity(0.7)),
-                                    ),
-                                    // style: primaryTextStyle(
-                                  ],
+                        RichText(
+                          text: TextSpan(
+                            children: [
+                              TextSpan(
+                                  text: 'View all',
+                                  style: primaryTextStyle(
+                                      size: 14,
+                                      color: Colors.white.withOpacity(0.7))),
+                              WidgetSpan(
+                                child: Padding(
+                                  padding:
+                                      EdgeInsets.symmetric(horizontal: 4.0),
+                                  child: Icon(
+                                    Icons.keyboard_arrow_right,
+                                    color: Colors.white.withOpacity(0.7),
+                                    size: 16,
+                                  ),
                                 ),
-                              )
+                              ),
                             ],
                           ),
-                        ),
-                      );
-                    }),
-              ),
-              Container(
-                padding:
-                    EdgeInsets.only(top: 4, bottom: 20, left: 16, right: 16),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Text(
-                      'Nature',
-                      style: TextStyle(
-                        color: Colors.white.withOpacity(0.9),
-                        fontSize: 20,
-                        fontFamily: 'googlesansebold',
-                      ),
+                        )
+                      ],
                     ),
-                    RichText(
-                      text: TextSpan(
-                        children: [
-                          TextSpan(
-                              text: 'View all',
-                              style: primaryTextStyle(
-                                  size: 14,
-                                  color: Colors.white.withOpacity(0.7))),
-                          WidgetSpan(
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 4.0),
-                              child: Icon(
-                                Icons.keyboard_arrow_right,
-                                color: Colors.white.withOpacity(0.7),
-                                size: 16,
+                  ),
+                if (isVisible)
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height / 3.5,
+                    child: AnimationLimiter(
+                      child: ListView.builder(
+                          physics: BouncingScrollPhysics(),
+                          padding: EdgeInsets.only(right: 20),
+                          scrollDirection: Axis.horizontal,
+                          itemCount: listFood.length,
+                          shrinkWrap: true,
+                          itemBuilder: (context, index) {
+                            return AnimationConfiguration.staggeredList(
+                              position: index,
+                              delay: Duration(milliseconds: 400),
+                              child: SlideAnimation(
+                                duration: Duration(milliseconds: 2000),
+                                horizontalOffset: 140,
+                                curve: Curves.ease,
+                                child: FadeInAnimation(
+                                  curve: Curves.easeOut,
+                                  duration: Duration(milliseconds: 2000),
+                                  child: InkWell(
+                                    splashColor: Colors.transparent,
+                                    highlightColor: Colors.transparent,
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  MyWidget()));
+                                    },
+                                    child: Container(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.35,
+                                      margin: EdgeInsets.only(left: 16),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(8.0),
+                                            child: Image.asset(
+                                                listFood[index].image_uri,
+                                                fit: BoxFit.cover,
+                                                height: MediaQuery.of(context)
+                                                        .size
+                                                        .height /
+                                                    4.8,
+                                                width: MediaQuery.of(context)
+                                                    .size
+                                                    .width),
+                                          ),
+                                          SizedBox(
+                                            height: 4,
+                                          ),
+                                          Padding(
+                                            padding: EdgeInsets.only(
+                                                left: 4, right: 4, top: 4),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: <Widget>[
+                                                Text(
+                                                  listFood[index].name,
+                                                  style: TextStyle(
+                                                      fontSize: 13,
+                                                      color: Colors.white
+                                                          .withOpacity(0.7)),
+                                                ),
+                                                // style: primaryTextStyle(
+                                              ],
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
                               ),
-                            ),
+                            );
+                          }),
+                    ),
+                  ),
+                if (isVisible)
+                  Container(
+                    padding: EdgeInsets.only(
+                        top: 4, bottom: 20, left: 16, right: 16),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text(
+                          'Nature',
+                          style: TextStyle(
+                            color: Colors.white.withOpacity(0.9),
+                            fontSize: 20,
+                            fontFamily: 'googlesansebold',
                           ),
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.only(
-                    left: MediaQuery.of(context).size.width / 30,
-                    bottom: MediaQuery.of(context).size.height / 30,
-                    right: MediaQuery.of(context).size.width / 30),
-                // height: MediaQuery.of(context).size.height,
-                child: MasonryGridView.count(
-                    // gridDelegate: Gr,
-                    itemCount: listRelaxation.length,
-                    mainAxisSpacing: 22,
-                    crossAxisSpacing: 22,
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    crossAxisCount: 2,
-                    itemBuilder: (BuildContext context, int index) =>
-                        buildImageCard(index)),
-                // .builder(
-                //     itemCount: 20,
-                //     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                //         crossAxisCount: 2,
-                //         mainAxisSpacing: 8,
-                //         crossAxisSpacing: 8),
-                //     itemBuilder: (context, index) ),
-              ),
-            ],
+                        ),
+                        RichText(
+                          text: TextSpan(
+                            children: [
+                              TextSpan(
+                                  text: 'View all',
+                                  style: primaryTextStyle(
+                                      size: 14,
+                                      color: Colors.white.withOpacity(0.7))),
+                              WidgetSpan(
+                                child: Padding(
+                                  padding:
+                                      EdgeInsets.symmetric(horizontal: 4.0),
+                                  child: Icon(
+                                    Icons.keyboard_arrow_right,
+                                    color: Colors.white.withOpacity(0.7),
+                                    size: 16,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                if (isVisible)
+                  Container(
+                    padding: EdgeInsets.only(
+                        left: MediaQuery.of(context).size.width / 30,
+                        bottom: MediaQuery.of(context).size.height / 30,
+                        right: MediaQuery.of(context).size.width / 30),
+                    child: MasonryGridView.count(
+                        itemCount: listRelaxation.length,
+                        mainAxisSpacing: 22,
+                        crossAxisSpacing: 22,
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        crossAxisCount: 2,
+                        itemBuilder: (BuildContext context, int index) =>
+                            buildImageCard(index)),
+                  ),
+              ],
+            ),
           ),
         ),
       ),

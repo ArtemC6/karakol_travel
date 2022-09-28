@@ -455,6 +455,8 @@ class RatingBar extends StatefulWidget {
 
   @override
   _RatingBarState createState() => _RatingBarState();
+
+  static builder({required int initialRating, required int minRating, required Axis direction, required bool allowHalfRating, required int itemCount, required EdgeInsets itemPadding, required Icon Function(dynamic context, dynamic _) itemBuilder, required Null Function(dynamic rating) onRatingUpdate}) {}
 }
 
 class _RatingBarState extends State<RatingBar> {

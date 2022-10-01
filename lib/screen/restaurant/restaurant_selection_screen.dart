@@ -1,49 +1,46 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:karakol_travel/data/model/RestaurantModel.dart';
 import 'package:karakol_travel/screen/home_screen.dart';
+import 'package:karakol_travel/screen/restaurant/restaurant_screen.dart';
 import '../../data/const.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import '../../data/model/HotelModel.dart';
-import 'hotel_screen.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:karakol_travel/screen/addPhoto.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
-class HotelSelectionScreen extends StatefulWidget {
-  const HotelSelectionScreen({Key? key}) : super(key: key);
+class RestaurantSelectionScreen extends StatefulWidget {
+  const RestaurantSelectionScreen({Key? key}) : super(key: key);
 
   @override
-  State<HotelSelectionScreen> createState() => _HotelSelectionScreenState();
+  State<RestaurantSelectionScreen> createState() =>
+      _RestaurantSelectionScreen();
 }
 
-class _HotelSelectionScreenState extends State<HotelSelectionScreen>
+class _RestaurantSelectionScreen extends State<RestaurantSelectionScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   bool isVisible = false;
-
-  List<HotelModel> listHotel = [];
+  List<RestaurantModel> listRestaurant = [];
 
   void readFirebase() async {
     await FirebaseFirestore.instance
-        .collection('Hotel')
+        .collection('Restaurant')
         .get()
         .then((QuerySnapshot querySnapshot) {
       querySnapshot.docs.forEach((document) async {
         Map<String, dynamic> data = document.data() as Map<String, dynamic>;
 
         setState(() {
-          listHotel.add(HotelModel(
+          listRestaurant.add(RestaurantModel(
               name: data['name'],
               id: data['id'],
               location: data['location'],
               rating: data['rating'],
               price: data['price'],
-              images: [],
               photo_main: data['photo']));
         });
       });
@@ -83,7 +80,7 @@ class _HotelSelectionScreenState extends State<HotelSelectionScreen>
               padding: const EdgeInsets.only(
                   right: 20, left: 20, bottom: 150, top: 10),
               scrollDirection: Axis.vertical,
-              itemCount: listHotel.length,
+              itemCount: listRestaurant.length,
               shrinkWrap: true,
               itemBuilder: (context, index) {
                 return AnimationConfiguration.staggeredList(
@@ -100,7 +97,11 @@ class _HotelSelectionScreenState extends State<HotelSelectionScreen>
                         splashColor: Colors.transparent,
                         highlightColor: Colors.transparent,
                         onTap: () {
-                          Navigator.push(context, FadeRouteAnimation(HotelScreen()));
+                          Navigator.push(
+                              context,
+                              FadeRouteAnimation(RestaurantScreen(
+                                id: listRestaurant[index].id,
+                              )));
                         },
                         child: Container(
                           decoration: const BoxDecoration(
@@ -122,7 +123,7 @@ class _HotelSelectionScreenState extends State<HotelSelectionScreen>
                                                 value: progress.progress,
                                               ),
                                             ),
-                                    imageUrl: listHotel[index].photo_main,
+                                    imageUrl: listRestaurant[index].photo_main,
                                     fit: BoxFit.cover,
                                     height: 230,
                                     width: MediaQuery.of(context).size.width),
@@ -141,14 +142,14 @@ class _HotelSelectionScreenState extends State<HotelSelectionScreen>
                                             MainAxisAlignment.spaceBetween,
                                         children: [
                                           Text(
-                                            listHotel[index].name,
+                                            listRestaurant[index].name,
                                             style: TextStyle(
                                                 fontSize: 16,
                                                 color: Colors.white
                                                     .withOpacity(0.9)),
                                           ),
                                           Text(
-                                            '${listHotel[index].price.toDouble().toString()} сом',
+                                            '${listRestaurant[index].price.toDouble().toString()} сом',
                                             style: TextStyle(
                                                 fontSize: 14,
                                                 color: Colors.white
@@ -168,7 +169,7 @@ class _HotelSelectionScreenState extends State<HotelSelectionScreen>
                                             size: 15,
                                           ),
                                           Text(
-                                            '  ${listHotel[index].location}',
+                                            '  ${listRestaurant[index].location}',
                                             style: TextStyle(
                                                 fontSize: 12,
                                                 color: Colors.white
@@ -187,7 +188,8 @@ class _HotelSelectionScreenState extends State<HotelSelectionScreen>
                                           child: Row(
                                             children: [
                                               RatingBarIndicator(
-                                                rating: listHotel[index].rating,
+                                                rating: listRestaurant[index]
+                                                    .rating,
                                                 itemBuilder: (context, index) =>
                                                     const Icon(
                                                   Icons.star,
@@ -198,7 +200,7 @@ class _HotelSelectionScreenState extends State<HotelSelectionScreen>
                                                 direction: Axis.horizontal,
                                               ),
                                               Text(
-                                                '  ${listHotel[index].rating.toString()} Ratings',
+                                                '  ${listRestaurant[index].rating.toString()} Ratings',
                                                 style: TextStyle(
                                                     fontSize: 12,
                                                     color: Colors.white

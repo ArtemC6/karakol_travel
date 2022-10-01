@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "5322631437",
+    "project_id": "karakol-travel",
+    "storage_bucket": "karakol-travel.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:5322631437:android:1932904f6dada8bb2f6844",
+        "android_client_info": {
+          "package_name": "com.example.karakol_travel"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "5322631437-77ldkgnmadalp3khvg7ajplm6d4f92ki.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAreNgTCmwY5EZFdX4YonoGeytDm4h9vm8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "5322631437-77ldkgnmadalp3khvg7ajplm6d4f92ki.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

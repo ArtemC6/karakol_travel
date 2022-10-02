@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:karakol_travel/screen/home_screen.dart';
@@ -27,6 +29,7 @@ class _HotelSelectionScreenState extends State<HotelSelectionScreen>
   bool isVisible = false;
 
   List<HotelModel> listHotel = [];
+  List<HotelModel> listHotelRevers = [];
 
   void readFirebase() async {
     await FirebaseFirestore.instance
@@ -37,19 +40,29 @@ class _HotelSelectionScreenState extends State<HotelSelectionScreen>
         Map<String, dynamic> data = document.data() as Map<String, dynamic>;
 
         setState(() {
-          listHotel.add(HotelModel(
-              name: data['name'],
-              id: data['id'],
-              location: data['location'],
-              rating: data['rating'],
-              price: data['price'],
-              images: [],
-              photo_main: data['photo']));
+          if (data['name'] == 'Karagat') {
+            listHotelRevers.add(HotelModel(
+                name: data['name'],
+                id: data['id'],
+                location: data['location'],
+                rating: data['rating'],
+                price: data['price'],
+                photo_main: data['photo']));
+          } else {
+            listHotelRevers.add(HotelModel(
+                name: data['name'],
+                id: data['id'],
+                location: data['location'],
+                rating: data['rating'],
+                price: data['price'],
+                photo_main: data['photo']));
+          }
         });
       });
     });
 
     setState(() {
+      listHotel = listHotelRevers.reversed.toList();
       isVisible = true;
     });
   }
@@ -100,7 +113,11 @@ class _HotelSelectionScreenState extends State<HotelSelectionScreen>
                         splashColor: Colors.transparent,
                         highlightColor: Colors.transparent,
                         onTap: () {
-                          Navigator.push(context, FadeRouteAnimation(HotelScreen()));
+                          Navigator.push(
+                              context,
+                              FadeRouteAnimation(HotelScreen(
+                                id: listHotel[index].id,
+                              )));
                         },
                         child: Container(
                           decoration: const BoxDecoration(
@@ -114,14 +131,19 @@ class _HotelSelectionScreenState extends State<HotelSelectionScreen>
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(12),
                                 child: CachedNetworkImage(
-                                    progressIndicatorBuilder:
-                                        (context, url, progress) => Center(
-                                              child: CircularProgressIndicator(
-                                                color: Colors.white,
-                                                strokeWidth: 0.7,
-                                                value: progress.progress,
-                                              ),
+                                    progressIndicatorBuilder: (context, url,
+                                            progress) =>
+                                        Center(
+                                          child: SizedBox(
+                                            height: 30,
+                                            width: 30,
+                                            child: CircularProgressIndicator(
+                                              color: Colors.white,
+                                              strokeWidth: 0.8,
+                                              value: progress.progress,
                                             ),
+                                          ),
+                                        ),
                                     imageUrl: listHotel[index].photo_main,
                                     fit: BoxFit.cover,
                                     height: 230,
@@ -187,6 +209,7 @@ class _HotelSelectionScreenState extends State<HotelSelectionScreen>
                                           child: Row(
                                             children: [
                                               RatingBarIndicator(
+                                                unratedColor: Colors.white30,
                                                 rating: listHotel[index].rating,
                                                 itemBuilder: (context, index) =>
                                                     const Icon(

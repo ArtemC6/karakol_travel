@@ -27,56 +27,8 @@ class _HomeScreen extends State<HomeScreen> {
   String uri = '';
   List<StartingPhotoModel> listStartingDataTop = [],
       listStartingDataHotel = [],
-      listStartingDataFood = [],
-      listStartingDataRelaxation = [];
-
-  List<RelaxationModel> listRelaxation = [
-    RelaxationModel(
-        id: '',
-        image_uri: 'images/karakol/relaxation/ic_mountains_2.jpg',
-        name: 'Pilaf',
-        price: '800 сом'),
-    RelaxationModel(
-        id: '',
-        image_uri: 'images/karakol/relaxation/ic_like_2.jpg',
-        name: 'Pilaf',
-        price: '800 сом'),
-    RelaxationModel(
-        id: '',
-        image_uri: 'images/karakol/relaxation/ic_like_alakyl_2.jpg',
-        name: 'Legs',
-        price: '500 сом'),
-    RelaxationModel(
-        id: '',
-        image_uri: 'images/karakol/relaxation/ic_summer_mountains.jpg',
-        name: 'Manti',
-        price: '150 сом'),
-    RelaxationModel(
-        id: '',
-        image_uri: 'images/karakol/relaxation/ic_story.jpg',
-        name: 'Manti',
-        price: '150 сом'),
-    RelaxationModel(
-        id: '',
-        image_uri: 'images/karakol/relaxation/ic_skiing.jpg',
-        name: 'Lagman',
-        price: '200 сом'),
-    RelaxationModel(
-        id: '',
-        image_uri: 'images/karakol/relaxation/ic_winter_mountains.jpg',
-        name: 'Manti',
-        price: '150 сом'),
-    RelaxationModel(
-        id: '',
-        image_uri: 'images/karakol/relaxation/ic_story_2.jpg',
-        name: 'Lagman',
-        price: '200 сом'),
-    RelaxationModel(
-        id: '',
-        image_uri: 'images/karakol/relaxation/ic_like_leto.jpg',
-        name: 'Manti',
-        price: '150 сом'),
-  ];
+      listStartingDataFood = [];
+  List<String> listStartingDataNature = [];
 
   int _current = 0;
 
@@ -125,7 +77,7 @@ class _HomeScreen extends State<HomeScreen> {
       });
     });
 
-    await FirebaseFirestore.instance
+    FirebaseFirestore.instance
         .collection('Starting_photos_food')
         .get()
         .then((QuerySnapshot querySnapshot) {
@@ -143,6 +95,19 @@ class _HomeScreen extends State<HomeScreen> {
               name: data['name_4'], image_uri: data['image_4']));
           listStartingDataFood.add(StartingPhotoModel(
               name: data['name_5'], image_uri: data['image_5']));
+        });
+      });
+    });
+
+    await FirebaseFirestore.instance
+        .collection('Starting_photos_nature')
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      querySnapshot.docs.forEach((document) async {
+        Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+
+        setState(() {
+          listStartingDataNature = new List<String>.from(document['images']);
         });
       });
     });
@@ -177,10 +142,14 @@ class _HomeScreen extends State<HomeScreen> {
                   fadeInDuration: const Duration(seconds: 0),
                   alignment: Alignment.center,
                   progressIndicatorBuilder: (context, url, progress) => Center(
-                    child: CircularProgressIndicator(
-                      color: Colors.white,
-                      strokeWidth: 0.7,
-                      value: progress.progress,
+                    child: SizedBox(
+                      height: 30,
+                      width: 30,
+                      child: CircularProgressIndicator(
+                        color: Colors.white,
+                        strokeWidth: 0.8,
+                        value: progress.progress,
+                      ),
                     ),
                   ),
                   imageUrl: item.image_uri,
@@ -316,12 +285,17 @@ class _HomeScreen extends State<HomeScreen> {
                                                 progressIndicatorBuilder:
                                                     (context, url, progress) =>
                                                         Center(
-                                                          child:
-                                                              CircularProgressIndicator(
-                                                            color: Colors.white,
-                                                            strokeWidth: 0.7,
-                                                            value: progress
-                                                                .progress,
+                                                          child: SizedBox(
+                                                            height: 30,
+                                                            width: 30,
+                                                            child:
+                                                                CircularProgressIndicator(
+                                                              color:
+                                                                  Colors.white,
+                                                              strokeWidth: 0.8,
+                                                              value: progress
+                                                                  .progress,
+                                                            ),
                                                           ),
                                                         ),
                                                 imageUrl:
@@ -397,12 +371,17 @@ class _HomeScreen extends State<HomeScreen> {
                                                 progressIndicatorBuilder:
                                                     (context, url, progress) =>
                                                         Center(
-                                                          child:
-                                                              CircularProgressIndicator(
-                                                            color: Colors.white,
-                                                            strokeWidth: 0.7,
-                                                            value: progress
-                                                                .progress,
+                                                          child: SizedBox(
+                                                            height: 30,
+                                                            width: 30,
+                                                            child:
+                                                                CircularProgressIndicator(
+                                                              color:
+                                                                  Colors.white,
+                                                              strokeWidth: 0.8,
+                                                              value: progress
+                                                                  .progress,
+                                                            ),
                                                           ),
                                                         ),
                                                 imageUrl:
@@ -434,7 +413,7 @@ class _HomeScreen extends State<HomeScreen> {
                     ),
                   ),
                   sampleProductOnTap('Nature'),
-                  showNatureCard(listRelaxation),
+                  showNatureCard(listStartingDataNature),
                 ],
               ),
             ),
@@ -446,7 +425,7 @@ class _HomeScreen extends State<HomeScreen> {
     if (!isVisible) {
       return Scaffold(
         backgroundColor: black_86,
-        body: Center(
+        body: const Center(
             child: CircularProgressIndicator(
           strokeWidth: 1.5,
         )),

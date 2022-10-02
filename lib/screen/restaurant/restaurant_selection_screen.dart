@@ -25,6 +25,7 @@ class _RestaurantSelectionScreen extends State<RestaurantSelectionScreen>
   late TabController _tabController;
   bool isVisible = false;
   List<RestaurantModel> listRestaurant = [];
+  List<RestaurantModel> listRestaurantRevers = [];
 
   void readFirebase() async {
     await FirebaseFirestore.instance
@@ -35,7 +36,7 @@ class _RestaurantSelectionScreen extends State<RestaurantSelectionScreen>
         Map<String, dynamic> data = document.data() as Map<String, dynamic>;
 
         setState(() {
-          listRestaurant.add(RestaurantModel(
+          listRestaurantRevers.add(RestaurantModel(
               name: data['name'],
               id: data['id'],
               location: data['location'],
@@ -47,6 +48,8 @@ class _RestaurantSelectionScreen extends State<RestaurantSelectionScreen>
     });
 
     setState(() {
+      listRestaurant = listRestaurantRevers.reversed.toList();
+
       isVisible = true;
     });
   }
@@ -117,10 +120,14 @@ class _RestaurantSelectionScreen extends State<RestaurantSelectionScreen>
                                 child: CachedNetworkImage(
                                     progressIndicatorBuilder:
                                         (context, url, progress) => Center(
-                                              child: CircularProgressIndicator(
-                                                color: Colors.white,
-                                                strokeWidth: 0.7,
-                                                value: progress.progress,
+                                              child: SizedBox(
+                                                height: 30,
+                                                width: 30,
+                                                child: CircularProgressIndicator(
+                                                  color: Colors.white,
+                                                  strokeWidth: 0.8,
+                                                  value: progress.progress,
+                                                ),
                                               ),
                                             ),
                                     imageUrl: listRestaurant[index].photo_main,
@@ -188,6 +195,8 @@ class _RestaurantSelectionScreen extends State<RestaurantSelectionScreen>
                                           child: Row(
                                             children: [
                                               RatingBarIndicator(
+                                                unratedColor: Colors.white30,
+
                                                 rating: listRestaurant[index]
                                                     .rating,
                                                 itemBuilder: (context, index) =>

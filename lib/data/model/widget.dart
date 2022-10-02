@@ -67,7 +67,7 @@ class sampleProductOnTap extends StatelessWidget {
 }
 
 class showNatureCard extends StatelessWidget {
-  List<RelaxationModel> list;
+  List<String> list;
 
   showNatureCard(this.list);
 
@@ -92,21 +92,21 @@ class showNatureCard extends StatelessWidget {
               height: masonryCardHeights[index % 2],
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(16),
-                child: Image.asset(
-                  list[index].image_uri,
+                child: CachedNetworkImage(
                   fit: BoxFit.cover,
+                  progressIndicatorBuilder: (context, url, progress) => Center(
+                    child: SizedBox(
+                      height: 24,
+                      width: 24,
+                      child: CircularProgressIndicator(
+                        color: Colors.white,
+                        strokeWidth: 0.8,
+                        value: progress.progress,
+                      ),
+                    ),
+                  ),
+                  imageUrl: list[index],
                 ),
-                // child: CachedNetworkImage(
-                //   progressIndicatorBuilder: (context, url, progress) => Center(
-                //     child: CircularProgressIndicator(
-                //       color: Colors.white,
-                //       strokeWidth: 1,
-                //       value: progress.progress,
-                //     ),
-                //   ),
-                //   imageUrl: list[index].image_uri,
-                //   fit: BoxFit.cover,
-                // ),
               ),
             );
           }),

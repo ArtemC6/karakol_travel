@@ -8,6 +8,7 @@ import '../../data/const.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
+import '../../data/model/CommentModel.dart';
 import '../../data/model/HotelModel.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -29,12 +30,42 @@ class _RestaurantScreen extends State<RestaurantScreen> {
   final CarouselController _controller = CarouselController();
   int _current = 0;
   List<RestaurantModel> listRestaurant = [];
+  List<String> imgList = [];
 
-  List<String> imgList = [
-    // 'images/karakol/hotel/ic_caragat_4.jpg',
-    // 'images/karakol/hotel/ic_caragat_room_4.jpg',
-    // 'images/karakol/hotel/ic_caragat_room_2.jpg',
-    // 'images/karakol/hotel/ic_caragat_room_5.jpg',
+  List<CommentModel> listComment = [
+    CommentModel(
+        name: '',
+        dateTime: DateTime.now(),
+        id: '',
+        photo_profile:
+            'https://cdn.vox-cdn.com/thumbor/n-V0QecZDxHqqs13ISr10aFtd6E=/0x0:1363x2048/1200x0/filters:focal(0x0:1363x2048):no_upscale()/cdn.vox-cdn.com/uploads/chorus_asset/file/19424454/jesse_brawner_creditMarcCartwright.jpeg',
+        rating: 4.5,
+        comment:
+            'good dfdsf dsf dsdsfdsfdsfasasdfadsf dsf dsf dsfdsffffffffff fdsssss'),
+    CommentModel(
+        name: '',
+        id: '',
+        dateTime: DateTime.now(),
+        photo_profile:
+            'https://lmg-labmanager.s3.amazonaws.com/assets/articleNo/23259/iImg/43114/owensjeffrey.jpg',
+        rating: 4.1,
+        comment: 'good fdaadsffffffdsf dsf dsf dsfdsffffffffff fdsssss'),
+    CommentModel(
+        name: '',
+        dateTime: DateTime.now(),
+        id: '',
+        photo_profile:
+            'https://kcballet.files.wordpress.com/2012/08/skyler-taylor.jpg',
+        rating: 3.7,
+        comment: 'good dfdsf dsf dsf dsf dsf dsfdsffffffffff fdsssss'),
+    CommentModel(
+        name: '',
+        dateTime: DateTime.now(),
+        id: '',
+        photo_profile: 'https://starnote.ru/media/c/starnote/'
+            'v2/blog/gallery/2013/10/15/6bfd5ae16f/sjurrealizm-ot-deniela-redkliffa-foto-aktera-dlja-flaunt_8.jpg',
+        rating: 5.0,
+        comment: 'good dfdsf dsf dsf dsf dsf dsfdsffffffffff fdsssss'),
   ];
 
   void readFirebase() async {
@@ -103,7 +134,7 @@ class _RestaurantScreen extends State<RestaurantScreen> {
                 pinned: true,
                 titleSpacing: 0,
                 backgroundColor: innerBoxIsScrolled ? black_86 : black_86,
-                actionsIconTheme: IconThemeData(opacity: 0.0),
+                // actionsIconTheme: IconThemeData(opacity: 0.0),
                 title: SizedBox(),
                 flexibleSpace: FlexibleSpaceBar(
                     background: Container(
@@ -158,14 +189,6 @@ class _RestaurantScreen extends State<RestaurantScreen> {
                                             height: 10.0,
                                             margin: const EdgeInsets.symmetric(
                                                 vertical: 8.0, horizontal: 4.0),
-
-                                            // decoration: BoxDecoration(
-                                            //     border: Border.all(
-                                            //       color: Colors.red,
-                                            //     ),
-                                            //     borderRadius: BorderRadius.all(Radius.circular(20))
-                                            // ),
-
                                             decoration: BoxDecoration(
                                                 shape: BoxShape.circle,
                                                 border: Border.all(
@@ -205,29 +228,75 @@ class _RestaurantScreen extends State<RestaurantScreen> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(),
-                    child: Text(
-                      listRestaurant[0].name,
-                      style: TextStyle(
-                          fontSize: 17, color: Colors.white.withOpacity(0.9)),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 4),
-                    child: Row(
-                      children: [
-                        const Icon(
-                          Icons.location_on,
-                          color: Colors.white70,
-                          size: 15,
-                        ),
-                        Text(
-                          '  ${listRestaurant[0].location}',
-                          style: TextStyle(fontSize: 13, color: Colors.white70),
-                        ),
-                      ],
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(),
+                            child: Text(
+                              listRestaurant[0].name,
+                              style: TextStyle(
+                                  fontSize: 17,
+                                  color: Colors.white.withOpacity(0.9)),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 4),
+                            child: Row(
+                              children: [
+                                const Icon(
+                                  Icons.location_on,
+                                  color: Colors.white70,
+                                  size: 15,
+                                ),
+                                SizedBox(
+                                  width: MediaQuery.of(context).size.width / 1.7,
+
+                                  child: Text(
+                                    ' ${listRestaurant[0].location}',
+                                    style: TextStyle(
+                                        fontSize: 13, color: Colors.white70),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: Colors.blue.withOpacity(0.10),
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Icon(
+                              Icons.location_on,
+                              color: Colors.blueAccent,
+                              size: 20,
+                            ),
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(left: 20, right: 10),
+                            padding: const EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: Colors.blue.withOpacity(0.10),
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(
+                              Icons.phone,
+                              color: Colors.blueAccent,
+                              size: 20,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 20),
@@ -236,12 +305,11 @@ class _RestaurantScreen extends State<RestaurantScreen> {
                         Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
+                            const Text(
                               'Price',
                               style: TextStyle(
-                                color: Colors.white.withOpacity(1),
+                                color: Colors.white,
                                 fontSize: 15,
                               ),
                             ),
@@ -264,11 +332,10 @@ class _RestaurantScreen extends State<RestaurantScreen> {
                           children: [
                             Container(
                               padding: const EdgeInsets.only(right: 8),
-                              child: Text(
+                              child: const Text(
                                 'Rating',
                                 style: TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.white.withOpacity(1)),
+                                    fontSize: 14, color: Colors.white),
                               ),
                             ),
                             Row(
@@ -289,13 +356,13 @@ class _RestaurantScreen extends State<RestaurantScreen> {
                                             fontWeight: FontWeight.bold),
                                       ),
                                       RatingBarIndicator(
-                                        // unratedColor: Colors.black,
+                                        unratedColor: Colors.white30,
                                         rating: listRestaurant[0].rating,
-                                        itemBuilder: (context, index) => Icon(
+                                        itemBuilder: (context, index) =>
+                                            const Icon(
                                           Icons.star,
                                           color: Colors.amber,
                                         ),
-                                        // itemCount: 5,
                                         itemSize: 15,
                                         direction: Axis.horizontal,
                                       ),
@@ -310,7 +377,7 @@ class _RestaurantScreen extends State<RestaurantScreen> {
                     ),
                   ),
                   const SizedBox(
-                    height: 40,
+                    height: 30,
                   ),
                   Column(
                     children: [
@@ -332,13 +399,13 @@ class _RestaurantScreen extends State<RestaurantScreen> {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Icon(
+                                const Icon(
                                   Icons.attach_money,
                                   color: Colors.blueAccent,
                                   size: 30,
                                 ),
-                                Container(
-                                  padding: EdgeInsets.only(top: 6),
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 6),
                                   child: Text(
                                     'Low Cost',
                                     style: TextStyle(
@@ -364,15 +431,15 @@ class _RestaurantScreen extends State<RestaurantScreen> {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Icon(
-                                  Icons.attach_money,
+                                const Icon(
+                                  Icons.wine_bar_rounded,
                                   color: Colors.blueAccent,
                                   size: 30,
                                 ),
                                 Container(
                                   padding: EdgeInsets.only(top: 6),
                                   child: Text(
-                                    'Low Cost',
+                                    'Bar',
                                     style: TextStyle(
                                         color: Colors.white.withOpacity(0.9)),
                                   ),
@@ -396,15 +463,15 @@ class _RestaurantScreen extends State<RestaurantScreen> {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Icon(
-                                  Icons.attach_money,
+                                const Icon(
+                                  Icons.car_repair_outlined,
                                   color: Colors.blueAccent,
                                   size: 30,
                                 ),
                                 Container(
                                   padding: EdgeInsets.only(top: 6),
                                   child: Text(
-                                    'Low Cost',
+                                    'Parking',
                                     style: TextStyle(
                                         color: Colors.white.withOpacity(0.9)),
                                   ),
@@ -428,150 +495,15 @@ class _RestaurantScreen extends State<RestaurantScreen> {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Icon(
-                                  Icons.attach_money,
+                                const Icon(
+                                  Icons.wifi,
                                   color: Colors.blueAccent,
                                   size: 30,
                                 ),
                                 Container(
                                   padding: EdgeInsets.only(top: 6),
                                   child: Text(
-                                    'Low Cost',
-                                    style: TextStyle(
-                                        color: Colors.white.withOpacity(0.9)),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Row(
-                        children: [
-                          Container(
-                            margin: EdgeInsets.only(left: 10),
-                            alignment: Alignment.center,
-                            height: 70,
-                            width: 80,
-                            decoration: BoxDecoration(
-                                color: black_86,
-                                // color: Colors.black.withOpacity(0.1),
-                                border: Border.all(
-                                  color: Colors.white.withOpacity(0.4),
-                                ),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(8))),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  Icons.attach_money,
-                                  color: Colors.blueAccent,
-                                  size: 30,
-                                ),
-                                Container(
-                                  padding: EdgeInsets.only(top: 6),
-                                  child: Text(
-                                    'Low Cost',
-                                    style: TextStyle(
-                                        color: Colors.white.withOpacity(0.9)),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                          Container(
-                            margin: EdgeInsets.only(left: 10),
-                            alignment: Alignment.center,
-                            height: 70,
-                            width: 80,
-                            decoration: BoxDecoration(
-                                color: black_86,
-                                // color: Colors.black.withOpacity(0.1),
-                                border: Border.all(
-                                  color: Colors.white.withOpacity(0.4),
-                                ),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(8))),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  Icons.attach_money,
-                                  color: Colors.blueAccent,
-                                  size: 30,
-                                ),
-                                Container(
-                                  padding: EdgeInsets.only(top: 6),
-                                  child: Text(
-                                    'Low Cost',
-                                    style: TextStyle(
-                                        color: Colors.white.withOpacity(0.9)),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                          Container(
-                            margin: EdgeInsets.only(left: 10),
-                            alignment: Alignment.center,
-                            height: 70,
-                            width: 80,
-                            decoration: BoxDecoration(
-                                color: black_86,
-                                // color: Colors.black.withOpacity(0.1),
-                                border: Border.all(
-                                  color: Colors.white.withOpacity(0.4),
-                                ),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(8))),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  Icons.attach_money,
-                                  color: Colors.blueAccent,
-                                  size: 30,
-                                ),
-                                Container(
-                                  padding: EdgeInsets.only(top: 6),
-                                  child: Text(
-                                    'Low Cost',
-                                    style: TextStyle(
-                                        color: Colors.white.withOpacity(0.9)),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                          Container(
-                            margin: EdgeInsets.only(left: 10),
-                            alignment: Alignment.center,
-                            height: 70,
-                            width: 80,
-                            decoration: BoxDecoration(
-                                color: black_86,
-                                // color: Colors.black.withOpacity(0.1),
-                                border: Border.all(
-                                  color: Colors.white.withOpacity(0.4),
-                                ),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(8))),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  Icons.attach_money,
-                                  color: Colors.blueAccent,
-                                  size: 30,
-                                ),
-                                Container(
-                                  padding: EdgeInsets.only(top: 6),
-                                  child: Text(
-                                    'Low Cost',
+                                    'Free WiFi',
                                     style: TextStyle(
                                         color: Colors.white.withOpacity(0.9)),
                                   ),
@@ -582,6 +514,160 @@ class _RestaurantScreen extends State<RestaurantScreen> {
                         ],
                       ),
                     ],
+                  ),
+                  const SizedBox(
+                    height: 30,
+                  ),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height / 2,
+                    child: AnimationLimiter(
+                      child: ListView.separated(
+                        physics: BouncingScrollPhysics(),
+                        padding: const EdgeInsets.only(right: 20),
+                        scrollDirection: Axis.vertical,
+                        itemCount: listComment.length,
+                        shrinkWrap: true,
+                        itemBuilder: (context, index) {
+                          return AnimationConfiguration.staggeredList(
+                            position: index,
+                            delay: const Duration(milliseconds: 100),
+                            child: SlideAnimation(
+                              duration: const Duration(milliseconds: 2000),
+                              verticalOffset: 100,
+                              curve: Curves.ease,
+                              child: FadeInAnimation(
+                                curve: Curves.easeOut,
+                                duration: const Duration(milliseconds: 2000),
+                                child: Padding(
+                                  padding: const EdgeInsets.only(
+                                      top: 10, bottom: 10),
+                                  child: Row(
+                                    children: [
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(left: 20),
+                                        child: CachedNetworkImage(
+                                          progressIndicatorBuilder:
+                                              (context, url, progress) =>
+                                                  Center(
+                                            child: SizedBox(
+                                              height: 24,
+                                              width: 24,
+                                              child: CircularProgressIndicator(
+                                                color: Colors.white,
+                                                strokeWidth: 0.8,
+                                                value: progress.progress,
+                                              ),
+                                            ),
+                                          ),
+                                          imageUrl:
+                                              listComment[index].photo_profile,
+                                          imageBuilder:
+                                              (context, imageProvider) =>
+                                                  Container(
+                                            height: 50,
+                                            width: 50,
+                                            decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(50)),
+                                              image: DecorationImage(
+                                                image: imageProvider,
+                                                fit: BoxFit.cover,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(left: 20),
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Container(
+                                                  alignment:
+                                                      Alignment.centerRight,
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          top: 4, bottom: 4),
+                                                  child: Row(
+                                                    children: [
+                                                      RatingBarIndicator(
+                                                        unratedColor:
+                                                            Colors.white30,
+                                                        rating:
+                                                            listComment[index]
+                                                                .rating,
+                                                        itemBuilder:
+                                                            (context, index) =>
+                                                                const Icon(
+                                                          Icons.star,
+                                                          color: Colors.amber,
+                                                        ),
+                                                        // itemCount: 5,
+                                                        itemSize: 20,
+                                                        direction:
+                                                            Axis.horizontal,
+                                                      ),
+                                                      Text(
+                                                        ' ${listComment[index].dateTime.day.toString()} '
+                                                        '${months[listComment[index].dateTime.month - 1]} '
+                                                        ' ${listComment[index].dateTime.year.toString()}  ',
+                                                        style: TextStyle(
+                                                            fontSize: 12,
+                                                            color: Colors.white
+                                                                .withOpacity(
+                                                                    0.9),
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .normal),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            Container(
+                                              padding:
+                                                  const EdgeInsets.only(top: 2),
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  1.8,
+                                              child: Text(
+                                                softWrap: true,
+                                                textAlign: TextAlign.start,
+                                                '${listComment[index].comment}',
+                                                style: TextStyle(
+                                                    color: Colors.white70,
+                                                    fontSize: 13),
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                        separatorBuilder: (BuildContext context, int index) {
+                          return Divider(
+                            color: Colors.white30,
+                          );
+                        },
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -598,7 +684,7 @@ class _RestaurantScreen extends State<RestaurantScreen> {
     }
     return Scaffold(
       backgroundColor: black_86,
-      body: Center(
+      body: const Center(
           child: CircularProgressIndicator(
         strokeWidth: 1.5,
       )),

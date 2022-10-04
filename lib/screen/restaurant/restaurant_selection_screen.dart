@@ -11,6 +11,7 @@ import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class RestaurantSelectionScreen extends StatefulWidget {
   const RestaurantSelectionScreen({Key? key}) : super(key: key);
@@ -70,9 +71,11 @@ class _RestaurantSelectionScreen extends State<RestaurantSelectionScreen>
   Widget hotelBest() {
     if (!isVisible) {
       return Center(
-          child: CircularProgressIndicator(
-        strokeWidth: 1.5,
-      ));
+        child: LoadingAnimationWidget.fourRotatingDots(
+          size: 44,
+          color: Colors.blueAccent,
+        ),
+      );
     }
     return SingleChildScrollView(
       child: SizedBox(
@@ -118,18 +121,19 @@ class _RestaurantSelectionScreen extends State<RestaurantSelectionScreen>
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(12),
                                 child: CachedNetworkImage(
-                                    progressIndicatorBuilder:
-                                        (context, url, progress) => Center(
-                                              child: SizedBox(
-                                                height: 30,
-                                                width: 30,
-                                                child: CircularProgressIndicator(
-                                                  color: Colors.white,
-                                                  strokeWidth: 0.8,
-                                                  value: progress.progress,
-                                                ),
-                                              ),
+                                    progressIndicatorBuilder: (context, url,
+                                            progress) =>
+                                        Center(
+                                          child: SizedBox(
+                                            height: 30,
+                                            width: 30,
+                                            child: CircularProgressIndicator(
+                                              color: Colors.white,
+                                              strokeWidth: 0.8,
+                                              value: progress.progress,
                                             ),
+                                          ),
+                                        ),
                                     imageUrl: listRestaurant[index].photo_main,
                                     fit: BoxFit.cover,
                                     height: 230,
@@ -221,11 +225,10 @@ class _RestaurantSelectionScreen extends State<RestaurantSelectionScreen>
                                         Padding(
                                           padding:
                                               const EdgeInsets.only(right: 8),
-                                          child: Text(
+                                          child: const Text(
                                             'Book now',
                                             style: TextStyle(
-                                              color: Colors.lightBlue
-                                                  .withOpacity(0.8),
+                                              color: Colors.blueAccent,
                                               fontSize: 13,
                                             ),
                                           ),

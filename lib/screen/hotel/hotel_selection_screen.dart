@@ -14,6 +14,8 @@ import 'package:karakol_travel/screen/addPhoto.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
+
 import 'package:cached_network_image/cached_network_image.dart';
 
 class HotelSelectionScreen extends StatefulWidget {
@@ -83,9 +85,11 @@ class _HotelSelectionScreenState extends State<HotelSelectionScreen>
   Widget hotelBest() {
     if (!isVisible) {
       return Center(
-          child: CircularProgressIndicator(
-        strokeWidth: 1.5,
-      ));
+        child: LoadingAnimationWidget.fourRotatingDots(
+          size: 44,
+          color: Colors.blueAccent,
+        ),
+      );
     }
     return SingleChildScrollView(
       child: SizedBox(
@@ -233,11 +237,10 @@ class _HotelSelectionScreenState extends State<HotelSelectionScreen>
                                         Padding(
                                           padding:
                                               const EdgeInsets.only(right: 8),
-                                          child: Text(
+                                          child: const Text(
                                             'Book now',
                                             style: TextStyle(
-                                              color: Colors.lightBlue
-                                                  .withOpacity(0.8),
+                                              color: Colors.blueAccent,
                                               fontSize: 13,
                                             ),
                                           ),

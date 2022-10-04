@@ -6,16 +6,18 @@ import 'package:karakol_travel/screen/addPhoto.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:karakol_travel/screen/restaurant/restaurant_selection_screen.dart';
 import '../data/const.dart';
-import 'package:carousel_slider/carousel_slider.dart';
-import '../data/model/RestaurantModel.dart';
-import '../data/model/HotelModel.dart';
-import '../data/model/RelaxationModel.dart';
 import '../data/model/StartingPhotoModel.dart';
 import '../data/model/widget.dart';
 import 'hotel/hotel_selection_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'myTest.dart';
+
+import 'package:flutter_carousel_slider/carousel_slider_indicators.dart';
+import 'package:flutter_carousel_slider/carousel_slider_transforms.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+import 'package:flutter_carousel_slider/carousel_slider.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -183,10 +185,11 @@ class _HomeScreen extends State<HomeScreen> {
           headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
             return <Widget>[
               SliverAppBar(
-                expandedHeight: MediaQuery.of(context).size.height / 3.8,
+                expandedHeight: MediaQuery.of(context).size.height / 3.5,
                 floating: true,
                 forceElevated: innerBoxIsScrolled,
                 // pinned: true,
+                automaticallyImplyLeading: false,
                 titleSpacing: 0,
                 backgroundColor: black_86,
                 actionsIconTheme: IconThemeData(opacity: 0.0),
@@ -194,32 +197,68 @@ class _HomeScreen extends State<HomeScreen> {
                 flexibleSpace: FlexibleSpaceBar(
                   background: Stack(
                     children: <Widget>[
-                      AnimationLimiter(
-                        child: AnimationConfiguration.staggeredList(
-                          position: 1,
-                          delay: Duration(milliseconds: 500),
-                          child: SlideAnimation(
-                            duration: Duration(milliseconds: 2200),
-                            horizontalOffset: 160,
-                            curve: Curves.ease,
-                            child: FadeInAnimation(
-                              curve: Curves.easeOut,
+                      SizedBox(
+                        width: size.width,
+                        child: AnimationLimiter(
+                          child: AnimationConfiguration.staggeredList(
+                            position: 1,
+                            delay: Duration(milliseconds: 500),
+                            child: SlideAnimation(
                               duration: Duration(milliseconds: 2200),
-                              child: CarouselSlider(
-                                items: imageSliders,
-                                options: CarouselOptions(
-                                  autoPlay: true,
-                                  disableCenter: false,
-                                  viewportFraction: 1,
-                                  // aspectRatio: 1.6,
-                                  onPageChanged: (index, reason) {
-                                    setState(
-                                      () {
-                                        _current = index;
-                                      },
-                                    );
-                                  },
-                                ),
+                              horizontalOffset: 160,
+                              curve: Curves.ease,
+                              child: FadeInAnimation(
+                                curve: Curves.easeOut,
+                                duration: Duration(milliseconds: 2200),
+                                child: CarouselSlider.builder(
+                                    keepPage: true,
+                                    enableAutoSlider: true,
+                                    unlimitedMode: true,
+                                    slideBuilder: (index) {
+                                      return CachedNetworkImage(
+                                        fadeOutDuration:
+                                            const Duration(seconds: 0),
+                                        fadeInDuration:
+                                            const Duration(seconds: 0),
+                                        alignment: Alignment.center,
+                                        progressIndicatorBuilder:
+                                            (context, url, progress) => Center(
+                                          child: SizedBox(
+                                            height: 30,
+                                            width: 30,
+                                            child: CircularProgressIndicator(
+                                              color: Colors.white,
+                                              strokeWidth: 0.8,
+                                              value: progress.progress,
+                                            ),
+                                          ),
+                                        ),
+                                        imageUrl: listStartingDataTop[index]
+                                            .image_uri,
+                                        // fit: BoxFit.fill,
+                                        fit: BoxFit.cover,
+                                        width: size.width,
+                                      );
+                                    },
+                                    slideTransform: CubeTransform(),
+                                    itemCount: listStartingDataTop.length),
+
+                                // child: CarouselSlider(
+                                //   items: imageSliders,
+                                //   options: CarouselOptions(
+                                //     autoPlay: true,
+                                //     disableCenter: false,
+                                //     viewportFraction: 1,
+                                //     // aspectRatio: 1.6,
+                                //     onPageChanged: (index, reason) {
+                                //       setState(
+                                //         () {
+                                //           _current = index;
+                                //         },
+                                //       );
+                                //     },
+                                //   ),
+                                // ),
                               ),
                             ),
                           ),
@@ -240,6 +279,9 @@ class _HomeScreen extends State<HomeScreen> {
             child: SingleChildScrollView(
               child: Column(
                 children: <Widget>[
+                  const SizedBox(
+                    height: 14,
+                  ),
                   sampleProductOnTap('Hotel'),
                   SizedBox(
                     height: MediaQuery.of(context).size.height / 3.5,
@@ -425,10 +467,12 @@ class _HomeScreen extends State<HomeScreen> {
     if (!isVisible) {
       return Scaffold(
         backgroundColor: black_86,
-        body: const Center(
-            child: CircularProgressIndicator(
-          strokeWidth: 1.5,
-        )),
+        body: Center(
+          child: LoadingAnimationWidget.fourRotatingDots(
+            size: 44,
+            color: Colors.blueAccent,
+          ),
+        ),
       );
     }
     return home_screen();

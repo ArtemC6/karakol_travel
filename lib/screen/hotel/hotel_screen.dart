@@ -8,9 +8,13 @@ import '../../data/const.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import '../../data/model/CommentModel.dart';
 import '../../data/model/HotelModel.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
+
+import '../../data/model/StartingDataModel.dart';
 
 class HotelScreen extends StatefulWidget {
   var id;
@@ -82,6 +86,40 @@ class _HotelScreen extends State<HotelScreen> {
         comment: 'good dfdsf dsf dsf dsf dsf dsfdsffffffffff fdsssss'),
   ];
 
+  List<StartingDataModel> listMenu = [
+    StartingDataModel(
+        name: 'Breakfast',
+        image_uri:
+            'https://proprikol.ru/wp-content/uploads/2020/06/kartinki-zavtrak-39.jpg'),
+    StartingDataModel(
+        name: 'Lunch',
+        image_uri:
+            'https://podacha-blud.com/uploads/posts/2022-06/1654220582_10-podacha-blud-com-p-krasivii-obed-foto-11.jpg'),
+    StartingDataModel(
+        name: 'Dinner',
+        image_uri:
+            'https://get.pxhere.com/photo/food-meal-meat-chicken-dinner-vege'
+            'table-dish-fried-potato-cooking-cooked-vegetables-roasted-lunch-'
+            'pan-baked-salad-potatoes-healthy-pork-plate-tomato-cuisine-grilled-onion-produce-'
+            'ingredient-garden-salad-tableware-recipe-kitchen-utensil-whole-food-leaf-vegetable-cutlery-root'
+            '-vegetable-dishware-local-food-natural-foods-chicken-meat-vegan-nutrition-pear-fork-veget'
+            'arian-food-kitchen-knife-bowl-side-dish-garnish-staple-food-Food-group-superfood-I'
+            'ceburg-lettuce-herb-greek-food-greek-salad-brunch-cruciferous-vegetables-knife-cucu'
+            'mber-pakistani-cuisine-1634384.jpg'),
+    StartingDataModel(
+        name: 'Coffee',
+        image_uri:
+            'https://u.9111s.ru/uploads/202109/02/7cf39d5512b533c63838f1ff218c235a.jpg'),
+    StartingDataModel(
+        name: 'Healthy Eating',
+        image_uri:
+            'https://pic.rutubelist.ru/video/e3/71/e3718791b86f28adab510b41770da490.jpg'),
+    StartingDataModel(
+        name: 'Beverages',
+        image_uri:
+            'https://i.artfile.ru/2560x1706_1119894_[www.ArtFile.ru].jpg'),
+  ];
+
   void readFirebase() async {
     await FirebaseFirestore.instance
         .collection('Hotel')
@@ -107,7 +145,6 @@ class _HotelScreen extends State<HotelScreen> {
         }
       });
     });
-
 
     setState(() {
       isVisible = true;
@@ -143,9 +180,94 @@ class _HotelScreen extends State<HotelScreen> {
         )
         .toList();
 
+    void showMenu({required BuildContext context}) {
+      Navigator.of(context)
+          .push(MaterialPageRoute(builder: (BuildContext context) {
+        return Scaffold(
+            backgroundColor: black_86,
+            body: SizedBox(
+              // height: MediaQuery.of(context).size.height / 2.2,
+              child: AnimationLimiter(
+                child: ListView.builder(
+                  physics: BouncingScrollPhysics(),
+                  scrollDirection: Axis.vertical,
+                  itemCount: listMenu.length,
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) {
+                    return AnimationConfiguration.staggeredList(
+                      position: index,
+                      delay: const Duration(milliseconds: 250),
+                      child: SlideAnimation(
+                        duration: const Duration(milliseconds: 2000),
+                        verticalOffset: 100,
+                        curve: Curves.ease,
+                        child: FadeInAnimation(
+                          curve: Curves.easeOut,
+                          duration: const Duration(milliseconds: 2000),
+                          child: Container(
+                            color: black_86,
+                            padding: const EdgeInsets.only(
+                                top: 4, bottom: 4, left: 8, right: 8),
+                            width: MediaQuery.of(context).size.width,
+                            height: MediaQuery.of(context).size.height / 6,
+                            child: Card(
+                              color: black_86,
+                              elevation: 10,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(14),
+                                  side: BorderSide(
+                                    width: 1,
+                                    color: Colors.white10,
+                                  )),
+                              child: Stack(
+                                alignment: Alignment.center,
+                                children: [
+                                  CachedNetworkImage(
+                                    fit: BoxFit.cover,
+                                    imageUrl: listMenu[index].image_uri,
+                                    imageBuilder: (context, imageProvider) =>
+                                        Container(
+                                      decoration: BoxDecoration(
+                                        color: black_86,
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(14)),
+                                        image: DecorationImage(
+                                          image: imageProvider,
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                    padding: const EdgeInsets.all(10),
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        color: Colors.black26),
+                                    child: Text(
+                                      '${listMenu[index].name}',
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 24,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ));
+      }));
+    }
+
     Widget restaurant_screen() {
       return Scaffold(
-        backgroundColor: black_93,
+        backgroundColor: black_86,
         body: NestedScrollView(
           headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
             return <Widget>[
@@ -160,7 +282,7 @@ class _HotelScreen extends State<HotelScreen> {
                 title: SizedBox(),
                 flexibleSpace: FlexibleSpaceBar(
                     background: Container(
-                  color: black_93,
+                  color: black_86,
                   height: MediaQuery.of(context).size.height / 2,
                   child: Stack(
                     children: <Widget>[
@@ -276,7 +398,8 @@ class _HotelScreen extends State<HotelScreen> {
                                   size: 15,
                                 ),
                                 SizedBox(
-                                  width: MediaQuery.of(context).size.width / 1.7,
+                                  width:
+                                      MediaQuery.of(context).size.width / 1.7,
                                   child: Text(
                                     ' ${listHotel[0].location}',
                                     style: TextStyle(
@@ -397,297 +520,237 @@ class _HotelScreen extends State<HotelScreen> {
                       ],
                     ),
                   ),
-                  const SizedBox(
-                    height: 30,
+                  Padding(
+                    padding:
+                        const EdgeInsets.only(top: 30, left: 20, right: 20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Delivery',
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 15),
+                            ),
+                            Text(
+                              'Free',
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 13),
+                            ),
+                          ],
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Time',
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 16),
+                            ),
+                            Text(
+                              '9 AM - 7 PM',
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 13),
+                            ),
+                          ],
+                        ),
+                        InkWell(
+                          splashColor: Colors.transparent,
+                          highlightColor: Colors.transparent,
+                          onTap: () {
+                            showMenu(context: context);
+                          },
+                          child: Text(
+                            'Catalog',
+                            style: TextStyle(
+                                color: Colors.blueAccent, fontSize: 17),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                  Column(
-                    children: [
-                      Row(
-                        children: [
-                          Container(
-                            margin: const EdgeInsets.only(left: 10),
-                            alignment: Alignment.center,
-                            height: 70,
-                            width: 80,
-                            decoration: BoxDecoration(
-                                color: black_86,
-                                // color: Colors.black.withOpacity(0.1),
-                                border: Border.all(
-                                  color: Colors.white.withOpacity(0.4),
-                                ),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(8))),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const Icon(
-                                  Icons.attach_money,
-                                  color: Colors.blueAccent,
-                                  size: 30,
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 6),
-                                  child: Text(
-                                    'Low Cost',
-                                    style: TextStyle(
-                                        color: Colors.white.withOpacity(0.9)),
-                                  ),
-                                )
-                              ],
+                  Padding(
+                    padding:
+                        const EdgeInsets.only(right: 20, left: 16, top: 40),
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Reviews',
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 17),
                             ),
-                          ),
-                          Container(
-                            margin: EdgeInsets.only(left: 10),
-                            alignment: Alignment.center,
-                            height: 70,
-                            width: 80,
-                            decoration: BoxDecoration(
-                                color: black_86,
-                                // color: Colors.black.withOpacity(0.1),
-                                border: Border.all(
-                                  color: Colors.white.withOpacity(0.4),
-                                ),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(8))),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const Icon(
-                                  Icons.wine_bar_rounded,
-                                  color: Colors.blueAccent,
-                                  size: 30,
-                                ),
-                                Container(
-                                  padding: EdgeInsets.only(top: 6),
-                                  child: Text(
-                                    'Bar',
-                                    style: TextStyle(
-                                        color: Colors.white.withOpacity(0.9)),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                          Container(
-                            margin: EdgeInsets.only(left: 10),
-                            alignment: Alignment.center,
-                            height: 70,
-                            width: 80,
-                            decoration: BoxDecoration(
-                                color: black_86,
-                                // color: Colors.black.withOpacity(0.1),
-                                border: Border.all(
-                                  color: Colors.white.withOpacity(0.4),
-                                ),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(8))),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const Icon(
-                                  Icons.car_repair_outlined,
-                                  color: Colors.blueAccent,
-                                  size: 30,
-                                ),
-                                Container(
-                                  padding: EdgeInsets.only(top: 6),
-                                  child: Text(
-                                    'Parking',
-                                    style: TextStyle(
-                                        color: Colors.white.withOpacity(0.9)),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                          Container(
-                            margin: EdgeInsets.only(left: 10),
-                            alignment: Alignment.center,
-                            height: 70,
-                            width: 80,
-                            decoration: BoxDecoration(
-                                color: black_86,
-                                // color: Colors.black.withOpacity(0.1),
-                                border: Border.all(
-                                  color: Colors.white.withOpacity(0.4),
-                                ),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(8))),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const Icon(
-                                  Icons.wifi,
-                                  color: Colors.blueAccent,
-                                  size: 30,
-                                ),
-                                Container(
-                                  padding: EdgeInsets.only(top: 6),
-                                  child: Text(
-                                    'Free WiFi',
-                                    style: TextStyle(
-                                        color: Colors.white.withOpacity(0.9)),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 30,
-                  ),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height / 2,
-                    child: AnimationLimiter(
-                      child: ListView.separated(
-                        physics: BouncingScrollPhysics(),
-                        padding: const EdgeInsets.only(right: 20),
-                        scrollDirection: Axis.vertical,
-                        itemCount: listComment.length,
-                        shrinkWrap: true,
-                        itemBuilder: (context, index) {
-                          return AnimationConfiguration.staggeredList(
-                            position: index,
-                            delay: const Duration(milliseconds: 100),
-                            child: SlideAnimation(
-                              duration: const Duration(milliseconds: 2000),
-                              verticalOffset: 100,
-                              curve: Curves.ease,
-                              child: FadeInAnimation(
-                                curve: Curves.easeOut,
-                                duration: const Duration(milliseconds: 2000),
-                                child: Padding(
-                                  padding: const EdgeInsets.only(
-                                      top: 10, bottom: 10),
-                                  child: Row(
-                                    children: [
-                                      Padding(
-                                        padding:
-                                            const EdgeInsets.only(left: 20),
-                                        child: CachedNetworkImage(
-                                          progressIndicatorBuilder:
-                                              (context, url, progress) =>
-                                                  Center(
-                                            child: SizedBox(
-                                              height: 24,
-                                              width: 24,
-                                              child: CircularProgressIndicator(
-                                                color: Colors.white,
-                                                strokeWidth: 0.8,
-                                                value: progress.progress,
-                                              ),
-                                            ),
-                                          ),
-                                          imageUrl:
-                                              listComment[index].photo_profile,
-                                          imageBuilder:
-                                              (context, imageProvider) =>
-                                                  Container(
-                                            height: 50,
-                                            width: 50,
-                                            decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(50)),
-                                              image: DecorationImage(
-                                                image: imageProvider,
-                                                fit: BoxFit.cover,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding:
-                                            const EdgeInsets.only(left: 20),
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                            Text(
+                              'View All',
+                              style: TextStyle(
+                                  color: Colors.blueAccent, fontSize: 12),
+                            )
+                          ],
+                        ),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height / 2,
+                          child: AnimationLimiter(
+                            child: ListView.builder(
+                              physics: BouncingScrollPhysics(),
+                              padding: const EdgeInsets.only(top: 20),
+                              scrollDirection: Axis.vertical,
+                              itemCount: listComment.length,
+                              shrinkWrap: true,
+                              itemBuilder: (context, index) {
+                                return AnimationConfiguration.staggeredList(
+                                  position: index,
+                                  delay: const Duration(milliseconds: 250),
+                                  child: SlideAnimation(
+                                    duration:
+                                        const Duration(milliseconds: 2000),
+                                    verticalOffset: 100,
+                                    curve: Curves.ease,
+                                    child: FadeInAnimation(
+                                      curve: Curves.easeOut,
+                                      duration:
+                                          const Duration(milliseconds: 2000),
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(
+                                            top: 8, bottom: 14),
+                                        child: Row(
                                           children: [
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Container(
-                                                  alignment:
-                                                      Alignment.centerRight,
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          top: 4, bottom: 4),
-                                                  child: Row(
+                                            Padding(
+                                              padding: const EdgeInsets.only(),
+                                              child: CachedNetworkImage(
+                                                progressIndicatorBuilder:
+                                                    (context, url, progress) =>
+                                                        Center(
+                                                  child: SizedBox(
+                                                    height: 24,
+                                                    width: 24,
+                                                    child:
+                                                        CircularProgressIndicator(
+                                                      color: Colors.white,
+                                                      strokeWidth: 0.8,
+                                                      value: progress.progress,
+                                                    ),
+                                                  ),
+                                                ),
+                                                imageUrl: listComment[index]
+                                                    .photo_profile,
+                                                imageBuilder:
+                                                    (context, imageProvider) =>
+                                                        Container(
+                                                  height: 50,
+                                                  width: 50,
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                            Radius.circular(
+                                                                50)),
+                                                    image: DecorationImage(
+                                                      image: imageProvider,
+                                                      fit: BoxFit.cover,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 20),
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
                                                     children: [
-                                                      RatingBarIndicator(
-                                                        unratedColor:
-                                                            Colors.white30,
-                                                        rating:
-                                                            listComment[index]
-                                                                .rating,
-                                                        itemBuilder:
-                                                            (context, index) =>
-                                                                const Icon(
-                                                          Icons.star,
-                                                          color: Colors.amber,
+                                                      Container(
+                                                        alignment: Alignment
+                                                            .centerRight,
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .only(
+                                                                top: 4,
+                                                                bottom: 4),
+                                                        child: Row(
+                                                          children: [
+                                                            RatingBarIndicator(
+                                                              unratedColor:
+                                                                  Colors
+                                                                      .white30,
+                                                              rating:
+                                                                  listComment[
+                                                                          index]
+                                                                      .rating,
+                                                              itemBuilder: (context,
+                                                                      index) =>
+                                                                  const Icon(
+                                                                Icons.star,
+                                                                color: Colors
+                                                                    .amber,
+                                                              ),
+                                                              // itemCount: 5,
+                                                              itemSize: 20,
+                                                              direction: Axis
+                                                                  .horizontal,
+                                                            ),
+                                                            Text(
+                                                              ' ${listComment[index].dateTime.day.toString()} '
+                                                              '${months[listComment[index].dateTime.month - 1]} '
+                                                              ' ${listComment[index].dateTime.year.toString()}  ',
+                                                              style: TextStyle(
+                                                                  fontSize: 12,
+                                                                  color: Colors
+                                                                      .white
+                                                                      .withOpacity(
+                                                                          0.9),
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .normal),
+                                                            ),
+                                                          ],
                                                         ),
-                                                        // itemCount: 5,
-                                                        itemSize: 20,
-                                                        direction:
-                                                            Axis.horizontal,
-                                                      ),
-                                                      Text(
-                                                        ' ${listComment[index].dateTime.day.toString()} '
-                                                        '${months[listComment[index].dateTime.month - 1]} '
-                                                        ' ${listComment[index].dateTime.year.toString()}  ',
-                                                        style: TextStyle(
-                                                            fontSize: 12,
-                                                            color: Colors.white
-                                                                .withOpacity(
-                                                                    0.9),
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .normal),
                                                       ),
                                                     ],
                                                   ),
-                                                ),
-                                              ],
-                                            ),
-                                            Container(
-                                              padding:
-                                                  const EdgeInsets.only(top: 2),
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width /
-                                                  1.8,
-                                              child: Text(
-                                                softWrap: true,
-                                                textAlign: TextAlign.start,
-                                                '${listComment[index].comment}',
-                                                style: TextStyle(
-                                                    color: Colors.white70,
-                                                    fontSize: 13),
+                                                  Container(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            top: 2),
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .width /
+                                                            1.8,
+                                                    child: Text(
+                                                      softWrap: true,
+                                                      textAlign:
+                                                          TextAlign.start,
+                                                      '${listComment[index].comment}',
+                                                      style: TextStyle(
+                                                          color: Colors.white70,
+                                                          fontSize: 13),
+                                                    ),
+                                                  )
+                                                ],
                                               ),
-                                            )
+                                            ),
                                           ],
                                         ),
                                       ),
-                                    ],
+                                    ),
                                   ),
-                                ),
-                              ),
+                                );
+                              },
                             ),
-                          );
-                        },
-                        separatorBuilder: (BuildContext context, int index) {
-                          return Divider(
-                            color: Colors.white30,
-                          );
-                        },
-                      ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ],
@@ -704,11 +767,12 @@ class _HotelScreen extends State<HotelScreen> {
       }
     }
     return Scaffold(
-      backgroundColor: black_86,
-      body: const Center(
-          child: CircularProgressIndicator(
-        strokeWidth: 1.5,
-      )),
-    );
+        backgroundColor: black_86,
+        body: Center(
+          child: LoadingAnimationWidget.fourRotatingDots(
+            size: 44,
+            color: Colors.blueAccent,
+          ),
+        ));
   }
 }

@@ -12,6 +12,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class RestaurantSelectionScreen extends StatefulWidget {
   const RestaurantSelectionScreen({Key? key}) : super(key: key);
@@ -25,8 +26,9 @@ class _RestaurantSelectionScreen extends State<RestaurantSelectionScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   bool isVisible = false;
-  List<RestaurantModel> listRestaurant = [];
-  List<RestaurantModel> listRestaurantRevers = [];
+  List<RestaurantModel> listRestaurantBest = [];
+  List<RestaurantModel> listRestaurantMedium = [];
+  List<RestaurantModel> listRestaurantLower = [];
 
   void readFirebase() async {
     await FirebaseFirestore.instance
@@ -37,20 +39,41 @@ class _RestaurantSelectionScreen extends State<RestaurantSelectionScreen>
         Map<String, dynamic> data = document.data() as Map<String, dynamic>;
 
         setState(() {
-          listRestaurantRevers.add(RestaurantModel(
-              name: data['name'],
-              id: data['id'],
-              location: data['location'],
-              rating: data['rating'],
-              price: data['price'],
-              photo_main: data['photo']));
+          if (data['category'] == 'Best') {
+            setState(() {
+              listRestaurantBest.add(RestaurantModel(
+                  name: data['name'],
+                  category: data['category'],
+                  id: data['id'],
+                  location: data['location'],
+                  rating: data['rating'],
+                  price: data['price'],
+                  photo_main: data['photo']));
+            });
+          } else if (data['category'] == 'Medium') {
+            listRestaurantMedium.add(RestaurantModel(
+                name: data['name'],
+                category: data['category'],
+                id: data['id'],
+                location: data['location'],
+                rating: data['rating'],
+                price: data['price'],
+                photo_main: data['photo']));
+          } else if (data['category'] == 'Lower') {
+            listRestaurantLower.add(RestaurantModel(
+                name: data['name'],
+                category: data['category'],
+                id: data['id'],
+                location: data['location'],
+                rating: data['rating'],
+                price: data['price'],
+                photo_main: data['photo']));
+          }
         });
       });
     });
 
     setState(() {
-      listRestaurant = listRestaurantRevers.reversed.toList();
-
       isVisible = true;
     });
   }
@@ -68,7 +91,7 @@ class _RestaurantSelectionScreen extends State<RestaurantSelectionScreen>
     _tabController.dispose();
   }
 
-  Widget hotelBest() {
+  Widget restaurant(List<RestaurantModel> list) {
     if (!isVisible) {
       return Center(
         child: LoadingAnimationWidget.fourRotatingDots(
@@ -79,14 +102,17 @@ class _RestaurantSelectionScreen extends State<RestaurantSelectionScreen>
     }
     return SingleChildScrollView(
       child: SizedBox(
-        height: MediaQuery.of(context).size.height,
+        height: MediaQuery
+            .of(context)
+            .size
+            .height,
         child: AnimationLimiter(
           child: ListView.builder(
               physics: const BouncingScrollPhysics(),
               padding: const EdgeInsets.only(
                   right: 20, left: 20, bottom: 150, top: 10),
               scrollDirection: Axis.vertical,
-              itemCount: listRestaurant.length,
+              itemCount: list.length,
               shrinkWrap: true,
               itemBuilder: (context, index) {
                 return AnimationConfiguration.staggeredList(
@@ -106,14 +132,14 @@ class _RestaurantSelectionScreen extends State<RestaurantSelectionScreen>
                           Navigator.push(
                               context,
                               FadeRouteAnimation(RestaurantScreen(
-                                id: listRestaurant[index].id,
+                                id: list[index].id,
                               )));
                         },
                         child: Container(
                           decoration: const BoxDecoration(
                               color: black_86,
                               borderRadius:
-                                  BorderRadius.all(Radius.circular(12))),
+                              BorderRadius.all(Radius.circular(12))),
                           margin: const EdgeInsets.only(top: 10, bottom: 10),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -122,7 +148,7 @@ class _RestaurantSelectionScreen extends State<RestaurantSelectionScreen>
                                 borderRadius: BorderRadius.circular(12),
                                 child: CachedNetworkImage(
                                     progressIndicatorBuilder: (context, url,
-                                            progress) =>
+                                        progress) =>
                                         Center(
                                           child: SizedBox(
                                             height: 30,
@@ -134,10 +160,13 @@ class _RestaurantSelectionScreen extends State<RestaurantSelectionScreen>
                                             ),
                                           ),
                                         ),
-                                    imageUrl: listRestaurant[index].photo_main,
+                                    imageUrl: list[index].photo_main,
                                     fit: BoxFit.cover,
                                     height: 230,
-                                    width: MediaQuery.of(context).size.width),
+                                    width: MediaQuery
+                                        .of(context)
+                                        .size
+                                        .width),
                               ),
                               Padding(
                                 padding: const EdgeInsets.only(
@@ -150,21 +179,26 @@ class _RestaurantSelectionScreen extends State<RestaurantSelectionScreen>
                                       padding: const EdgeInsets.only(right: 8),
                                       child: Row(
                                         mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
+                                        MainAxisAlignment.spaceBetween,
                                         children: [
                                           Text(
-                                            listRestaurant[index].name,
-                                            style: TextStyle(
-                                                fontSize: 16,
-                                                color: Colors.white
-                                                    .withOpacity(0.9)),
+                                            list[index].name,
+                                            style: GoogleFonts.lato(
+                                              textStyle: TextStyle(
+                                                  fontSize: 16,
+                                                  color: Colors.white,
+                                                  letterSpacing: .9),
+                                            ),
                                           ),
                                           Text(
-                                            '${listRestaurant[index].price.toDouble().toString()} сом',
-                                            style: TextStyle(
-                                                fontSize: 14,
-                                                color: Colors.white
-                                                    .withOpacity(1)),
+                                            '${list[index].price.toDouble()
+                                                .toString()} сом',
+                                            style: GoogleFonts.lato(
+                                              textStyle: TextStyle(
+                                                  fontSize: 14,
+                                                  color: Colors.white,
+                                                  letterSpacing: .9),
+                                            ),
                                           ),
                                         ],
                                       ),
@@ -173,25 +207,26 @@ class _RestaurantSelectionScreen extends State<RestaurantSelectionScreen>
                                       padding: const EdgeInsets.only(top: 10),
                                       child: Row(
                                         children: [
-                                          Icon(
+                                          const Icon(
                                             Icons.location_on,
-                                            color:
-                                                Colors.white.withOpacity(0.7),
+                                            color: Colors.white70,
                                             size: 15,
                                           ),
                                           Text(
-                                            '  ${listRestaurant[index].location}',
-                                            style: TextStyle(
-                                                fontSize: 12,
-                                                color: Colors.white
-                                                    .withOpacity(0.7)),
+                                            '  ${list[index].location}',
+                                            style: GoogleFonts.lato(
+                                              textStyle: TextStyle(
+                                                  fontSize: 12,
+                                                  color: Colors.white70,
+                                                  letterSpacing: .7),
+                                            ),
                                           ),
                                         ],
                                       ),
                                     ),
                                     Row(
                                       mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
+                                      MainAxisAlignment.spaceBetween,
                                       children: [
                                         Padding(
                                           padding: EdgeInsets.only(
@@ -200,36 +235,38 @@ class _RestaurantSelectionScreen extends State<RestaurantSelectionScreen>
                                             children: [
                                               RatingBarIndicator(
                                                 unratedColor: Colors.white30,
-
-                                                rating: listRestaurant[index]
-                                                    .rating,
+                                                rating: list[index].rating,
                                                 itemBuilder: (context, index) =>
-                                                    const Icon(
+                                                const Icon(
                                                   Icons.star,
                                                   color: Colors.amber,
                                                 ),
-                                                // itemCount: 5,
                                                 itemSize: 15,
                                                 direction: Axis.horizontal,
                                               ),
                                               Text(
-                                                '  ${listRestaurant[index].rating.toString()} Ratings',
-                                                style: TextStyle(
-                                                    fontSize: 12,
-                                                    color: Colors.white
-                                                        .withOpacity(0.7)),
+                                                '  ${list[index].rating
+                                                    .toString()} Ratings',
+                                                style: GoogleFonts.lato(
+                                                  textStyle: TextStyle(
+                                                      fontSize: 12,
+                                                      color: Colors.white70,
+                                                      letterSpacing: .9),
+                                                ),
                                               ),
                                             ],
                                           ),
                                         ),
                                         Padding(
                                           padding:
-                                              const EdgeInsets.only(right: 8),
-                                          child: const Text(
+                                          const EdgeInsets.only(right: 8),
+                                          child: Text(
                                             'Book now',
-                                            style: TextStyle(
-                                              color: Colors.blueAccent,
-                                              fontSize: 13,
+                                            style: GoogleFonts.lato(
+                                              textStyle: TextStyle(
+                                                  fontSize: 13,
+                                                  color: Colors.blueAccent,
+                                                  letterSpacing: .9),
                                             ),
                                           ),
                                         )
@@ -305,9 +342,9 @@ class _RestaurantSelectionScreen extends State<RestaurantSelectionScreen>
                 child: TabBarView(
                   controller: _tabController,
                   children: [
-                    hotelBest(),
-                    hotelBest(),
-                    hotelBest(),
+                    restaurant(listRestaurantBest),
+                    restaurant(listRestaurantMedium),
+                    restaurant(listRestaurantLower),
                   ],
                 ),
               ),

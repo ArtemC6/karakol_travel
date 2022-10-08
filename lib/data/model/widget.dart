@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:karakol_travel/screen/restaurant/restaurant_selection_screen.dart';
 import '../../data/const.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../../screen/Nature/nature_screen.dart';
@@ -20,19 +21,17 @@ class sampleProductOnTap extends StatelessWidget {
       highlightColor: Colors.transparent,
       onTap: () {
         if (nameProduct == 'Hotel') {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => HotelSelectionScreen()));
+          Navigator.push(context, FadeRouteAnimation(HotelSelectionScreen()));
         } else if (nameProduct == 'Food') {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => HotelSelectionScreen()));
+          Navigator.push(
+              context, FadeRouteAnimation(RestaurantSelectionScreen()));
         } else if (nameProduct == 'Nature') {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => HotelSelectionScreen()));
+          Navigator.push(context, FadeRouteAnimation(NatureScreen()));
         }
       },
       child: Padding(
         padding:
-            const EdgeInsets.only(top: 10, bottom: 22, left: 16, right: 16),
+            const EdgeInsets.only(top: 10, bottom: 18, left: 16, right: 16),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
@@ -41,28 +40,57 @@ class sampleProductOnTap extends StatelessWidget {
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                   color: Colors.white10),
-              child: Text(
-                nameProduct,
-                // style: GoogleFonts.ans(
-                //     fontFamily: 'googleFontBold',
-                //
-                // fontWeight: FontWeight.bold,
-                //     color: Colors.white,
-                //     fontSize: 17,
-                // ),
-                style: TextStyle(
-                  fontFamily: 'googleFontBold',
-                  color: Colors.white,
-                  fontSize: 17,
-                ),
+              child: Row(
+                children: [
+                  if (nameProduct == 'Hotel')
+                    Padding(
+                      padding: const EdgeInsets.only(right: 6),
+                      child: const Icon(
+                        Icons.home_outlined,
+                        color: Colors.white70,
+                        size: 22,
+                      ),
+                    ),
+                  if (nameProduct == 'Food')
+                    Padding(
+                      padding: const EdgeInsets.only(right: 6),
+                      child: const Icon(
+                        Icons.fastfood_rounded,
+                        color: Colors.white70,
+                        size: 20,
+                      ),
+                    ),
+                  if (nameProduct == 'Nature')
+                    Padding(
+                      padding: const EdgeInsets.only(right: 6),
+                      child: const Icon(
+                        Icons.nature_people_outlined,
+                        color: Colors.white70,
+                        size: 20,
+                      ),
+                    ),
+                  Text(
+                    nameProduct,
+                    style: GoogleFonts.lato(
+                      textStyle: TextStyle(
+                          color: Colors.white, fontSize: 16, letterSpacing: .9),
+                    ),
+                  ),
+                ],
               ),
             ),
             RichText(
               text: TextSpan(
                 children: [
-                  const TextSpan(
-                      text: 'View all',
-                      style: TextStyle(fontSize: 14, color: Colors.blueAccent)),
+                  TextSpan(
+                    text: 'View all',
+                    style: GoogleFonts.lato(
+                      textStyle: TextStyle(
+                          color: Colors.blueAccent,
+                          fontSize: 13,
+                          letterSpacing: .9),
+                    ),
+                  ),
                   const WidgetSpan(
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 4.0),
@@ -92,92 +120,76 @@ class showNatureCard extends StatelessWidget {
   Widget build(BuildContext context) {
     List<double> masonryCardHeights = [150, 250, 300];
 
-    // return SizedBox(
-    //   height: MediaQuery.of(context).size.height / 3.5,
-    //   child: AnimationLimiter(
-    //     child: ListView.builder(
-    //         physics: BouncingScrollPhysics(),
-    //         padding: const EdgeInsets.only(right: 20),
-    //         scrollDirection: Axis.horizontal,
-    //         itemCount: list.length,
-    //         shrinkWrap: true,
-    //         itemBuilder: (context, index) {
-    //           return AnimationConfiguration.staggeredList(
-    //             position: index,
-    //             delay: const Duration(milliseconds: 400),
-    //             child: SlideAnimation(
-    //               duration: const Duration(milliseconds: 2000),
-    //               horizontalOffset: 140,
-    //               curve: Curves.ease,
-    //               child: FadeInAnimation(
-    //                 curve: Curves.easeOut,
-    //                 duration: const Duration(milliseconds: 2000),
-    //                 child: InkWell(
-    //                   splashColor: Colors.transparent,
-    //                   highlightColor: Colors.transparent,
-    //                   onTap: () {
-    //
-    //                   },
-    //                   child: Container(
-    //                     width: MediaQuery.of(context).size.width * 0.35,
-    //                     margin: const EdgeInsets.only(left: 16),
-    //                     child: Column(
-    //                       crossAxisAlignment: CrossAxisAlignment.start,
-    //                       children: <Widget>[
-    //
-    //                       ],
-    //                     ),
-    //                   ),
-    //                 ),
-    //               ),
-    //             ),
-    //           );
-    //         }),
-    //   ),
-    // );
     return Container(
       padding: EdgeInsets.only(
           left: MediaQuery.of(context).size.width / 50,
           bottom: MediaQuery.of(context).size.height / 50,
           right: MediaQuery.of(context).size.width / 50),
-      child: MasonryGridView.count(
-          itemCount: list.length,
-          mainAxisSpacing: 14,
-          crossAxisSpacing: 14,
-          shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(),
-          crossAxisCount: 2,
-          itemBuilder: (BuildContext context, int index) {
-            return InkWell(
-              splashColor: Colors.transparent,
-              highlightColor: Colors.transparent,
-              onTap: () {
-                Navigator.push(context, FadeRouteAnimation(NatureScreen()));
-              },
-              child: SizedBox(
-                height: masonryCardHeights[index % 2],
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(16),
-                  child: CachedNetworkImage(
-                    fit: BoxFit.cover,
-                    progressIndicatorBuilder: (context, url, progress) =>
-                        Center(
+      child: AnimationLimiter(
+        child: AnimationConfiguration.staggeredList(
+          position: 1,
+          delay: const Duration(milliseconds: 400),
+          child: SlideAnimation(
+            duration: const Duration(milliseconds: 3000),
+            verticalOffset: 260,
+            curve: Curves.ease,
+            child: FadeInAnimation(
+              curve: Curves.easeOut,
+              duration: const Duration(milliseconds: 3500),
+              child: MasonryGridView.count(
+                  itemCount: list.length,
+                  mainAxisSpacing: 14,
+                  crossAxisSpacing: 14,
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  crossAxisCount: 2,
+                  itemBuilder: (BuildContext context, int index) {
+                    return InkWell(
+                      splashColor: Colors.transparent,
+                      highlightColor: Colors.transparent,
+                      onTap: () {
+                        Navigator.push(
+                            context, FadeRouteAnimation(NatureScreen()));
+                      },
                       child: SizedBox(
-                        height: 24,
-                        width: 24,
-                        child: CircularProgressIndicator(
-                          color: Colors.white,
-                          strokeWidth: 0.8,
-                          value: progress.progress,
+                        height: masonryCardHeights[index % 2],
+                        child: Card(
+                          shadowColor: Colors.white30,
+                          color: black_86,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(14),
+                              side: const BorderSide(
+                                width: 0.8,
+                                color: Colors.white10,
+                              )),
+                          elevation: 12,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(14),
+                            child: CachedNetworkImage(
+                              fit: BoxFit.cover,
+                              progressIndicatorBuilder:
+                                  (context, url, progress) => Center(
+                                child: SizedBox(
+                                  height: 24,
+                                  width: 24,
+                                  child: CircularProgressIndicator(
+                                    color: Colors.white,
+                                    strokeWidth: 0.8,
+                                    value: progress.progress,
+                                  ),
+                                ),
+                              ),
+                              imageUrl: list[index],
+                            ),
+                          ),
                         ),
                       ),
-                    ),
-                    imageUrl: list[index],
-                  ),
-                ),
-              ),
-            );
-          }),
+                    );
+                  }),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

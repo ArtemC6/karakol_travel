@@ -8,18 +8,13 @@ import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import '../../data/model/HotelModel.dart';
 import 'hotel_screen.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:karakol_travel/screen/addPhoto.dart';
-import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
-
+import 'package:google_fonts/google_fonts.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 class HotelSelectionScreen extends StatefulWidget {
-  const HotelSelectionScreen({Key? key}) : super(key: key);
+  HotelSelectionScreen({Key? key}) : super(key: key);
 
   @override
   State<HotelSelectionScreen> createState() => _HotelSelectionScreenState();
@@ -29,9 +24,9 @@ class _HotelSelectionScreenState extends State<HotelSelectionScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   bool isVisible = false;
-
-  List<HotelModel> listHotel = [];
-  List<HotelModel> listHotelRevers = [];
+  List<HotelModel> listHotelBest = [];
+  List<HotelModel> listHotelMedium = [];
+  List<HotelModel> listHotelLower = [];
 
   void readFirebase() async {
     await FirebaseFirestore.instance
@@ -41,30 +36,40 @@ class _HotelSelectionScreenState extends State<HotelSelectionScreen>
       querySnapshot.docs.forEach((document) async {
         Map<String, dynamic> data = document.data() as Map<String, dynamic>;
 
-        setState(() {
-          if (data['name'] == 'Karagat') {
-            listHotelRevers.add(HotelModel(
+        if (data['category'] == 'Best') {
+          setState(() {
+            listHotelBest.add(HotelModel(
                 name: data['name'],
+                category: data['category'],
                 id: data['id'],
                 location: data['location'],
                 rating: data['rating'],
                 price: data['price'],
                 photo_main: data['photo']));
-          } else {
-            listHotelRevers.add(HotelModel(
-                name: data['name'],
-                id: data['id'],
-                location: data['location'],
-                rating: data['rating'],
-                price: data['price'],
-                photo_main: data['photo']));
-          }
-        });
+          });
+        } else if (data['category'] == 'Medium') {
+          listHotelMedium.add(HotelModel(
+              name: data['name'],
+              category: data['category'],
+              id: data['id'],
+              location: data['location'],
+              rating: data['rating'],
+              price: data['price'],
+              photo_main: data['photo']));
+        } else if (data['category'] == 'Lower') {
+          listHotelLower.add(HotelModel(
+              name: data['name'],
+              category: data['category'],
+              id: data['id'],
+              location: data['location'],
+              rating: data['rating'],
+              price: data['price'],
+              photo_main: data['photo']));
+        }
       });
     });
 
     setState(() {
-      listHotel = listHotelRevers.reversed.toList();
       isVisible = true;
     });
   }
@@ -82,7 +87,7 @@ class _HotelSelectionScreenState extends State<HotelSelectionScreen>
     _tabController.dispose();
   }
 
-  Widget hotelBest() {
+  Widget hotel(List<HotelModel> list) {
     if (!isVisible) {
       return Center(
         child: LoadingAnimationWidget.fourRotatingDots(
@@ -100,7 +105,7 @@ class _HotelSelectionScreenState extends State<HotelSelectionScreen>
               padding: const EdgeInsets.only(
                   right: 20, left: 20, bottom: 150, top: 10),
               scrollDirection: Axis.vertical,
-              itemCount: listHotel.length,
+              itemCount: list.length,
               shrinkWrap: true,
               itemBuilder: (context, index) {
                 return AnimationConfiguration.staggeredList(
@@ -120,7 +125,7 @@ class _HotelSelectionScreenState extends State<HotelSelectionScreen>
                           Navigator.push(
                               context,
                               FadeRouteAnimation(HotelScreen(
-                                id: listHotel[index].id,
+                                id: list[index].id,
                               )));
                         },
                         child: Container(
@@ -148,7 +153,7 @@ class _HotelSelectionScreenState extends State<HotelSelectionScreen>
                                             ),
                                           ),
                                         ),
-                                    imageUrl: listHotel[index].photo_main,
+                                    imageUrl: list[index].photo_main,
                                     fit: BoxFit.cover,
                                     height: 230,
                                     width: MediaQuery.of(context).size.width),
@@ -167,18 +172,22 @@ class _HotelSelectionScreenState extends State<HotelSelectionScreen>
                                             MainAxisAlignment.spaceBetween,
                                         children: [
                                           Text(
-                                            listHotel[index].name,
-                                            style: TextStyle(
-                                                fontSize: 16,
-                                                color: Colors.white
-                                                    .withOpacity(0.9)),
+                                            list[index].name,
+                                            style: GoogleFonts.lato(
+                                              textStyle: TextStyle(
+                                                  fontSize: 16,
+                                                  color: Colors.white,
+                                                  letterSpacing: .9),
+                                            ),
                                           ),
                                           Text(
-                                            '${listHotel[index].price.toDouble().toString()} сом',
-                                            style: TextStyle(
-                                                fontSize: 14,
-                                                color: Colors.white
-                                                    .withOpacity(1)),
+                                            '${list[index].price.toDouble().toString()} сом',
+                                            style: GoogleFonts.lato(
+                                              textStyle: TextStyle(
+                                                  fontSize: 14,
+                                                  color: Colors.white,
+                                                  letterSpacing: .9),
+                                            ),
                                           ),
                                         ],
                                       ),
@@ -187,18 +196,19 @@ class _HotelSelectionScreenState extends State<HotelSelectionScreen>
                                       padding: const EdgeInsets.only(top: 10),
                                       child: Row(
                                         children: [
-                                          Icon(
+                                          const Icon(
                                             Icons.location_on,
-                                            color:
-                                                Colors.white.withOpacity(0.7),
+                                            color: Colors.white70,
                                             size: 15,
                                           ),
                                           Text(
-                                            '  ${listHotel[index].location}',
-                                            style: TextStyle(
-                                                fontSize: 12,
-                                                color: Colors.white
-                                                    .withOpacity(0.7)),
+                                            '  ${list[index].location}',
+                                            style: GoogleFonts.lato(
+                                              textStyle: TextStyle(
+                                                  fontSize: 12,
+                                                  color: Colors.white70,
+                                                  letterSpacing: .7),
+                                            ),
                                           ),
                                         ],
                                       ),
@@ -214,22 +224,23 @@ class _HotelSelectionScreenState extends State<HotelSelectionScreen>
                                             children: [
                                               RatingBarIndicator(
                                                 unratedColor: Colors.white30,
-                                                rating: listHotel[index].rating,
+                                                rating: list[index].rating,
                                                 itemBuilder: (context, index) =>
                                                     const Icon(
                                                   Icons.star,
                                                   color: Colors.amber,
                                                 ),
-                                                // itemCount: 5,
                                                 itemSize: 15,
                                                 direction: Axis.horizontal,
                                               ),
                                               Text(
-                                                '  ${listHotel[index].rating.toString()} Ratings',
-                                                style: TextStyle(
-                                                    fontSize: 12,
-                                                    color: Colors.white
-                                                        .withOpacity(0.7)),
+                                                '  ${list[index].rating.toString()} Ratings',
+                                                style: GoogleFonts.lato(
+                                                  textStyle: TextStyle(
+                                                      fontSize: 12,
+                                                      color: Colors.white70,
+                                                      letterSpacing: .9),
+                                                ),
                                               ),
                                             ],
                                           ),
@@ -237,11 +248,13 @@ class _HotelSelectionScreenState extends State<HotelSelectionScreen>
                                         Padding(
                                           padding:
                                               const EdgeInsets.only(right: 8),
-                                          child: const Text(
+                                          child: Text(
                                             'Book now',
-                                            style: TextStyle(
-                                              color: Colors.blueAccent,
-                                              fontSize: 13,
+                                            style: GoogleFonts.lato(
+                                              textStyle: TextStyle(
+                                                  fontSize: 13,
+                                                  color: Colors.blueAccent,
+                                                  letterSpacing: .9),
                                             ),
                                           ),
                                         )
@@ -317,9 +330,9 @@ class _HotelSelectionScreenState extends State<HotelSelectionScreen>
                 child: TabBarView(
                   controller: _tabController,
                   children: [
-                    hotelBest(),
-                    hotelBest(),
-                    hotelBest(),
+                    hotel(listHotelBest),
+                    hotel(listHotelMedium),
+                    hotel(listHotelLower),
                   ],
                 ),
               ),

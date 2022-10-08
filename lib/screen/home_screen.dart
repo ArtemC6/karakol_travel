@@ -2,7 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:karakol_travel/screen/addPhoto.dart';
+import 'package:karakol_travel/screen/Nature/nature_screen.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:karakol_travel/screen/restaurant/restaurant_selection_screen.dart';
 import '../data/const.dart';
@@ -11,12 +12,8 @@ import '../data/model/widget.dart';
 import 'hotel/hotel_selection_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-
-import 'package:flutter_carousel_slider/carousel_slider_indicators.dart';
 import 'package:flutter_carousel_slider/carousel_slider_transforms.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 import 'package:flutter_carousel_slider/carousel_slider.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -25,14 +22,12 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreen extends State<HomeScreen> {
-  bool isVisible = false;
-  String uri = '';
+  ScrollController _scrollController = ScrollController();
+  bool isVisible = false, isVisibleNature = false;
   List<StartingPhotoModel> listStartingDataTop = [],
       listStartingDataHotel = [],
       listStartingDataFood = [];
   List<String> listStartingDataNature = [];
-
-  int _current = 0;
 
   void readFirebase() async {
     FirebaseFirestore.instance
@@ -119,68 +114,34 @@ class _HomeScreen extends State<HomeScreen> {
     });
   }
 
+  void getPositionScroll() {
+    _scrollController.addListener(() {
+      int offset = _scrollController.offset.toInt();
+      print(offset);
+      if (offset >= 150 && offset <= 180 && isVisible) {
+        setState(() {
+          isVisibleNature = true;
+        });
+      }
+    });
+  }
+
   @override
   void initState() {
-    super.initState();
+    getPositionScroll();
     readFirebase();
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    List<Widget> imageSliders = listStartingDataTop
-        .map(
-          (item) => InkWell(
-            splashColor: Colors.transparent,
-            highlightColor: Colors.transparent,
-            onTap: () {
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => AddPhoto()));
-            },
-            child: Stack(
-              children: <Widget>[
-                CachedNetworkImage(
-                  fadeOutDuration: const Duration(seconds: 0),
-                  fadeInDuration: const Duration(seconds: 0),
-                  alignment: Alignment.center,
-                  progressIndicatorBuilder: (context, url, progress) => Center(
-                    child: SizedBox(
-                      height: 30,
-                      width: 30,
-                      child: CircularProgressIndicator(
-                        color: Colors.white,
-                        strokeWidth: 0.8,
-                        value: progress.progress,
-                      ),
-                    ),
-                  ),
-                  imageUrl: item.image_uri,
-                  fit: BoxFit.cover,
-                  width: size.width,
-                ),
-                Container(
-                  padding: const EdgeInsets.only(bottom: 20, left: 20),
-                  alignment: Alignment.bottomLeft,
-                  child: Text(
-                    item.name,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'googlesansebold',
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        )
-        .toList();
 
     Widget home_screen() {
       return Scaffold(
         backgroundColor: black_86,
         body: NestedScrollView(
+          controller: _scrollController,
           physics: BouncingScrollPhysics(),
           headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
             return <Widget>[
@@ -188,7 +149,6 @@ class _HomeScreen extends State<HomeScreen> {
                 expandedHeight: MediaQuery.of(context).size.height / 3.5,
                 floating: true,
                 forceElevated: innerBoxIsScrolled,
-                // pinned: true,
                 automaticallyImplyLeading: false,
                 titleSpacing: 0,
                 backgroundColor: black_86,
@@ -202,63 +162,94 @@ class _HomeScreen extends State<HomeScreen> {
                         child: AnimationLimiter(
                           child: AnimationConfiguration.staggeredList(
                             position: 1,
-                            delay: Duration(milliseconds: 500),
+                            delay: const Duration(milliseconds: 500),
                             child: SlideAnimation(
-                              duration: Duration(milliseconds: 2200),
+                              duration: const Duration(milliseconds: 2200),
                               horizontalOffset: 160,
                               curve: Curves.ease,
                               child: FadeInAnimation(
                                 curve: Curves.easeOut,
-                                duration: Duration(milliseconds: 2200),
+                                duration: const Duration(milliseconds: 1800),
                                 child: CarouselSlider.builder(
                                     keepPage: true,
                                     enableAutoSlider: true,
                                     unlimitedMode: true,
                                     slideBuilder: (index) {
-                                      return CachedNetworkImage(
-                                        fadeOutDuration:
-                                            const Duration(seconds: 0),
-                                        fadeInDuration:
-                                            const Duration(seconds: 0),
-                                        alignment: Alignment.center,
-                                        progressIndicatorBuilder:
-                                            (context, url, progress) => Center(
-                                          child: SizedBox(
-                                            height: 30,
-                                            width: 30,
-                                            child: CircularProgressIndicator(
-                                              color: Colors.white,
-                                              strokeWidth: 0.8,
-                                              value: progress.progress,
+                                      return InkWell(
+                                        splashColor: Colors.transparent,
+                                        highlightColor: Colors.transparent,
+                                        onTap: () {
+                                          if (index == 0) {
+                                            Navigator.push(
+                                                context,
+                                                FadeRouteAnimation(
+                                                    HotelSelectionScreen()));
+                                          } else if (index == 1) {
+                                            Navigator.push(
+                                                context,
+                                                FadeRouteAnimation(
+                                                    RestaurantSelectionScreen()));
+                                          } else if (index == 2) {
+                                            Navigator.push(
+                                                context,
+                                                FadeRouteAnimation(
+                                                    NatureScreen()));
+                                          }
+                                        },
+                                        child: Stack(
+                                          fit: StackFit.expand,
+                                          children: [
+                                            CachedNetworkImage(
+                                              fadeOutDuration:
+                                                  const Duration(seconds: 0),
+                                              fadeInDuration:
+                                                  const Duration(seconds: 0),
+                                              alignment: Alignment.center,
+                                              progressIndicatorBuilder:
+                                                  (context, url, progress) =>
+                                                      Center(
+                                                child: SizedBox(
+                                                  height: 30,
+                                                  width: 30,
+                                                  child:
+                                                      CircularProgressIndicator(
+                                                    color: Colors.white,
+                                                    strokeWidth: 0.8,
+                                                    value: progress.progress,
+                                                  ),
+                                                ),
+                                              ),
+                                              imageUrl:
+                                                  listStartingDataTop[index]
+                                                      .image_uri,
+                                              // fit: BoxFit.fill,
+                                              fit: BoxFit.cover,
+                                              width: size.width,
                                             ),
-                                          ),
+                                            Align(
+                                              alignment: Alignment.bottomLeft,
+                                              child: Padding(
+                                                padding: EdgeInsets.all(12),
+                                                child: Text(
+                                                  listStartingDataTop[index]
+                                                      .name,
+                                                  style: TextStyle(
+                                                    backgroundColor:
+                                                        Colors.black12,
+                                                    fontFamily:
+                                                        'googleFontBold',
+                                                    color: Colors.white,
+                                                    fontSize: 18,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
                                         ),
-                                        imageUrl: listStartingDataTop[index]
-                                            .image_uri,
-                                        // fit: BoxFit.fill,
-                                        fit: BoxFit.cover,
-                                        width: size.width,
                                       );
                                     },
                                     slideTransform: CubeTransform(),
                                     itemCount: listStartingDataTop.length),
-
-                                // child: CarouselSlider(
-                                //   items: imageSliders,
-                                //   options: CarouselOptions(
-                                //     autoPlay: true,
-                                //     disableCenter: false,
-                                //     viewportFraction: 1,
-                                //     // aspectRatio: 1.6,
-                                //     onPageChanged: (index, reason) {
-                                //       setState(
-                                //         () {
-                                //           _current = index;
-                                //         },
-                                //       );
-                                //     },
-                                //   ),
-                                // ),
                               ),
                             ),
                           ),
@@ -284,7 +275,7 @@ class _HomeScreen extends State<HomeScreen> {
                   ),
                   sampleProductOnTap('Hotel'),
                   SizedBox(
-                    height: MediaQuery.of(context).size.height / 3.5,
+                    height: MediaQuery.of(context).size.height / 3.6,
                     child: AnimationLimiter(
                       child: ListView.builder(
                           physics: BouncingScrollPhysics(),
@@ -344,20 +335,25 @@ class _HomeScreen extends State<HomeScreen> {
                                                     listStartingDataHotel[index]
                                                         .image_uri,
                                                 fit: BoxFit.cover,
-                                                height: size.height / 4.8,
+                                                height: size.height / 4.5,
                                                 width: size.width),
                                           ),
                                           Padding(
                                             padding: const EdgeInsets.only(
                                                 left: 4, right: 4, top: 10),
                                             child: Text(
+                                              // lato
+                                              // rubik
+                                              // alegreyaSans
+                                              // sourceCodePro
                                               listStartingDataHotel[index].name,
-                                              style: TextStyle(
-                                                  fontSize: 13,
-                                                  color: Colors.white
-                                                      .withOpacity(0.7)),
+                                              style: GoogleFonts.lato(
+                                                textStyle: TextStyle(
+                                                    color: Colors.white,
+                                                    letterSpacing: .9),
+                                              ),
                                             ),
-                                          )
+                                          ),
                                         ],
                                       ),
                                     ),
@@ -370,7 +366,7 @@ class _HomeScreen extends State<HomeScreen> {
                   ),
                   sampleProductOnTap('Food'),
                   SizedBox(
-                    height: MediaQuery.of(context).size.height / 3.5,
+                    height: MediaQuery.of(context).size.height / 3.7,
                     child: AnimationLimiter(
                       child: ListView.builder(
                           physics: BouncingScrollPhysics(),
@@ -430,7 +426,7 @@ class _HomeScreen extends State<HomeScreen> {
                                                     listStartingDataFood[index]
                                                         .image_uri,
                                                 fit: BoxFit.cover,
-                                                height: size.height / 4.8,
+                                                height: size.height / 4.5,
                                                 width: size.width),
                                           ),
                                           Padding(
@@ -438,10 +434,11 @@ class _HomeScreen extends State<HomeScreen> {
                                                 left: 4, right: 4, top: 10),
                                             child: Text(
                                               listStartingDataFood[index].name,
-                                              style: TextStyle(
-                                                  fontSize: 13,
-                                                  color: Colors.white
-                                                      .withOpacity(0.7)),
+                                              style: GoogleFonts.lato(
+                                                textStyle: TextStyle(
+                                                    color: Colors.white,
+                                                    letterSpacing: .9),
+                                              ),
                                             ),
                                           )
                                         ],
@@ -455,7 +452,7 @@ class _HomeScreen extends State<HomeScreen> {
                     ),
                   ),
                   sampleProductOnTap('Nature'),
-                  showNatureCard(listStartingDataNature),
+                  if (isVisibleNature) showNatureCard(listStartingDataNature),
                 ],
               ),
             ),

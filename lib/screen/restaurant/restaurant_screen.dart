@@ -1,19 +1,758 @@
+// import 'package:flutter/cupertino.dart';
+// import 'package:flutter/material.dart';
+// import 'package:karakol_travel/data/model/RestaurantModel.dart';
+// import 'package:karakol_travel/data/model/StartingDataModel.dart';
+// import 'package:nb_utils/nb_utils.dart';
+// import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+// import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+// import '../../data/const.dart';
+// import 'package:carousel_slider/carousel_slider.dart';
+// import 'package:cached_network_image/cached_network_image.dart';
+// import 'package:loading_animation_widget/loading_animation_widget.dart';
+// import 'package:google_fonts/google_fonts.dart';
+// import 'package:cloud_firestore/cloud_firestore.dart';
+//
+// class RestaurantScreen extends StatefulWidget {
+//   var id;
+//
+//   RestaurantScreen({Key? key, @required this.id}) : super(key: key);
+//
+//   @override
+//   _RestaurantScreen createState() => _RestaurantScreen(id);
+// }
+//
+// class _RestaurantScreen extends State<RestaurantScreen> {
+//   var id;
+//
+//   _RestaurantScreen(this.id);
+//
+//   bool isVisible = false;
+//   final CarouselController _controller = CarouselController();
+//   int _current = 0;
+//   List<RestaurantModel> listRestaurant = [];
+//   List<String> imgList = [], imgListMenu = [];
+//
+//   void readFirebase() async {
+//     await FirebaseFirestore.instance
+//         .collection('Restaurant')
+//         .get()
+//         .then((QuerySnapshot querySnapshot) {
+//       querySnapshot.docs.forEach((document) async {
+//         Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+//
+//         if (data['id'] == id) {
+//           setState(() {
+//             imgList = new List<String>.from(document['images']);
+//             imgListMenu = new List<String>.from(document['menu']);
+//             listRestaurant.add(RestaurantModel(
+//                 name: data['name'],
+//                 category: data['category'],
+//                 id: data['id'],
+//                 location: data['location'],
+//                 rating: data['rating'],
+//                 price: data['price'],
+//                 photo_main: data['photo']));
+//           });
+//         }
+//       });
+//     });
+//
+//     setState(() {
+//       isVisible = true;
+//     });
+//   }
+//
+//   @override
+//   void initState() {
+//     super.initState();
+//     readFirebase();
+//   }
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     List<Widget> imageSliders = imgList
+//         .map(
+//           (item) => CachedNetworkImage(
+//             imageUrl: item,
+//             progressIndicatorBuilder: (context, url, progress) => Center(
+//               child: SizedBox(
+//                 height: 30,
+//                 width: 30,
+//                 child: CircularProgressIndicator(
+//                   color: Colors.white,
+//                   strokeWidth: 0.8,
+//                   value: progress.progress,
+//                 ),
+//               ),
+//             ),
+//             fit: BoxFit.cover,
+//             width: MediaQuery.of(context).size.width,
+//           ),
+//         )
+//         .toList();
+//
+//     void showMenu({required BuildContext context}) {
+//       Navigator.of(context)
+//           .push(MaterialPageRoute(builder: (BuildContext context) {
+//         return Scaffold(
+//             backgroundColor: black_86,
+//             body: SizedBox(
+//               child: AnimationLimiter(
+//                 child: ListView.builder(
+//                   physics: BouncingScrollPhysics(),
+//                   scrollDirection: Axis.vertical,
+//                   itemCount: listMenu.length,
+//                   shrinkWrap: true,
+//                   itemBuilder: (context, index) {
+//                     return AnimationConfiguration.staggeredList(
+//                       position: index,
+//                       delay: const Duration(milliseconds: 250),
+//                       child: SlideAnimation(
+//                         duration: const Duration(milliseconds: 2000),
+//                         verticalOffset: 100,
+//                         curve: Curves.ease,
+//                         child: FadeInAnimation(
+//                           curve: Curves.easeOut,
+//                           duration: const Duration(milliseconds: 2000),
+//                           child: Container(
+//                             color: black_86,
+//                             padding: const EdgeInsets.only(
+//                                 top: 4, bottom: 4, left: 8, right: 8),
+//                             width: MediaQuery.of(context).size.width,
+//                             height: MediaQuery.of(context).size.height / 6,
+//                             child: Card(
+//                               color: black_86,
+//                               elevation: 10,
+//                               shape: RoundedRectangleBorder(
+//                                   borderRadius: BorderRadius.circular(14),
+//                                   side: const BorderSide(
+//                                     width: 1,
+//                                     color: Colors.white10,
+//                                   )),
+//                               child: Stack(
+//                                 alignment: Alignment.center,
+//                                 children: [
+//                                   CachedNetworkImage(
+//                                     fit: BoxFit.cover,
+//                                     imageUrl: listMenu[index].image_uri,
+//                                     imageBuilder: (context, imageProvider) =>
+//                                         Container(
+//                                       decoration: BoxDecoration(
+//                                         color: black_86,
+//                                         borderRadius: BorderRadius.all(
+//                                             Radius.circular(14)),
+//                                         image: DecorationImage(
+//                                           image: imageProvider,
+//                                           fit: BoxFit.cover,
+//                                         ),
+//                                       ),
+//                                     ),
+//                                   ),
+//                                   Container(
+//                                     padding: const EdgeInsets.all(10),
+//                                     decoration: BoxDecoration(
+//                                         borderRadius: BorderRadius.circular(10),
+//                                         color: Colors.black26),
+//                                     child: Text(
+//                                       '${listMenu[index].name}',
+//                                       style: GoogleFonts.lato(
+//                                         textStyle: TextStyle(
+//                                             fontSize: 16,
+//                                             color: Colors.white,
+//                                             letterSpacing: .9),
+//                                       ),
+//                                     ),
+//                                   ),
+//                                 ],
+//                               ),
+//                             ),
+//                           ),
+//                         ),
+//                       ),
+//                     );
+//                   },
+//                 ),
+//               ),
+//             ));
+//       }));
+//     }
+//
+//     Widget restaurant_screen() {
+//       return Scaffold(
+//         backgroundColor: black_86,
+//         body: NestedScrollView(
+//           headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+//             return <Widget>[
+//               SliverAppBar(
+//                 expandedHeight: MediaQuery.of(context).size.height / 3.2,
+//                 floating: true,
+//                 forceElevated: innerBoxIsScrolled,
+//                 pinned: true,
+//                 titleSpacing: 0,
+//                 backgroundColor: innerBoxIsScrolled ? black_86 : black_86,
+//                 // actionsIconTheme: IconThemeData(opacity: 0.0),
+//                 title: const SizedBox(),
+//                 flexibleSpace: FlexibleSpaceBar(
+//                     background: Container(
+//                   color: black_86,
+//                   height: MediaQuery.of(context).size.height / 2,
+//                   child: Stack(
+//                     children: <Widget>[
+//                       AnimationLimiter(
+//                         child: AnimationConfiguration.staggeredList(
+//                           position: 1,
+//                           delay: const Duration(milliseconds: 400),
+//                           child: Container(
+//                             child: SlideAnimation(
+//                               duration: const Duration(milliseconds: 2000),
+//                               horizontalOffset: 160,
+//                               curve: Curves.ease,
+//                               child: FadeInAnimation(
+//                                 curve: Curves.easeOut,
+//                                 duration: const Duration(milliseconds: 2000),
+//                                 child: Stack(
+//                                   children: [
+//                                     CarouselSlider(
+//                                       items: imageSliders,
+//                                       carouselController: _controller,
+//                                       options: CarouselOptions(
+//                                         autoPlay: true,
+//                                         disableCenter: false,
+//                                         viewportFraction: 1,
+//                                         aspectRatio: 1.5,
+//                                         onPageChanged: (index, reason) {
+//                                           setState(
+//                                             () {
+//                                               _current = index;
+//                                             },
+//                                           );
+//                                         },
+//                                       ),
+//                                     ),
+//                                     Container(
+//                                       padding:
+//                                           const EdgeInsets.only(bottom: 20),
+//                                       alignment: Alignment.bottomCenter,
+//                                       child: Row(
+//                                         mainAxisAlignment:
+//                                             MainAxisAlignment.center,
+//                                         children: imgList
+//                                             .asMap()
+//                                             .entries
+//                                             .map((entry) {
+//                                           return Container(
+//                                             width: 10.0,
+//                                             height: 10.0,
+//                                             margin: const EdgeInsets.symmetric(
+//                                                 vertical: 8.0, horizontal: 4.0),
+//                                             decoration: BoxDecoration(
+//                                                 shape: BoxShape.circle,
+//                                                 border: Border.all(
+//                                                     width: 0.8,
+//                                                     color: Colors.white),
+//                                                 color: (Theme.of(context)
+//                                                                 .brightness ==
+//                                                             Brightness.dark
+//                                                         ? Colors.white
+//                                                         : Colors.white)
+//                                                     .withOpacity(
+//                                                         _current == entry.key
+//                                                             ? 1
+//                                                             : 0.0)),
+//                                           );
+//                                         }).toList(),
+//                                       ),
+//                                     ),
+//                                   ],
+//                                 ),
+//                               ),
+//                             ),
+//                           ),
+//                         ),
+//                       ),
+//                     ],
+//                   ),
+//                 )),
+//               ),
+//             ];
+//           },
+//           body: SingleChildScrollView(
+//             physics: BouncingScrollPhysics(),
+//             child: Padding(
+//               padding: const EdgeInsets.only(top: 8, left: 14, right: 14),
+//               child: Column(
+//                 mainAxisAlignment: MainAxisAlignment.start,
+//                 crossAxisAlignment: CrossAxisAlignment.start,
+//                 children: <Widget>[
+//                   Row(
+//                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                     children: [
+//                       Column(
+//                         mainAxisAlignment: MainAxisAlignment.start,
+//                         crossAxisAlignment: CrossAxisAlignment.start,
+//                         children: [
+//                           Padding(
+//                             padding: EdgeInsets.all(2),
+//                             child: Text(
+//                               listRestaurant[0].name,
+//                               style: GoogleFonts.lato(
+//                                 textStyle: TextStyle(
+//                                     fontSize: 17,
+//                                     color: Colors.white,
+//                                     letterSpacing: .9),
+//                               ),
+//                             ),
+//                           ),
+//                           Padding(
+//                             padding: const EdgeInsets.only(top: 4),
+//                             child: Row(
+//                               children: [
+//                                 Icon(
+//                                   Icons.location_on,
+//                                   color: Colors.white.withOpacity(0.9),
+//                                   size: 15,
+//                                 ),
+//                                 const SizedBox(
+//                                   width: 4,
+//                                 ),
+//                                 SizedBox(
+//                                   width:
+//                                       MediaQuery.of(context).size.width / 1.8,
+//                                   child: Text(
+//                                     '${listRestaurant[0].location}',
+//                                     style: GoogleFonts.lato(
+//                                       textStyle: TextStyle(
+//                                           fontSize: 13,
+//                                           color: Colors.white.withOpacity(0.9),
+//                                           letterSpacing: .8),
+//                                     ),
+//                                   ),
+//                                 ),
+//                               ],
+//                             ),
+//                           ),
+//                         ],
+//                       ),
+//                       Row(
+//                         children: [
+//                           Container(
+//                             padding: const EdgeInsets.all(12),
+//                             decoration: BoxDecoration(
+//                               color: Colors.white.withOpacity(0.10),
+//                               shape: BoxShape.circle,
+//                             ),
+//                             child: const Icon(
+//                               Icons.location_on,
+//                               color: Colors.blueAccent,
+//                               size: 20,
+//                             ),
+//                           ),
+//                           Container(
+//                             margin: EdgeInsets.only(left: 20, right: 10),
+//                             padding: const EdgeInsets.all(12),
+//                             decoration: BoxDecoration(
+//                               color: Colors.white.withOpacity(0.10),
+//                               shape: BoxShape.circle,
+//                             ),
+//                             child: Icon(
+//                               Icons.phone,
+//                               color: Colors.blueAccent,
+//                               size: 20,
+//                             ),
+//                           ),
+//                         ],
+//                       ),
+//                     ],
+//                   ),
+//                   Padding(
+//                     padding: const EdgeInsets.only(top: 20),
+//                     child: Row(
+//                       children: [
+//                         Column(
+//                           mainAxisAlignment: MainAxisAlignment.start,
+//                           crossAxisAlignment: CrossAxisAlignment.start,
+//                           children: [
+//                             const Text(
+//                               'Price',
+//                               style: TextStyle(
+//                                   fontSize: 15,
+//                                   color: Colors.white,
+//                                   letterSpacing: .8),
+//                             ),
+//                             Padding(
+//                                 padding:
+//                                     const EdgeInsets.only(top: 2, bottom: 2),
+//                                 child: Text(
+//                                   '${listRestaurant[0].price.toString()} сом',
+//                                   style: GoogleFonts.lato(
+//                                     textStyle: TextStyle(
+//                                         fontSize: 14,
+//                                         color: Colors.white,
+//                                         letterSpacing: .8),
+//                                   ),
+//                                 ))
+//                           ],
+//                         ),
+//                         Padding(padding: const EdgeInsets.only(left: 20)),
+//                         Column(
+//                           mainAxisAlignment: MainAxisAlignment.start,
+//                           crossAxisAlignment: CrossAxisAlignment.start,
+//                           children: [
+//                             Container(
+//                               padding: const EdgeInsets.only(right: 8),
+//                               child: Text(
+//                                 'Rating',
+//                                 style: GoogleFonts.lato(
+//                                   textStyle: TextStyle(
+//                                       fontSize: 14,
+//                                       color: Colors.white,
+//                                       letterSpacing: .8),
+//                                 ),
+//                               ),
+//                             ),
+//                             Row(
+//                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                               children: [
+//                                 Container(
+//                                   alignment: Alignment.centerRight,
+//                                   padding:
+//                                       const EdgeInsets.only(top: 4, bottom: 4),
+//                                   child: Row(
+//                                     children: [
+//                                       Text(
+//                                         '${listRestaurant[0].rating.toString()}  ',
+//                                         style: TextStyle(
+//                                             fontSize: 14,
+//                                             color:
+//                                                 Colors.white.withOpacity(0.9),
+//                                             fontWeight: FontWeight.bold),
+//                                       ),
+//                                       RatingBarIndicator(
+//                                         unratedColor: Colors.white30,
+//                                         rating: listRestaurant[0].rating,
+//                                         itemBuilder: (context, index) =>
+//                                             const Icon(
+//                                           Icons.star,
+//                                           color: Colors.amber,
+//                                         ),
+//                                         itemSize: 15,
+//                                         direction: Axis.horizontal,
+//                                       ),
+//                                     ],
+//                                   ),
+//                                 ),
+//                               ],
+//                             ),
+//                           ],
+//                         ),
+//                       ],
+//                     ),
+//                   ),
+//                   Padding(
+//                     padding:
+//                         const EdgeInsets.only(top: 30, left: 20, right: 20),
+//                     child: Row(
+//                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                       children: [
+//                         Column(
+//                           crossAxisAlignment: CrossAxisAlignment.start,
+//                           children: [
+//                             Text(
+//                               'Delivery',
+//                               style: GoogleFonts.lato(
+//                                 textStyle: TextStyle(
+//                                     fontSize: 15,
+//                                     color: Colors.white,
+//                                     letterSpacing: .7),
+//                               ),
+//                             ),
+//                             Text(
+//                               'Free',
+//                               style: GoogleFonts.lato(
+//                                 textStyle: TextStyle(
+//                                     fontSize: 13,
+//                                     color: Colors.white,
+//                                     letterSpacing: .8),
+//                               ),
+//                             ),
+//                           ],
+//                         ),
+//                         Column(
+//                           crossAxisAlignment: CrossAxisAlignment.start,
+//                           children: [
+//                             Text(
+//                               'Time',
+//                               style: GoogleFonts.lato(
+//                                 textStyle: TextStyle(
+//                                     fontSize: 16,
+//                                     color: Colors.white,
+//                                     letterSpacing: .8),
+//                               ),
+//                             ),
+//                             Text(
+//                               '9 AM - 7 PM',
+//                               style: GoogleFonts.lato(
+//                                 textStyle: TextStyle(
+//                                     fontSize: 13,
+//                                     color: Colors.white,
+//                                     letterSpacing: .8),
+//                               ),
+//                             ),
+//                           ],
+//                         ),
+//                         InkWell(
+//                           splashColor: Colors.transparent,
+//                           highlightColor: Colors.transparent,
+//                           onTap: () {
+//                             showMenu(context: context);
+//                           },
+//                           child: Text(
+//                             'Menu',
+//                             style: GoogleFonts.lato(
+//                               textStyle: TextStyle(
+//                                   fontSize: 17,
+//                                   color: Colors.blueAccent,
+//                                   letterSpacing: .8),
+//                             ),
+//                           ),
+//                         ),
+//                       ],
+//                     ),
+//                   ),
+//                   Padding(
+//                     padding:
+//                         const EdgeInsets.only(right: 20, left: 16, top: 40),
+//                     child: Column(
+//                       children: [
+//                         Row(
+//                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                           children: [
+//                             Text(
+//                               'Reviews',
+//                               style: GoogleFonts.lato(
+//                                 textStyle: TextStyle(
+//                                     fontSize: 17,
+//                                     color: Colors.white,
+//                                     letterSpacing: .8),
+//                               ),
+//                             ),
+//                             Text(
+//                               'View All',
+//                               style: GoogleFonts.lato(
+//                                 textStyle: TextStyle(
+//                                     fontSize: 12,
+//                                     color: Colors.blueAccent,
+//                                     letterSpacing: .8),
+//                               ),
+//                             )
+//                           ],
+//                         ),
+//                         SizedBox(
+//                           // height: MediaQuery.of(context).size.height / 2.2,
+//                           child: AnimationLimiter(
+//                             child: ListView.builder(
+//                               physics: BouncingScrollPhysics(),
+//                               scrollDirection: Axis.vertical,
+//                               itemCount: listComment.length,
+//                               shrinkWrap: true,
+//                               itemBuilder: (context, index) {
+//                                 return AnimationConfiguration.staggeredList(
+//                                   position: index,
+//                                   delay: const Duration(milliseconds: 250),
+//                                   child: SlideAnimation(
+//                                     duration:
+//                                         const Duration(milliseconds: 2000),
+//                                     verticalOffset: 100,
+//                                     curve: Curves.ease,
+//                                     child: FadeInAnimation(
+//                                       curve: Curves.easeOut,
+//                                       duration:
+//                                           const Duration(milliseconds: 2000),
+//                                       child: Padding(
+//                                         padding: const EdgeInsets.only(
+//                                             top: 8, bottom: 14),
+//                                         child: Row(
+//                                           children: [
+//                                             CachedNetworkImage(
+//                                               progressIndicatorBuilder:
+//                                                   (context, url, progress) =>
+//                                                       Center(
+//                                                 child: SizedBox(
+//                                                   height: 24,
+//                                                   width: 24,
+//                                                   child:
+//                                                       CircularProgressIndicator(
+//                                                     color: Colors.white,
+//                                                     strokeWidth: 0.8,
+//                                                     value: progress.progress,
+//                                                   ),
+//                                                 ),
+//                                               ),
+//                                               imageUrl: listComment[index]
+//                                                   .photo_profile,
+//                                               imageBuilder:
+//                                                   (context, imageProvider) =>
+//                                                       Container(
+//                                                 height: 44,
+//                                                 width: 44,
+//                                                 decoration: BoxDecoration(
+//                                                   borderRadius:
+//                                                       const BorderRadius.all(
+//                                                           Radius.circular(50)),
+//                                                   image: DecorationImage(
+//                                                     image: imageProvider,
+//                                                     fit: BoxFit.cover,
+//                                                   ),
+//                                                 ),
+//                                               ),
+//                                             ),
+//                                             Padding(
+//                                               padding: const EdgeInsets.only(
+//                                                   left: 20),
+//                                               child: Column(
+//                                                 mainAxisAlignment:
+//                                                     MainAxisAlignment.start,
+//                                                 crossAxisAlignment:
+//                                                     CrossAxisAlignment.start,
+//                                                 children: [
+//                                                   Row(
+//                                                     mainAxisAlignment:
+//                                                         MainAxisAlignment
+//                                                             .spaceBetween,
+//                                                     children: [
+//                                                       Container(
+//                                                         alignment: Alignment
+//                                                             .centerRight,
+//                                                         padding:
+//                                                             const EdgeInsets
+//                                                                     .only(
+//                                                                 top: 4,
+//                                                                 bottom: 4),
+//                                                         child: Row(
+//                                                           children: [
+//                                                             RatingBarIndicator(
+//                                                               unratedColor:
+//                                                                   Colors
+//                                                                       .white30,
+//                                                               rating:
+//                                                                   listComment[
+//                                                                           index]
+//                                                                       .rating,
+//                                                               itemBuilder: (context,
+//                                                                       index) =>
+//                                                                   const Icon(
+//                                                                 Icons.star,
+//                                                                 color: Colors
+//                                                                     .amber,
+//                                                               ),
+//                                                               // itemCount: 5,
+//                                                               itemSize: 18,
+//                                                               direction: Axis
+//                                                                   .horizontal,
+//                                                             ),
+//                                                             Text(
+//                                                               ' ${listComment[index].dateTime.day.toString()} '
+//                                                               '${months[listComment[index].dateTime.month - 1]} '
+//                                                               ' ${listComment[index].dateTime.year.toString()}  ',
+//                                                               style: GoogleFonts
+//                                                                   .lato(
+//                                                                 textStyle: TextStyle(
+//                                                                     fontSize:
+//                                                                         12,
+//                                                                     color: Colors
+//                                                                         .white,
+//                                                                     letterSpacing:
+//                                                                         .8),
+//                                                               ),
+//                                                             ),
+//                                                           ],
+//                                                         ),
+//                                                       ),
+//                                                     ],
+//                                                   ),
+//                                                   Container(
+//                                                     padding:
+//                                                         const EdgeInsets.only(
+//                                                             top: 2),
+//                                                     width:
+//                                                         MediaQuery.of(context)
+//                                                                 .size
+//                                                                 .width /
+//                                                             1.7,
+//                                                     child: Text(
+//                                                       softWrap: true,
+//                                                       textAlign:
+//                                                           TextAlign.start,
+//                                                       '${listComment[index].comment}',
+//                                                       style: GoogleFonts.lato(
+//                                                         textStyle: TextStyle(
+//                                                             fontSize: 13,
+//                                                             color: Colors.white,
+//                                                             letterSpacing: .8),
+//                                                       ),
+//                                                     ),
+//                                                   )
+//                                                 ],
+//                                               ),
+//                                             ),
+//                                           ],
+//                                         ),
+//                                       ),
+//                                     ),
+//                                   ),
+//                                 );
+//                               },
+//                             ),
+//                           ),
+//                         ),
+//                       ],
+//                     ),
+//                   ),
+//                 ],
+//               ),
+//             ),
+//           ),
+//         ),
+//       );
+//     }
+//
+//     if (isVisible) {
+//       if (listRestaurant.length != 0) {
+//         return restaurant_screen();
+//       }
+//     }
+//     return Scaffold(
+//       backgroundColor: black_86,
+//       body: Center(
+//         child: LoadingAnimationWidget.fourRotatingDots(
+//           size: 44,
+//           color: Colors.blueAccent,
+//         ),
+//       ),
+//     );
+//   }
+// }
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:karakol_travel/data/model/RestaurantModel.dart';
-import 'package:karakol_travel/data/model/StartingDataModel.dart';
-import 'package:nb_utils/nb_utils.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import '../../data/const.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
-import 'package:loading_animation_widget/loading_animation_widget.dart';
-
-import '../../data/model/CommentModel.dart';
 import '../../data/model/HotelModel.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:flutter_launch/flutter_launch.dart';
+import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
+import 'package:telegram/telegram.dart';
+import '../../data/model/OperatorModel.dart';
+import 'dart:io';
+
+import '../../data/model/RestaurantModel.dart';
+import '../restaurant/menu_screen.dart';
 
 class RestaurantScreen extends StatefulWidget {
   var id;
@@ -29,94 +768,30 @@ class _RestaurantScreen extends State<RestaurantScreen> {
 
   _RestaurantScreen(this.id);
 
-  bool isVisible = false;
+  bool isVisible = false, isOperatorExist = false;
   final CarouselController _controller = CarouselController();
   int _current = 0;
-  List<RestaurantModel> listRestaurant = [];
-  List<String> imgList = [];
-  List<StartingDataModel> listMenu = [
-    StartingDataModel(
-        name: 'Breakfast',
-        image_uri:
-            'https://proprikol.ru/wp-content/uploads/2020/06/kartinki-zavtrak-39.jpg'),
-    StartingDataModel(
-        name: 'Lunch',
-        image_uri:
-            'https://podacha-blud.com/uploads/posts/2022-06/1654220582_10-podacha-blud-com-p-krasivii-obed-foto-11.jpg'),
-    StartingDataModel(
-        name: 'Dinner',
-        image_uri:
-            'https://get.pxhere.com/photo/food-meal-meat-chicken-dinner-vege'
-            'table-dish-fried-potato-cooking-cooked-vegetables-roasted-lunch-'
-            'pan-baked-salad-potatoes-healthy-pork-plate-tomato-cuisine-grilled-onion-produce-'
-            'ingredient-garden-salad-tableware-recipe-kitchen-utensil-whole-food-leaf-vegetable-cutlery-root'
-            '-vegetable-dishware-local-food-natural-foods-chicken-meat-vegan-nutrition-pear-fork-veget'
-            'arian-food-kitchen-knife-bowl-side-dish-garnish-staple-food-Food-group-superfood-I'
-            'ceburg-lettuce-herb-greek-food-greek-salad-brunch-cruciferous-vegetables-knife-cucu'
-            'mber-pakistani-cuisine-1634384.jpg'),
-    StartingDataModel(
-        name: 'Coffee',
-        image_uri:
-            'https://u.9111s.ru/uploads/202109/02/7cf39d5512b533c63838f1ff218c235a.jpg'),
-    StartingDataModel(
-        name: 'Healthy Eating',
-        image_uri:
-            'https://pic.rutubelist.ru/video/e3/71/e3718791b86f28adab510b41770da490.jpg'),
-    StartingDataModel(
-        name: 'Beverages',
-        image_uri:
-            'https://i.artfile.ru/2560x1706_1119894_[www.ArtFile.ru].jpg'),
-  ];
-
-  List<CommentModel> listComment = [
-    CommentModel(
-        name: '',
-        dateTime: DateTime.now(),
-        id: '',
-        photo_profile:
-            'https://cdn.vox-cdn.com/thumbor/n-V0QecZDxHqqs13ISr10aFtd6E=/0x0:1363x2048/1200x0/filters:focal(0x0:1363x2048):no_upscale()/cdn.vox-cdn.com/uploads/chorus_asset/file/19424454/jesse_brawner_creditMarcCartwright.jpeg',
-        rating: 4.5,
-        comment:
-            'good dfdsf dsf dsdsfdsfdsfasasdfadsf dsf dsf dsfdsffffffffff fdsssss'),
-    CommentModel(
-        name: '',
-        id: '',
-        dateTime: DateTime.now(),
-        photo_profile:
-            'https://lmg-labmanager.s3.amazonaws.com/assets/articleNo/23259/iImg/43114/owensjeffrey.jpg',
-        rating: 4.1,
-        comment: 'good fdaadsffffffdsf dsf dsf dsfdsffffffffff fdsssss'),
-    CommentModel(
-        name: '',
-        dateTime: DateTime.now(),
-        id: '',
-        photo_profile:
-            'https://kcballet.files.wordpress.com/2012/08/skyler-taylor.jpg',
-        rating: 3.7,
-        comment: 'good dfdsf dsf dsf dsf dsf dsfdsffffffffff fdsssss'),
-    CommentModel(
-        name: '',
-        dateTime: DateTime.now(),
-        id: '',
-        photo_profile: 'https://starnote.ru/media/c/starnote/'
-            'v2/blog/gallery/2013/10/15/6bfd5ae16f/sjurrealizm-ot-deniela-redkliffa-foto-aktera-dlja-flaunt_8.jpg',
-        rating: 5.0,
-        comment: 'good dfdsf dsf dsf dsf dsf dsfdsffffffffff fdsssss'),
-  ];
+  List<RestaurantModel> listRestaurant = [], listRestaurantSimilar = [];
+  List<String> imgList = [], imaListMenu = [];
+  List<OperatorModel> listOperator = [];
+  String _phoneInfo = '';
 
   void readFirebase() async {
+    listRestaurant = [];
+    listRestaurantSimilar = [];
     await FirebaseFirestore.instance
         .collection('Restaurant')
         .get()
         .then((QuerySnapshot querySnapshot) {
       querySnapshot.docs.forEach((document) async {
         Map<String, dynamic> data = document.data() as Map<String, dynamic>;
-
         if (data['id'] == id) {
           setState(() {
             imgList = new List<String>.from(document['images']);
+            imaListMenu = new List<String>.from(document['menu']);
             listRestaurant.add(RestaurantModel(
                 name: data['name'],
+                category: data['category'],
                 id: data['id'],
                 location: data['location'],
                 rating: data['rating'],
@@ -124,22 +799,80 @@ class _RestaurantScreen extends State<RestaurantScreen> {
                 photo_main: data['photo']));
           });
         }
+
+        if (data['id'] != id) {
+          if (data['category'] == listRestaurant[0].category) {
+            listRestaurantSimilar.add(RestaurantModel(
+                name: data['name'],
+                category: data['category'],
+                id: data['id'],
+                location: data['location'],
+                rating: data['rating'],
+                price: data['price'],
+                photo_main: data['photo']));
+          }
+        }
       });
     });
 
     setState(() {
       isVisible = true;
     });
+
+    if (Platform.isAndroid) {
+      var androidInfo = await DeviceInfoPlugin().androidInfo;
+      var release = androidInfo.version.release;
+      var manufacturer = androidInfo.manufacturer;
+      var model = androidInfo.model;
+      _phoneInfo = 'Android $release, $manufacturer $model';
+    }
+
+    if (Platform.isIOS) {
+      var iosInfo = await DeviceInfoPlugin().iosInfo;
+      var systemName = iosInfo.systemName;
+      var version = iosInfo.systemVersion;
+      var name = iosInfo.name;
+      var model = iosInfo.model;
+      _phoneInfo = '$systemName $version, $name $model';
+    }
+  }
+
+  readFirebaseOperator() async {
+    listOperator = [];
+    await FirebaseFirestore.instance
+        .collection('Operator')
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      querySnapshot.docs.forEach((document) async {
+        Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+
+        if (data['dataEnd'] == '') {
+          setState(() {
+            listOperator.add(OperatorModel(
+                name: data['name'],
+                telegram: data['telegram'],
+                whitsApp: data['whistApp'],
+                phone: data['phone'],
+                uid: data['uid'],
+                dataStart: data['dataStart'],
+                dataEnd: Timestamp.now(),
+                id: data['id']));
+            isOperatorExist = true;
+          });
+        }
+      });
+    });
   }
 
   @override
   void initState() {
-    super.initState();
     readFirebase();
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    var size = MediaQuery.of(context).size;
     List<Widget> imageSliders = imgList
         .map(
           (item) => CachedNetworkImage(
@@ -161,89 +894,192 @@ class _RestaurantScreen extends State<RestaurantScreen> {
         )
         .toList();
 
-    void showMenu({required BuildContext context}) {
-      Navigator.of(context)
-          .push(MaterialPageRoute(builder: (BuildContext context) {
-        return Scaffold(
-            backgroundColor: black_86,
-            body: SizedBox(
-              // height: MediaQuery.of(context).size.height / 2.2,
-              child: AnimationLimiter(
-                child: ListView.builder(
-                  physics: BouncingScrollPhysics(),
-                  scrollDirection: Axis.vertical,
-                  itemCount: listMenu.length,
-                  shrinkWrap: true,
-                  itemBuilder: (context, index) {
-                    return AnimationConfiguration.staggeredList(
-                      position: index,
-                      delay: const Duration(milliseconds: 250),
-                      child: SlideAnimation(
-                        duration: const Duration(milliseconds: 2000),
-                        verticalOffset: 100,
-                        curve: Curves.ease,
-                        child: FadeInAnimation(
-                          curve: Curves.easeOut,
-                          duration: const Duration(milliseconds: 2000),
-                          child: Container(
-                            color: black_86,
-                            padding: const EdgeInsets.only(
-                                top: 4, bottom: 4, left: 8, right: 8),
-                            width: MediaQuery.of(context).size.width,
-                            height: MediaQuery.of(context).size.height / 6,
-                            child: Card(
-                              color: black_86,
-                              elevation: 10,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(14),
-                                  side: BorderSide(
-                                    width: 1,
-                                    color: Colors.white10,
-                                  )),
-                              child: Stack(
-                                alignment: Alignment.center,
-                                children: [
-                                  CachedNetworkImage(
-                                    fit: BoxFit.cover,
-                                    imageUrl: listMenu[index].image_uri,
-                                    imageBuilder: (context, imageProvider) =>
-                                        Container(
-                                      decoration: BoxDecoration(
-                                        color: black_86,
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(14)),
-                                        image: DecorationImage(
-                                          image: imageProvider,
-                                          fit: BoxFit.cover,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  Container(
-                                    padding: const EdgeInsets.all(10),
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(10),
-                                        color: Colors.black26),
-                                    child: Text(
-                                      '${listMenu[index].name}',
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 24,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    );
+    Widget dialNumber(BuildContext context, List<OperatorModel> list) {
+      if (list.length >= 1) {
+        return SingleChildScrollView(
+            child: Container(
+          padding: const EdgeInsets.all(10.0),
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.blueAccent, width: 2.0),
+            borderRadius: BorderRadius.circular(30),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Align(
+                  alignment: Alignment.centerLeft,
+                  child: TextButton(
+                      onPressed: () {},
+                      child: Text('Connect with us ',
+                          style: GoogleFonts.lato(
+                            textStyle: TextStyle(
+                                fontSize: 19,
+                                color: Colors.white,
+                                letterSpacing: .8),
+                          )))),
+              Container(
+                padding: const EdgeInsets.only(top: 10),
+                width: size.width,
+                height: 65,
+                child: TextButton.icon(
+                  style: ButtonStyle(
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(18.0),
+                              side: BorderSide(
+                                  color: Colors.green, width: 0.5)))),
+                  onPressed: () async {
+                    final docCall = await FirebaseFirestore.instance
+                        .collection('Call')
+                        .doc();
+                    int randomIndex = getRandomElement(listOperator.length);
+                    final json = {
+                      'id': docCall.id,
+                      'uid': list[randomIndex].uid,
+                      'deviceInfo': _phoneInfo,
+                      'currentData': DateTime.now(),
+                      'action': 'call',
+                    };
+                    docCall.set(json).then((value) {
+                      FlutterPhoneDirectCaller.callNumber(
+                          list[randomIndex].phone);
+                      Navigator.pop(context);
+                    });
                   },
+                  icon: Image.asset(
+                    'images/karakol/ic_phone.png',
+                    height: 65,
+                    width: 65,
+                  ),
+                  label: Text(
+                    'Call the phone               ',
+                    style: GoogleFonts.lato(
+                        textStyle: TextStyle(
+                            fontSize: 18,
+                            color: Colors.white,
+                            letterSpacing: .8)),
+                  ),
                 ),
               ),
-            ));
-      }));
+              Container(
+                // alignment: Alignment.centerLeft,
+                padding: const EdgeInsets.only(top: 10),
+                width: size.width,
+                height: 65,
+                child: TextButton.icon(
+                  style: ButtonStyle(
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(18.0),
+                              side: BorderSide(
+                                  color: Colors.green, width: 0.5)))),
+                  onPressed: () async {
+                    final docCall = await FirebaseFirestore.instance
+                        .collection('Call')
+                        .doc();
+                    int randomIndex = getRandomElement(listOperator.length);
+                    final json = {
+                      'id': docCall.id,
+                      'uid': list[randomIndex].uid,
+                      'deviceInfo': _phoneInfo,
+                      'currentData': DateTime.now(),
+                      'action': 'whatsApp',
+                    };
+                    docCall.set(json);
+                    Navigator.pop(context);
+
+                    bool whatsapp =
+                        await FlutterLaunch.hasApp(name: "whatsapp");
+                    if (whatsapp) {
+                      await FlutterLaunch.launchWhatsapp(
+                          phone: list[randomIndex].whitsApp, message: "Hello");
+                    }
+                  },
+                  icon: Image.asset(
+                    'images/karakol/ic_whatsapp.png',
+                    height: 60,
+                    width: 60,
+                  ),
+                  label: Text(
+                    'Contact via Whatsapp',
+                    style: GoogleFonts.lato(
+                        textStyle: TextStyle(
+                            fontSize: 18,
+                            color: Colors.white,
+                            letterSpacing: .8)),
+                  ),
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.only(top: 10),
+                width: size.width,
+                height: 65,
+                child: TextButton.icon(
+                  style: ButtonStyle(
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(18.0),
+                              side: BorderSide(
+                                  color: Colors.blueAccent, width: 0.5)))),
+                  onPressed: () async {
+                    final docCall = await FirebaseFirestore.instance
+                        .collection('Call')
+                        .doc();
+                    int randomIndex = getRandomElement(listOperator.length);
+                    final json = {
+                      'id': docCall.id,
+                      'uid': list[randomIndex].uid,
+                      'deviceInfo': _phoneInfo,
+                      'currentData': DateTime.now(),
+                      'action': 'telegram',
+                    };
+                    docCall.set(json).then((value) {
+                      Telegram.send(
+                        username: list[randomIndex].telegram,
+                        message: 'Hello',
+                      );
+                      Navigator.pop(context);
+                    });
+                  },
+                  icon: Image.asset(
+                    'images/karakol/ic_telegram.png',
+                    height: 65,
+                    width: 65,
+                  ),
+                  label: Text(
+                    'Contact via Telegram',
+                    style: GoogleFonts.lato(
+                        textStyle: TextStyle(
+                            fontSize: 18,
+                            color: Colors.white,
+                            letterSpacing: .8)),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ));
+      }
+
+      return Container(
+          width: size.width,
+          height: 60,
+          margin: EdgeInsets.all(40),
+          child: TextButton(
+            style: ButtonStyle(
+                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                    RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(24),
+                        side:
+                            BorderSide(color: Colors.blueAccent, width: 0.7)))),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: const Text(
+              'Попрубуйте позже',
+              style: TextStyle(fontSize: 20),
+            ),
+          ));
     }
 
     Widget restaurant_screen() {
@@ -253,7 +1089,7 @@ class _RestaurantScreen extends State<RestaurantScreen> {
           headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
             return <Widget>[
               SliverAppBar(
-                expandedHeight: MediaQuery.of(context).size.height / 3.2,
+                expandedHeight: size.height / 3.2,
                 floating: true,
                 forceElevated: innerBoxIsScrolled,
                 pinned: true,
@@ -264,7 +1100,7 @@ class _RestaurantScreen extends State<RestaurantScreen> {
                 flexibleSpace: FlexibleSpaceBar(
                     background: Container(
                   color: black_86,
-                  height: MediaQuery.of(context).size.height / 2,
+                  height: size.height / 2,
                   child: Stack(
                     children: <Widget>[
                       AnimationLimiter(
@@ -347,13 +1183,13 @@ class _RestaurantScreen extends State<RestaurantScreen> {
           },
           body: SingleChildScrollView(
             physics: BouncingScrollPhysics(),
-            child: Padding(
-              padding: const EdgeInsets.only(top: 8, left: 14, right: 14),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Row(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(left: 14, right: 14),
+                  child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Column(
@@ -361,30 +1197,39 @@ class _RestaurantScreen extends State<RestaurantScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Padding(
-                            padding: const EdgeInsets.only(),
+                            padding: EdgeInsets.all(2),
                             child: Text(
                               listRestaurant[0].name,
-                              style: TextStyle(
-                                  fontSize: 17,
-                                  color: Colors.white.withOpacity(0.9)),
+                              style: GoogleFonts.lato(
+                                textStyle: TextStyle(
+                                    fontSize: 17,
+                                    color: Colors.white,
+                                    letterSpacing: .9),
+                              ),
                             ),
                           ),
                           Padding(
                             padding: const EdgeInsets.only(top: 4),
                             child: Row(
                               children: [
-                                const Icon(
+                                Icon(
                                   Icons.location_on,
-                                  color: Colors.white70,
+                                  color: Colors.white.withOpacity(0.9),
                                   size: 15,
                                 ),
+                                const SizedBox(
+                                  width: 4,
+                                ),
                                 SizedBox(
-                                  width:
-                                      MediaQuery.of(context).size.width / 1.7,
+                                  width: size.width / 2,
                                   child: Text(
-                                    ' ${listRestaurant[0].location}',
-                                    style: TextStyle(
-                                        fontSize: 13, color: Colors.white70),
+                                    '${listRestaurant[0].location}',
+                                    style: GoogleFonts.lato(
+                                      textStyle: TextStyle(
+                                          fontSize: 13,
+                                          color: Colors.white.withOpacity(0.9),
+                                          letterSpacing: .8),
+                                    ),
                                   ),
                                 ),
                               ],
@@ -395,342 +1240,507 @@ class _RestaurantScreen extends State<RestaurantScreen> {
                       Row(
                         children: [
                           Container(
-                            padding: const EdgeInsets.all(12),
+                            margin: const EdgeInsets.only(
+                                left: 10, right: 6, top: 10),
                             decoration: BoxDecoration(
                               color: Colors.white.withOpacity(0.10),
                               shape: BoxShape.circle,
                             ),
-                            child: const Icon(
-                              Icons.location_on,
-                              color: Colors.blueAccent,
-                              size: 20,
+                            child: IconButton(
+                              onPressed: () {},
+                              icon: const Icon(
+                                Icons.location_on,
+                                color: Colors.blueAccent,
+                                size: 20,
+                              ),
                             ),
                           ),
                           Container(
-                            margin: EdgeInsets.only(left: 20, right: 10),
-                            padding: const EdgeInsets.all(12),
+                            margin: EdgeInsets.only(left: 4, top: 10, right: 4),
                             decoration: BoxDecoration(
                               color: Colors.white.withOpacity(0.10),
                               shape: BoxShape.circle,
                             ),
-                            child: Icon(
-                              Icons.phone,
-                              color: Colors.blueAccent,
-                              size: 20,
+                            child: IconButton(
+                              onPressed: () async {
+                                await readFirebaseOperator();
+                                showCupertinoModalBottomSheet(
+                                  topRadius: Radius.circular(30),
+                                  duration: Duration(milliseconds: 700),
+                                  backgroundColor: black_86,
+                                  context: context,
+                                  builder: (context) =>
+                                      dialNumber(context, listOperator),
+                                );
+                              },
+                              icon: const Icon(
+                                Icons.phone,
+                                color: Colors.blueAccent,
+                                size: 20,
+                              ),
                             ),
                           ),
                         ],
                       ),
                     ],
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 20),
-                    child: Row(
-                      children: [
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              'Price',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 15,
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 4, bottom: 4),
-                              child: Text(
-                                '${listRestaurant[0].price.toString()} сом',
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 30, left: 30, right: 40),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                'Price',
                                 style: TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.white.withOpacity(0.9),
-                                    fontWeight: FontWeight.bold),
+                                    fontSize: 15,
+                                    color: Colors.white,
+                                    letterSpacing: .8),
                               ),
-                            )
-                          ],
-                        ),
-                        Padding(padding: const EdgeInsets.only(left: 20)),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.only(right: 8),
-                              child: const Text(
-                                'Rating',
-                                style: TextStyle(
-                                    fontSize: 14, color: Colors.white),
-                              ),
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Container(
-                                  alignment: Alignment.centerRight,
+                              Padding(
                                   padding:
-                                      const EdgeInsets.only(top: 4, bottom: 4),
-                                  child: Row(
-                                    children: [
-                                      Text(
-                                        '${listRestaurant[0].rating.toString()}  ',
-                                        style: TextStyle(
-                                            fontSize: 14,
-                                            color:
-                                                Colors.white.withOpacity(0.9),
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      RatingBarIndicator(
-                                        unratedColor: Colors.white30,
-                                        rating: listRestaurant[0].rating,
-                                        itemBuilder: (context, index) =>
-                                            const Icon(
-                                          Icons.star,
-                                          color: Colors.amber,
-                                        ),
-                                        itemSize: 15,
-                                        direction: Axis.horizontal,
-                                      ),
-                                    ],
+                                      const EdgeInsets.only(top: 2, bottom: 2),
+                                  child: Text(
+                                    '${listRestaurant[0].price.toString()} сом',
+                                    style: GoogleFonts.lato(
+                                      textStyle: TextStyle(
+                                          fontSize: 14,
+                                          color: Colors.white,
+                                          letterSpacing: .8),
+                                    ),
+                                  ))
+                            ],
+                          ),
+                          Padding(padding: const EdgeInsets.only(left: 14)),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.only(right: 8),
+                                child: Text(
+                                  'Rating',
+                                  style: GoogleFonts.lato(
+                                    textStyle: TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.white,
+                                        letterSpacing: .8),
                                   ),
                                 ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding:
-                        const EdgeInsets.only(top: 30, left: 20, right: 20),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Delivery',
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 15),
-                            ),
-                            Text(
-                              'Free',
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 13),
-                            ),
-                          ],
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Time',
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 16),
-                            ),
-                            Text(
-                              '9 AM - 7 PM',
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 13),
-                            ),
-                          ],
-                        ),
-                        InkWell(
-                          splashColor: Colors.transparent,
-                          highlightColor: Colors.transparent,
-                          onTap: () {
-                            showMenu(context: context);
-                          },
-                          child: Text(
-                            'Menu',
-                            style: TextStyle(
-                                color: Colors.blueAccent, fontSize: 17),
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Container(
+                                    alignment: Alignment.centerRight,
+                                    padding: const EdgeInsets.only(
+                                        top: 4, bottom: 4),
+                                    child: Row(
+                                      children: [
+                                        Text(
+                                          '${listRestaurant[0].rating.toString()} ',
+                                          style: TextStyle(
+                                              fontSize: 14,
+                                              color:
+                                                  Colors.white.withOpacity(0.9),
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        RatingBarIndicator(
+                                          unratedColor: Colors.white30,
+                                          rating: listRestaurant[0].rating,
+                                          itemBuilder: (context, index) =>
+                                              const Icon(
+                                            Icons.star,
+                                            color: Colors.amber,
+                                          ),
+                                          itemSize: 15,
+                                          direction: Axis.horizontal,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      InkWell(
+                        splashColor: Colors.transparent,
+                        highlightColor: Colors.transparent,
+                        onTap: () {
+                          if (imaListMenu.length != 0) {
+                            Navigator.push(
+                                context,
+                                FadeRouteAnimation(MenuScreen(
+                                  listMenu: imaListMenu,
+                                )));
+                          }
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.white10),
+                          child: Row(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(right: 6),
+                                child: const Icon(
+                                  Icons.restaurant_menu,
+                                  color: Colors.white,
+                                  size: 17,
+                                ),
+                              ),
+                              Text(
+                                'Menu',
+                                style: GoogleFonts.lato(
+                                  textStyle: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.white,
+                                      letterSpacing: .8),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                  Padding(
-                    padding:
-                        const EdgeInsets.only(right: 20, left: 16, top: 40),
-                    child: Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 14, right: 24, top: 40),
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: Colors.white10),
+                            child: Text(
                               'Reviews',
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 17),
+                              style: GoogleFonts.lato(
+                                textStyle: TextStyle(
+                                    fontSize: 17,
+                                    color: Colors.white,
+                                    letterSpacing: .8),
+                              ),
                             ),
-                            Text(
-                              'View All',
-                              style: TextStyle(
-                                  color: Colors.blueAccent, fontSize: 12),
-                            )
-                          ],
-                        ),
-                        SizedBox(
-                          // height: MediaQuery.of(context).size.height / 2.2,
-                          child: AnimationLimiter(
-                            child: ListView.builder(
-                              physics: BouncingScrollPhysics(),
-                              scrollDirection: Axis.vertical,
-                              itemCount: listComment.length,
-                              shrinkWrap: true,
-                              itemBuilder: (context, index) {
-                                return AnimationConfiguration.staggeredList(
-                                  position: index,
-                                  delay: const Duration(milliseconds: 250),
-                                  child: SlideAnimation(
+                          ),
+                          Text(
+                            'View All',
+                            style: GoogleFonts.lato(
+                              textStyle: TextStyle(
+                                  fontSize: 13,
+                                  color: Colors.blueAccent,
+                                  letterSpacing: .8),
+                            ),
+                          )
+                        ],
+                      ),
+                      SizedBox(
+                        child: AnimationLimiter(
+                          child: ListView.builder(
+                            physics: BouncingScrollPhysics(),
+                            scrollDirection: Axis.vertical,
+                            itemCount: 3,
+                            shrinkWrap: true,
+                            itemBuilder: (context, index) {
+                              return AnimationConfiguration.staggeredList(
+                                position: index,
+                                delay: const Duration(milliseconds: 300),
+                                child: SlideAnimation(
+                                  duration: const Duration(milliseconds: 1500),
+                                  horizontalOffset: 100,
+                                  curve: Curves.ease,
+                                  child: FadeInAnimation(
+                                    curve: Curves.easeOut,
                                     duration:
                                         const Duration(milliseconds: 2000),
-                                    verticalOffset: 100,
-                                    curve: Curves.ease,
-                                    child: FadeInAnimation(
-                                      curve: Curves.easeOut,
-                                      duration:
-                                          const Duration(milliseconds: 2000),
-                                      child: Padding(
-                                        padding: const EdgeInsets.only(
-                                            top: 8, bottom: 14),
-                                        child: Row(
-                                          children: [
-                                            CachedNetworkImage(
-                                              progressIndicatorBuilder:
-                                                  (context, url, progress) =>
-                                                      Center(
-                                                child: SizedBox(
-                                                  height: 24,
-                                                  width: 24,
-                                                  child:
-                                                      CircularProgressIndicator(
-                                                    color: Colors.white,
-                                                    strokeWidth: 0.8,
-                                                    value: progress.progress,
-                                                  ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(
+                                          top: 8, bottom: 14),
+                                      child: Row(
+                                        children: [
+                                          CachedNetworkImage(
+                                            progressIndicatorBuilder:
+                                                (context, url, progress) =>
+                                                    Center(
+                                              child: SizedBox(
+                                                height: 24,
+                                                width: 24,
+                                                child:
+                                                    CircularProgressIndicator(
+                                                  color: Colors.white,
+                                                  strokeWidth: 0.8,
+                                                  value: progress.progress,
                                                 ),
                                               ),
-                                              imageUrl: listComment[index]
-                                                  .photo_profile,
-                                              imageBuilder:
-                                                  (context, imageProvider) =>
-                                                      Container(
-                                                height: 44,
-                                                width: 44,
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      const BorderRadius.all(
-                                                          Radius.circular(50)),
-                                                  image: DecorationImage(
-                                                    image: imageProvider,
-                                                    fit: BoxFit.cover,
-                                                  ),
+                                            ),
+                                            imageUrl: listComment[index]
+                                                .photo_profile,
+                                            imageBuilder:
+                                                (context, imageProvider) =>
+                                                    Container(
+                                              height: 44,
+                                              width: 44,
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    const BorderRadius.all(
+                                                        Radius.circular(50)),
+                                                image: DecorationImage(
+                                                  image: imageProvider,
+                                                  fit: BoxFit.cover,
                                                 ),
+                                              ),
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding:
+                                                const EdgeInsets.only(left: 20),
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    Container(
+                                                      alignment:
+                                                          Alignment.centerRight,
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              top: 4,
+                                                              bottom: 4),
+                                                      child: Row(
+                                                        children: [
+                                                          RatingBarIndicator(
+                                                            unratedColor:
+                                                                Colors.white30,
+                                                            rating: listComment[
+                                                                    index]
+                                                                .rating,
+                                                            itemBuilder:
+                                                                (context,
+                                                                        index) =>
+                                                                    const Icon(
+                                                              Icons.star,
+                                                              color:
+                                                                  Colors.amber,
+                                                            ),
+                                                            // itemCount: 5,
+                                                            itemSize: 18,
+                                                            direction:
+                                                                Axis.horizontal,
+                                                          ),
+                                                          Text(
+                                                            ' ${listComment[index].dateTime.day.toString()} '
+                                                            '${months[listComment[index].dateTime.month - 1]} '
+                                                            ' ${listComment[index].dateTime.year.toString()}  ',
+                                                            style: GoogleFonts
+                                                                .lato(
+                                                              textStyle: TextStyle(
+                                                                  fontSize: 12,
+                                                                  color: Colors
+                                                                      .white,
+                                                                  letterSpacing:
+                                                                      .8),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                Container(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          top: 2),
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width /
+                                                      1.7,
+                                                  child: Text(
+                                                    softWrap: true,
+                                                    textAlign: TextAlign.start,
+                                                    '${listComment[index].comment}',
+                                                    style: GoogleFonts.lato(
+                                                      textStyle: TextStyle(
+                                                          fontSize: 13,
+                                                          color: Colors.white,
+                                                          letterSpacing: .8),
+                                                    ),
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                if (listRestaurantSimilar.length != 0)
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    padding: EdgeInsets.only(top: 10, bottom: 10, left: 14),
+                    child: Text(
+                      'Похожие кафе',
+                      style: GoogleFonts.lato(
+                        textStyle: TextStyle(
+                            fontSize: 18,
+                            color: Colors.white,
+                            letterSpacing: .8),
+                      ),
+                    ),
+                  ),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height / 3.5,
+                  child: AnimationLimiter(
+                    child: ListView.builder(
+                        physics: BouncingScrollPhysics(),
+                        padding: const EdgeInsets.only(right: 10, left: 10),
+                        scrollDirection: Axis.horizontal,
+                        itemCount: listRestaurantSimilar.length,
+                        shrinkWrap: true,
+                        itemBuilder: (context, index) {
+                          return AnimationConfiguration.staggeredList(
+                            position: index,
+                            delay: const Duration(milliseconds: 400),
+                            child: SlideAnimation(
+                              duration: const Duration(milliseconds: 2000),
+                              horizontalOffset: 140,
+                              curve: Curves.ease,
+                              child: FadeInAnimation(
+                                curve: Curves.easeOut,
+                                duration: const Duration(milliseconds: 2000),
+                                child: InkWell(
+                                  splashColor: Colors.transparent,
+                                  highlightColor: Colors.transparent,
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        FadeRouteAnimation(RestaurantScreen(
+                                          id: listRestaurantSimilar[index].id,
+                                        )));
+                                  },
+                                  child: Container(
+                                    width: MediaQuery.of(context).size.width *
+                                        0.35,
+                                    margin: const EdgeInsets.only(left: 16),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(8.0),
+                                          child: CachedNetworkImage(
+                                            progressIndicatorBuilder:
+                                                (context, url, progress) =>
+                                                    Center(
+                                              child: SizedBox(
+                                                height: 30,
+                                                width: 30,
+                                                child:
+                                                    CircularProgressIndicator(
+                                                  color: Colors.white,
+                                                  strokeWidth: 0.8,
+                                                  value: progress.progress,
+                                                ),
+                                              ),
+                                            ),
+                                            imageUrl:
+                                                listRestaurantSimilar[index]
+                                                    .photo_main,
+                                            fit: BoxFit.cover,
+                                            /* height: size.height / 4.5,
+                                                    width: size.width*/
+                                          ),
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Padding(
+                                              padding: EdgeInsets.only(top: 4),
+                                              child: RatingBarIndicator(
+                                                unratedColor: Colors.white30,
+                                                rating:
+                                                    listRestaurantSimilar[index]
+                                                        .rating,
+                                                itemBuilder: (context, index) =>
+                                                    const Icon(
+                                                  Icons.star,
+                                                  color: Colors.amber,
+                                                ),
+                                                // itemCount: 5,
+                                                itemSize: 13,
+                                                direction: Axis.horizontal,
                                               ),
                                             ),
                                             Padding(
                                               padding: const EdgeInsets.only(
-                                                  left: 20),
-                                              child: Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.start,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
-                                                    children: [
-                                                      Container(
-                                                        alignment: Alignment
-                                                            .centerRight,
-                                                        padding:
-                                                            const EdgeInsets
-                                                                    .only(
-                                                                top: 4,
-                                                                bottom: 4),
-                                                        child: Row(
-                                                          children: [
-                                                            RatingBarIndicator(
-                                                              unratedColor:
-                                                                  Colors
-                                                                      .white30,
-                                                              rating:
-                                                                  listComment[
-                                                                          index]
-                                                                      .rating,
-                                                              itemBuilder: (context,
-                                                                      index) =>
-                                                                  const Icon(
-                                                                Icons.star,
-                                                                color: Colors
-                                                                    .amber,
-                                                              ),
-                                                              // itemCount: 5,
-                                                              itemSize: 18,
-                                                              direction: Axis
-                                                                  .horizontal,
-                                                            ),
-                                                            Text(
-                                                              ' ${listComment[index].dateTime.day.toString()} '
-                                                              '${months[listComment[index].dateTime.month - 1]} '
-                                                              ' ${listComment[index].dateTime.year.toString()}  ',
-                                                              style: TextStyle(
-                                                                  fontSize: 12,
-                                                                  color: Colors
-                                                                      .white
-                                                                      .withOpacity(
-                                                                          0.9),
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .normal),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  Container(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            top: 2),
-                                                    width:
-                                                        MediaQuery.of(context)
-                                                                .size
-                                                                .width /
-                                                            1.7,
-                                                    child: Text(
-                                                      softWrap: true,
-                                                      textAlign:
-                                                          TextAlign.start,
-                                                      '${listComment[index].comment}',
-                                                      style: TextStyle(
-                                                          color: Colors.white70,
-                                                          fontSize: 13),
-                                                    ),
-                                                  )
-                                                ],
+                                                  left: 4, right: 4, top: 4),
+                                              child: Text(
+                                                "${listRestaurantSimilar[index].price.toString()} сом",
+                                                style: GoogleFonts.lato(
+                                                  textStyle: TextStyle(
+                                                      fontSize: 12,
+                                                      color: Colors.white,
+                                                      letterSpacing: .9),
+                                                ),
                                               ),
                                             ),
                                           ],
                                         ),
-                                      ),
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              left: 4, right: 4, top: 4),
+                                          child: Text(
+                                            listRestaurantSimilar[index].name,
+                                            style: GoogleFonts.lato(
+                                              textStyle: TextStyle(
+                                                  color: Colors.white,
+                                                  letterSpacing: .9),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                );
-                              },
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
-                      ],
-                    ),
+                          );
+                        }),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),
@@ -743,13 +1753,12 @@ class _RestaurantScreen extends State<RestaurantScreen> {
       }
     }
     return Scaffold(
-      backgroundColor: black_86,
-      body: Center(
-        child: LoadingAnimationWidget.fourRotatingDots(
-          size: 44,
-          color: Colors.blueAccent,
-        ),
-      ),
-    );
+        backgroundColor: black_86,
+        body: Center(
+          child: LoadingAnimationWidget.fourRotatingDots(
+            size: 44,
+            color: Colors.blueAccent,
+          ),
+        ));
   }
 }

@@ -2,7 +2,8 @@ class HotelModel {
   String id = "";
   String name = "";
   String location = "";
-  int price = 0;
+  String category = "";
+  var price = 0;
   double rating = 0.0;
   String photo_main = "";
 
@@ -11,6 +12,7 @@ class HotelModel {
       required this.id,
       required this.location,
       required this.rating,
+      required this.category,
       required this.photo_main,
       required this.price});
 }

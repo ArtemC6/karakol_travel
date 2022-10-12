@@ -1,4 +1,6 @@
+// @dart=2.9
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:karakol_travel/screen/home_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -10,6 +12,8 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   await FirebaseFirestore.instance.clearPersistence();
+  SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   runApp(MyApp());
 }
 

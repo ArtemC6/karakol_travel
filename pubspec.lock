@@ -22,6 +22,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.9.0"
+  avatar_glow:
+    dependency: "direct dev"
+    description:
+      name: avatar_glow
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.2"
   boolean_selector:
     dependency: transitive
     description:
@@ -211,6 +218,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.1"
+  dropdown_button2:
+    dependency: "direct dev"
+    description:
+      name: dropdown_button2
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.8.5"
   fake_async:
     dependency: transitive
     description:
@@ -342,6 +356,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.0.1"
+  flutter_rating_stars:
+    dependency: "direct dev"
+    description:
+      name: flutter_rating_stars
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.3+4"
   flutter_staggered_animations:
     dependency: "direct dev"
     description:
@@ -686,6 +707,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.99"
+  smooth_star_rating:
+    dependency: "direct dev"
+    description:
+      name: smooth_star_rating
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.1.1"
   source_span:
     dependency: transitive
     description:

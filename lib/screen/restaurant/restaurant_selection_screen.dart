@@ -3,12 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:karakol_travel/data/model/RestaurantModel.dart';
 import 'package:karakol_travel/screen/home_screen.dart';
 import 'package:karakol_travel/screen/restaurant/restaurant_screen.dart';
-import '../../data/const.dart';
+import '../../data/cons/const.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import '../../data/model/HotelModel.dart';
-import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
@@ -26,9 +23,9 @@ class _RestaurantSelectionScreen extends State<RestaurantSelectionScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   bool isVisible = false;
-  List<RestaurantModel> listRestaurantBest = [];
-  List<RestaurantModel> listRestaurantMedium = [];
-  List<RestaurantModel> listRestaurantLower = [];
+  List<RestaurantModel> listRestaurantBest = [],
+      listRestaurantMedium = [],
+      listRestaurantLower = [];
 
   void readFirebase() async {
     await FirebaseFirestore.instance
@@ -102,10 +99,7 @@ class _RestaurantSelectionScreen extends State<RestaurantSelectionScreen>
     }
     return SingleChildScrollView(
       child: SizedBox(
-        height: MediaQuery
-            .of(context)
-            .size
-            .height,
+        height: MediaQuery.of(context).size.height,
         child: AnimationLimiter(
           child: ListView.builder(
               physics: const BouncingScrollPhysics(),
@@ -124,133 +118,94 @@ class _RestaurantSelectionScreen extends State<RestaurantSelectionScreen>
                     curve: Curves.ease,
                     child: FadeInAnimation(
                       curve: Curves.easeOut,
-                      duration: Duration(milliseconds: 2000),
-                      child: InkWell(
-                        splashColor: Colors.transparent,
-                        highlightColor: Colors.transparent,
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              FadeRouteAnimation(RestaurantScreen(
-                                id: list[index].id,
-                              )));
-                        },
-                        child: Container(
-                          decoration: const BoxDecoration(
-                              color: black_86,
-                              borderRadius:
-                              BorderRadius.all(Radius.circular(12))),
-                          margin: const EdgeInsets.only(top: 10, bottom: 10),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              ClipRRect(
+                      duration: const Duration(milliseconds: 2000),
+                      child: Padding(
+                        padding: const EdgeInsets.only(bottom: 20),
+                        child: InkWell(
+                          splashColor: Colors.transparent,
+                          highlightColor: Colors.transparent,
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                FadeRouteAnimation(RestaurantScreen(
+                                  id: list[index].id,
+                                )));
+                          },
+                          child: Card(
+                            shadowColor: Colors.white30,
+                            color: black_86,
+                            shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
-                                child: CachedNetworkImage(
-                                    progressIndicatorBuilder: (context, url,
-                                        progress) =>
-                                        Center(
-                                          child: SizedBox(
-                                            height: 30,
-                                            width: 30,
-                                            child: CircularProgressIndicator(
-                                              color: Colors.white,
-                                              strokeWidth: 0.8,
-                                              value: progress.progress,
-                                            ),
-                                          ),
-                                        ),
-                                    imageUrl: list[index].photo_main,
-                                    fit: BoxFit.cover,
-                                    height: 230,
-                                    width: MediaQuery
-                                        .of(context)
-                                        .size
-                                        .width),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                    left: 10, right: 4, top: 10, bottom: 10),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: <Widget>[
-                                    Container(
-                                      padding: const EdgeInsets.only(right: 8),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                            list[index].name,
-                                            style: GoogleFonts.lato(
-                                              textStyle: TextStyle(
-                                                  fontSize: 16,
-                                                  color: Colors.white,
-                                                  letterSpacing: .9),
-                                            ),
-                                          ),
-                                          Text(
-                                            '${list[index].price.toDouble()
-                                                .toString()} сом',
-                                            style: GoogleFonts.lato(
-                                              textStyle: TextStyle(
-                                                  fontSize: 14,
-                                                  color: Colors.white,
-                                                  letterSpacing: .9),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(top: 10),
-                                      child: Row(
-                                        children: [
-                                          const Icon(
-                                            Icons.location_on,
-                                            color: Colors.white70,
-                                            size: 15,
-                                          ),
-                                          Text(
-                                            '  ${list[index].location}',
-                                            style: GoogleFonts.lato(
-                                              textStyle: TextStyle(
-                                                  fontSize: 12,
-                                                  color: Colors.white70,
-                                                  letterSpacing: .7),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Padding(
-                                          padding: EdgeInsets.only(
-                                              top: 4, bottom: 4),
-                                          child: Row(
-                                            children: [
-                                              RatingBarIndicator(
-                                                unratedColor: Colors.white30,
-                                                rating: list[index].rating,
-                                                itemBuilder: (context, index) =>
-                                                const Icon(
-                                                  Icons.star,
-                                                  color: Colors.amber,
+                                side: const BorderSide(
+                                  width: 0.8,
+                                  color: Colors.white24,
+                                )),
+                            elevation: 7,
+                            child: Container(
+                              decoration: const BoxDecoration(
+                                  color: black_86,
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(12))),
+                              margin: const EdgeInsets.only(bottom: 8),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(12),
+                                    child: CachedNetworkImage(
+                                        progressIndicatorBuilder:
+                                            (context, url, progress) => Center(
+                                                  child: SizedBox(
+                                                    height: 30,
+                                                    width: 30,
+                                                    child:
+                                                        CircularProgressIndicator(
+                                                      color: Colors.white,
+                                                      strokeWidth: 0.8,
+                                                      value: progress.progress,
+                                                    ),
+                                                  ),
                                                 ),
-                                                itemSize: 15,
-                                                direction: Axis.horizontal,
+                                        imageUrl: list[index].photo_main,
+                                        fit: BoxFit.cover,
+                                        height: 230,
+                                        width:
+                                            MediaQuery.of(context).size.width),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: 10,
+                                        right: 4,
+                                        top: 10,
+                                        bottom: 10),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: <Widget>[
+                                        Container(
+                                          padding:
+                                              const EdgeInsets.only(right: 8),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                list[index].name,
+                                                style: GoogleFonts.lato(
+                                                  textStyle: const TextStyle(
+                                                      fontSize: 16,
+                                                      color: Colors.white,
+                                                      letterSpacing: .9),
+                                                ),
                                               ),
                                               Text(
-                                                '  ${list[index].rating
-                                                    .toString()} Ratings',
+                                                '${list[index].price.toDouble().toString()} сом',
                                                 style: GoogleFonts.lato(
-                                                  textStyle: TextStyle(
-                                                      fontSize: 12,
-                                                      color: Colors.white70,
+                                                  textStyle: const TextStyle(
+                                                      fontSize: 14,
+                                                      color: Colors.white,
                                                       letterSpacing: .9),
                                                 ),
                                               ),
@@ -259,23 +214,84 @@ class _RestaurantSelectionScreen extends State<RestaurantSelectionScreen>
                                         ),
                                         Padding(
                                           padding:
-                                          const EdgeInsets.only(right: 8),
-                                          child: Text(
-                                            'Book now',
-                                            style: GoogleFonts.lato(
-                                              textStyle: TextStyle(
-                                                  fontSize: 13,
-                                                  color: Colors.blueAccent,
-                                                  letterSpacing: .9),
-                                            ),
+                                              const EdgeInsets.only(top: 10),
+                                          child: Row(
+                                            children: [
+                                              const Icon(
+                                                Icons.location_on,
+                                                color: Colors.white70,
+                                                size: 15,
+                                              ),
+                                              Text(
+                                                '  ${list[index].location}',
+                                                style: GoogleFonts.lato(
+                                                  textStyle: const TextStyle(
+                                                      fontSize: 12,
+                                                      color: Colors.white70,
+                                                      letterSpacing: .7),
+                                                ),
+                                              ),
+                                            ],
                                           ),
-                                        )
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  top: 4, bottom: 4),
+                                              child: Row(
+                                                children: [
+                                                  RatingBarIndicator(
+                                                    unratedColor:
+                                                        Colors.white30,
+                                                    rating: list[index].rating,
+                                                    itemBuilder:
+                                                        (context, index) =>
+                                                            const Icon(
+                                                      Icons.star,
+                                                      color: Colors.amber,
+                                                    ),
+                                                    itemSize: 15,
+                                                    direction: Axis.horizontal,
+                                                  ),
+                                                  Text(
+                                                    '  ${list[index].rating.toString()} Ratings',
+                                                    style: GoogleFonts.lato(
+                                                      textStyle:
+                                                          const TextStyle(
+                                                              fontSize: 12,
+                                                              color: Colors
+                                                                  .white70,
+                                                              letterSpacing:
+                                                                  .9),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  right: 8),
+                                              child: Text(
+                                                'Book now',
+                                                style: GoogleFonts.lato(
+                                                  textStyle: const TextStyle(
+                                                      fontSize: 13,
+                                                      color: Colors.blueAccent,
+                                                      letterSpacing: .9),
+                                                ),
+                                              ),
+                                            )
+                                          ],
+                                        ),
                                       ],
                                     ),
-                                  ],
-                                ),
-                              )
-                            ],
+                                  )
+                                ],
+                              ),
+                            ),
                           ),
                         ),
                       ),
@@ -317,6 +333,7 @@ class _RestaurantSelectionScreen extends State<RestaurantSelectionScreen>
                 child: TabBar(
                   controller: _tabController,
                   indicator: BoxDecoration(
+                    border: Border.all(width: 0.5, color: Colors.white30),
                     borderRadius: BorderRadius.circular(
                       16,
                     ),
@@ -324,14 +341,14 @@ class _RestaurantSelectionScreen extends State<RestaurantSelectionScreen>
                   ),
                   labelColor: Colors.white,
                   unselectedLabelColor: Colors.white,
-                  tabs: [
-                    const Tab(
+                  tabs: const [
+                    Tab(
                       text: 'Best',
                     ),
-                    const Tab(
+                    Tab(
                       text: 'Medium',
                     ),
-                    const Tab(
+                    Tab(
                       text: 'Lower',
                     ),
                   ],

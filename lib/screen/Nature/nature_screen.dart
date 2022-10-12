@@ -8,7 +8,7 @@ import 'package:flutter_carousel_slider/carousel_slider.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
-import '../../data/const.dart';
+import '../../data/cons/const.dart';
 
 class NatureScreen extends StatefulWidget {
   const NatureScreen({Key? key}) : super(key: key);

@@ -1,15 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:karakol_travel/data/model/RestaurantModel.dart';
+import 'package:karakol_travel/generated/locale_keys.g.dart';
 import 'package:karakol_travel/screen/home_screen.dart';
 import 'package:karakol_travel/screen/restaurant/restaurant_screen.dart';
-import '../../data/cons/const.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:easy_localization/easy_localization.dart';
+import '../../data/const/const.dart';
 
 class RestaurantSelectionScreen extends StatefulWidget {
   const RestaurantSelectionScreen({Key? key}) : super(key: key);
@@ -24,6 +26,9 @@ class _RestaurantSelectionScreen extends State<RestaurantSelectionScreen>
   late TabController _tabController;
   bool isVisible = false;
   List<RestaurantModel> listRestaurantBest = [],
+      listRestaurantBestPosition = [],
+      listRestaurantMediumPosition = [],
+      listRestaurantLowerPosition = [],
       listRestaurantMedium = [],
       listRestaurantLower = [];
 
@@ -37,18 +42,8 @@ class _RestaurantSelectionScreen extends State<RestaurantSelectionScreen>
 
         setState(() {
           if (data['category'] == 'Best') {
-            setState(() {
-              listRestaurantBest.add(RestaurantModel(
-                  name: data['name'],
-                  category: data['category'],
-                  id: data['id'],
-                  location: data['location'],
-                  rating: data['rating'],
-                  price: data['price'],
-                  photo_main: data['photo']));
-            });
-          } else if (data['category'] == 'Medium') {
-            listRestaurantMedium.add(RestaurantModel(
+            listRestaurantBestPosition.add(RestaurantModel(
+                position: data['position'],
                 name: data['name'],
                 category: data['category'],
                 id: data['id'],
@@ -56,10 +51,21 @@ class _RestaurantSelectionScreen extends State<RestaurantSelectionScreen>
                 rating: data['rating'],
                 price: data['price'],
                 photo_main: data['photo']));
-          } else if (data['category'] == 'Lower') {
-            listRestaurantLower.add(RestaurantModel(
+          } else if (data['category'] == 'Medium') {
+            listRestaurantMediumPosition.add(RestaurantModel(
                 name: data['name'],
                 category: data['category'],
+                position: data['position'],
+                id: data['id'],
+                location: data['location'],
+                rating: data['rating'],
+                price: data['price'],
+                photo_main: data['photo']));
+          } else if (data['category'] == 'Lower') {
+            listRestaurantLowerPosition.add(RestaurantModel(
+                name: data['name'],
+                category: data['category'],
+                position: data['position'],
                 id: data['id'],
                 location: data['location'],
                 rating: data['rating'],
@@ -72,7 +78,102 @@ class _RestaurantSelectionScreen extends State<RestaurantSelectionScreen>
 
     setState(() {
       isVisible = true;
+      sortingElement();
     });
+  }
+
+  void sortingElement() {
+    for (int i = 0; i < 200; i++) {
+      listRestaurantBestPosition.forEach((element) {
+        getElementBest(element, 0);
+        getElementBest(element, 1);
+        getElementBest(element, 2);
+        getElementBest(element, 3);
+        getElementBest(element, 4);
+        getElementBest(element, 5);
+        getElementBest(element, 6);
+        getElementBest(element, 7);
+        getElementBest(element, 8);
+        getElementBest(element, 9);
+        getElementBest(element, 10);
+        getElementBest(element, 11);
+        getElementBest(element, 12);
+        getElementBest(element, 13);
+        getElementBest(element, 14);
+        getElementBest(element, 15);
+        getElementBest(element, 16);
+        getElementBest(element, 17);
+        getElementBest(element, 18);
+        getElementBest(element, 19);
+        getElementBest(element, 20);
+      });
+
+      listRestaurantMediumPosition.forEach((element) {
+        getElementMedium(element, 0);
+        getElementMedium(element, 1);
+        getElementMedium(element, 2);
+        getElementMedium(element, 3);
+        getElementMedium(element, 4);
+        getElementMedium(element, 5);
+        getElementMedium(element, 6);
+        getElementMedium(element, 7);
+        getElementMedium(element, 8);
+        getElementMedium(element, 9);
+        getElementMedium(element, 10);
+        getElementMedium(element, 11);
+        getElementMedium(element, 12);
+        getElementMedium(element, 13);
+        getElementMedium(element, 14);
+        getElementMedium(element, 15);
+        getElementMedium(element, 16);
+        getElementMedium(element, 17);
+        getElementMedium(element, 18);
+        getElementMedium(element, 19);
+        getElementMedium(element, 20);
+      });
+
+      listRestaurantLowerPosition.forEach((element) {
+        getElementLower(element, 0);
+        getElementLower(element, 1);
+        getElementLower(element, 2);
+        getElementLower(element, 3);
+        getElementLower(element, 4);
+        getElementLower(element, 5);
+        getElementLower(element, 6);
+        getElementLower(element, 7);
+        getElementLower(element, 8);
+        getElementLower(element, 9);
+        getElementLower(element, 10);
+        getElementLower(element, 11);
+        getElementLower(element, 12);
+        getElementLower(element, 13);
+        getElementLower(element, 14);
+        getElementLower(element, 15);
+        getElementLower(element, 16);
+        getElementLower(element, 17);
+        getElementLower(element, 18);
+        getElementLower(element, 19);
+        getElementLower(element, 20);
+      });
+    }
+  }
+
+  void getElementBest(RestaurantModel element, int index) {
+    if (element.position == index && listRestaurantBest.length == index) {
+      listRestaurantBest.add(element);
+    }
+  }
+
+  void getElementMedium(RestaurantModel element, int index) {
+    if (element.position == index && listRestaurantMedium.length == index) {
+      listRestaurantMedium.add(element);
+    }
+  }
+
+  void getElementLower(RestaurantModel element, int index) {
+    if (element.position == index && listRestaurantLower.length == index) {
+      listRestaurantLower.add(element);
+    }
   }
 
   @override
@@ -168,7 +269,7 @@ class _RestaurantSelectionScreen extends State<RestaurantSelectionScreen>
                                                 ),
                                         imageUrl: list[index].photo_main,
                                         fit: BoxFit.cover,
-                                        height: 230,
+                                        height: 240,
                                         width:
                                             MediaQuery.of(context).size.width),
                                   ),
@@ -195,16 +296,16 @@ class _RestaurantSelectionScreen extends State<RestaurantSelectionScreen>
                                                 list[index].name,
                                                 style: GoogleFonts.lato(
                                                   textStyle: const TextStyle(
-                                                      fontSize: 16,
+                                                      fontSize: 15,
                                                       color: Colors.white,
                                                       letterSpacing: .9),
                                                 ),
                                               ),
                                               Text(
-                                                '${list[index].price.toDouble().toString()} сом',
+                                                '${list[index].price.toDouble().toString()} ${LocaleKeys.som_lc.tr()}',
                                                 style: GoogleFonts.lato(
                                                   textStyle: const TextStyle(
-                                                      fontSize: 14,
+                                                      fontSize: 13,
                                                       color: Colors.white,
                                                       letterSpacing: .9),
                                                 ),
@@ -214,19 +315,22 @@ class _RestaurantSelectionScreen extends State<RestaurantSelectionScreen>
                                         ),
                                         Padding(
                                           padding:
-                                              const EdgeInsets.only(top: 10),
+                                              const EdgeInsets.only(top: 6),
                                           child: Row(
                                             children: [
                                               const Icon(
                                                 Icons.location_on,
                                                 color: Colors.white70,
-                                                size: 15,
+                                                size: 14,
+                                              ),
+                                              const SizedBox(
+                                                width: 3,
                                               ),
                                               Text(
-                                                '  ${list[index].location}',
+                                                list[index].location,
                                                 style: GoogleFonts.lato(
                                                   textStyle: const TextStyle(
-                                                      fontSize: 12,
+                                                      fontSize: 11.5,
                                                       color: Colors.white70,
                                                       letterSpacing: .7),
                                                 ),
@@ -257,11 +361,11 @@ class _RestaurantSelectionScreen extends State<RestaurantSelectionScreen>
                                                     direction: Axis.horizontal,
                                                   ),
                                                   Text(
-                                                    '  ${list[index].rating.toString()} Ratings',
+                                                    '  ${list[index].rating.toString()} ${LocaleKeys.rating_lc.tr()}',
                                                     style: GoogleFonts.lato(
                                                       textStyle:
                                                           const TextStyle(
-                                                              fontSize: 12,
+                                                              fontSize: 11.5,
                                                               color: Colors
                                                                   .white70,
                                                               letterSpacing:
@@ -275,10 +379,10 @@ class _RestaurantSelectionScreen extends State<RestaurantSelectionScreen>
                                               padding: const EdgeInsets.only(
                                                   right: 8),
                                               child: Text(
-                                                'Book now',
+                                                LocaleKeys.book_now_lc.tr(),
                                                 style: GoogleFonts.lato(
                                                   textStyle: const TextStyle(
-                                                      fontSize: 13,
+                                                      fontSize: 11.5,
                                                       color: Colors.blueAccent,
                                                       letterSpacing: .9),
                                                 ),
@@ -333,23 +437,41 @@ class _RestaurantSelectionScreen extends State<RestaurantSelectionScreen>
                 child: TabBar(
                   controller: _tabController,
                   indicator: BoxDecoration(
-                    border: Border.all(width: 0.5, color: Colors.white30),
+                    border: Border.all(width: 0.5, color: Colors.white38),
                     borderRadius: BorderRadius.circular(
                       16,
                     ),
                     color: black_86,
                   ),
-                  labelColor: Colors.white,
+                  labelColor: Colors.blueAccent,
                   unselectedLabelColor: Colors.white,
-                  tabs: const [
+                  tabs: [
                     Tab(
-                      text: 'Best',
+                      child: Text(LocaleKeys.restaurant_best_lc.tr(),
+                          style: GoogleFonts.lato(
+                              textStyle: const TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.white,
+                                  letterSpacing: .9))),
+                      // text: LocaleKeys.restaurant_best_lc.tr(),
                     ),
                     Tab(
-                      text: 'Medium',
+                      child: Text(LocaleKeys.restaurant_medium_lc.tr(),
+                          style: GoogleFonts.lato(
+                              textStyle: const TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.white,
+                                  letterSpacing: .9))),
+                      // text: ,
                     ),
                     Tab(
-                      text: 'Lower',
+                      child: Text(LocaleKeys.restaurant_lower_lc.tr(),
+                          style: GoogleFonts.lato(
+                              textStyle: const TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.white,
+                                  letterSpacing: .9))),
+                      // text: LocaleKeys.restaurant_lower_lc.tr(),
                     ),
                   ],
                 ),

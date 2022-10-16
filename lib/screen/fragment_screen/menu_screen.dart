@@ -2,9 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:flutter/services.dart';
-import '../../data/cons/const.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:photo_view/photo_view.dart';
+import '../../data/const/const.dart';
 
 class MenuScreen extends StatefulWidget {
   List<String> listMenu;
@@ -25,35 +26,32 @@ class _MenuScreen extends State<MenuScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print(listMenu.length);
     List<Widget> imageSlidersMenu = listMenu
         .map(
-          (item) => InteractiveViewer(
-            constrained: true,
-            scaleEnabled: true,
-            panEnabled: true,
-            child: Card(
-              margin: EdgeInsets.all(8),
-              shadowColor: Colors.white30,
-              color: black_86,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(34),
-                  side: const BorderSide(
-                    width: 0.8,
-                    color: Colors.white38,
-                  )),
-              elevation: 6,
+          (item) => Container(
+            padding: const EdgeInsets.all(12),
+            child: Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                  border: Border.all(width: 0.5, color: Colors.white38),
+                  borderRadius: BorderRadius.circular(26),
+                  color: black_86),
               child: CachedNetworkImage(
-                imageBuilder: (context, imageProvider) => Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(34)),
-                    image: DecorationImage(
-                      image: imageProvider,
-                      fit: BoxFit.fill,
-                    ),
+                imageBuilder: (context, imageProvider) => PhotoView(
+                  // basePosition: Alignment.topCenter,
+                  // customSize:
+                  // Size.fromWidth(10),
+                  // customSize:Size.copy( )
+                  // Size.square(100),
+                  // customSize: ,
+
+                  imageProvider: imageProvider,
+                  backgroundDecoration: BoxDecoration(
+                    color: black_86,
+                    // borderRadius: BorderRadius.circular(28),
+                    //   border: Border.all(width: 0.5, color: Colors.white38),
                   ),
                 ),
-
                 imageUrl: item,
                 progressIndicatorBuilder: (context, url, progress) => Center(
                   child: SizedBox(
@@ -66,8 +64,6 @@ class _MenuScreen extends State<MenuScreen> {
                     ),
                   ),
                 ),
-                fit: BoxFit.fill,
-                height: MediaQuery.of(context).size.height,
               ),
             ),
           ),
@@ -119,7 +115,7 @@ class _MenuScreen extends State<MenuScreen> {
                                     ),
                                   ),
                                   Container(
-                                    padding: const EdgeInsets.only(bottom: 20),
+                                    padding: const EdgeInsets.only(bottom: 24),
                                     alignment: Alignment.bottomCenter,
                                     child: Row(
                                       mainAxisAlignment:
@@ -127,10 +123,10 @@ class _MenuScreen extends State<MenuScreen> {
                                       children:
                                           listMenu.asMap().entries.map((entry) {
                                         return Container(
-                                          width: 10.0,
-                                          height: 10.0,
+                                          width: 9.0,
+                                          height: 9.0,
                                           margin: const EdgeInsets.symmetric(
-                                              vertical: 8.0, horizontal: 4.0),
+                                              vertical: 8.0, horizontal: 3.2),
                                           decoration: BoxDecoration(
                                               shape: BoxShape.circle,
                                               border: Border.all(
@@ -204,8 +200,8 @@ class _MenuScreen extends State<MenuScreen> {
                                             borderRadius:
                                                 BorderRadius.circular(8),
                                             side: const BorderSide(
-                                              width: 0.8,
-                                              color: Colors.white24,
+                                              width: 0.6,
+                                              color: Colors.white38,
                                             )),
                                         elevation: 16,
                                         child: ClipRRect(

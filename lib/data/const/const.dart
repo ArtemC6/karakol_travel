@@ -21,6 +21,7 @@ class FirebaseApi {
 }
 
 const black_93 = Color(0xFF161616);
+// const black_86 = Color(0xFF2D2D2D);
 const black_86 = Color(0xFF222327);
 
 class FadeRouteAnimation extends PageRouteBuilder {

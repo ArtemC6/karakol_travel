@@ -5,8 +5,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:karakol_travel/data/model/CommentModel.dart';
-import '../../screen/fragment_screen/photo_viewing_screen.dart';
-import '../cons/const.dart';
+import '../../generated/locale_keys.g.dart';
+
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -19,7 +19,9 @@ import 'package:smooth_star_rating/smooth_star_rating.dart';
 import '../../screen/fragment_screen/comment_screen.dart';
 import '../../screen/fragment_screen/menu_screen.dart';
 import '../../screen/restaurant/restaurant_screen.dart';
+import '../const/const.dart';
 import 'contact_operators.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class companyComponent_1 extends StatefulWidget {
   List<RestaurantModel> listCompany = [];
@@ -48,6 +50,7 @@ class _companyComponent_1State extends State<companyComponent_1> {
                   widget.listCompany[0].name,
                   style: GoogleFonts.lato(
                     textStyle: const TextStyle(
+                        overflow: TextOverflow.fade,
                         fontSize: 17, color: Colors.white, letterSpacing: .9),
                   ),
                 ),
@@ -187,36 +190,36 @@ class companyComponent_2 extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Price',
+                  Text(
+                    LocaleKeys.price_lc.tr(),
                     style: TextStyle(
-                        fontSize: 15, color: Colors.white, letterSpacing: .8),
+                        fontSize: 14, color: Colors.white, letterSpacing: .8),
                   ),
                   Padding(
-                      padding: const EdgeInsets.only(top: 2, bottom: 2),
+                      padding: const EdgeInsets.only(top: 4, bottom: 4),
                       child: Text(
-                        '${listCompany[0].price.toString()} сом',
+                        '${listCompany[0].price.toString()} ${LocaleKeys.som_lc.tr()}',
                         style: GoogleFonts.lato(
                           textStyle: const TextStyle(
-                              fontSize: 14,
+                              fontSize: 13.5,
                               color: Colors.white,
                               letterSpacing: .8),
                         ),
                       ))
                 ],
               ),
-              const Padding(padding: EdgeInsets.only(left: 14)),
+              const Padding(padding: EdgeInsets.only(left: 20)),
               Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    padding: const EdgeInsets.only(right: 8),
+                    padding: const EdgeInsets.only(right: 12),
                     child: Text(
-                      'Rating',
+                      LocaleKeys.rating_lc.tr(),
                       style: GoogleFonts.lato(
                         textStyle: const TextStyle(
-                            fontSize: 14,
+                            fontSize: 13.5,
                             color: Colors.white,
                             letterSpacing: .8),
                       ),
@@ -230,12 +233,14 @@ class companyComponent_2 extends StatelessWidget {
                         padding: const EdgeInsets.only(top: 4, bottom: 4),
                         child: Row(
                           children: [
-                            Text(
-                              listCompany[0].rating.toString(),
-                              style: const TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold),
+                            Text(listCompany[0].rating.toString(),
+                                style: GoogleFonts.lato(
+                                    textStyle: const TextStyle(
+                                        fontSize: 13.5,
+                                        color: Colors.white,
+                                        letterSpacing: .8))),
+                            const SizedBox(
+                              width: 3,
                             ),
                             RatingBarIndicator(
                               unratedColor: Colors.white30,
@@ -260,7 +265,7 @@ class companyComponent_2 extends StatelessWidget {
             splashColor: Colors.transparent,
             highlightColor: Colors.transparent,
             onTap: () {
-              if (listCompany.isNotEmpty) {
+              if (listMenu.isNotEmpty) {
                 Navigator.push(
                     context,
                     FadeRouteAnimation(MenuScreen(
@@ -287,10 +292,12 @@ class companyComponent_2 extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    isCompany == 'Restaurant' ? 'Menu' : 'Catalog',
+                    isCompany == 'Restaurant'
+                        ? LocaleKeys.is_menu_lc.tr()
+                        : LocaleKeys.is_catalog_lc.tr(),
                     style: GoogleFonts.lato(
                       textStyle: const TextStyle(
-                          fontSize: 16, color: Colors.white, letterSpacing: .8),
+                          fontSize: 12, color: Colors.white, letterSpacing: .8),
                     ),
                   ),
                 ],
@@ -321,24 +328,25 @@ class companyComponentGallery extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Container(
+                margin: const EdgeInsets.only(bottom: 6),
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
                     border: Border.all(width: 0.5, color: Colors.white30),
                     borderRadius: BorderRadius.circular(10),
                     color: Colors.white10),
                 child: Text(
-                  'Gallery',
+                  LocaleKeys.gallery_lc.tr(),
                   style: GoogleFonts.lato(
                     textStyle: const TextStyle(
-                        fontSize: 16, color: Colors.white, letterSpacing: .8),
+                        fontSize: 12.5, color: Colors.white, letterSpacing: .8),
                   ),
                 ),
               ),
               Text(
-                'View All',
+                LocaleKeys.view_all_lc.tr(),
                 style: GoogleFonts.lato(
                   textStyle: const TextStyle(
-                      fontSize: 13,
+                      fontSize: 12,
                       color: Colors.blueAccent,
                       letterSpacing: .8),
                 ),
@@ -347,12 +355,12 @@ class companyComponentGallery extends StatelessWidget {
           ),
         ),
         SizedBox(
-          height: 320,
+          height: 340,
           child: AnimationLimiter(
             child: GridView.count(
               physics: const BouncingScrollPhysics(
                   parent: AlwaysScrollableScrollPhysics()),
-              padding: EdgeInsets.all(MediaQuery.of(context).size.width / 60),
+              padding: EdgeInsets.all(1),
               crossAxisCount: 3,
               children: List.generate(
                 listImages.length,
@@ -372,7 +380,7 @@ class companyComponentGallery extends StatelessWidget {
                             if (listImages.isNotEmpty) {
                               Navigator.push(
                                   context,
-                                  FadeRouteAnimation(PhotoViewingScreen(
+                                  FadeRouteAnimation(MenuScreen(
                                     listMenu: listImages,
                                   )));
                             }
@@ -404,7 +412,8 @@ class companyComponentGallery extends StatelessWidget {
                                   ),
                                 ),
                                 fit: BoxFit.cover,
-                                width: MediaQuery.of(context).size.width,
+                                // height: MediaQuery.of(context).size.height,
+                                // width: MediaQuery.of(context).size.width,
                               ),
                             ),
                           ),
@@ -467,6 +476,7 @@ class _companyComponentCommentState extends State<companyComponentComment> {
   @override
   Widget build(BuildContext context) {
     String? floor;
+    String? position;
     showAlertDialogComment(BuildContext context) {
       showDialog(
         context: context,
@@ -505,14 +515,14 @@ class _companyComponentCommentState extends State<companyComponentComment> {
                                     color: Colors.blueAccent, width: 1.2),
                               ),
                               hintMaxLines: 1,
-                              hintText: 'Enter your name',
+                              hintText: LocaleKeys.your_name_lc.tr(),
                               hintStyle: TextStyle(
-                                fontSize: 14,
+                                fontSize: 13,
                                 color: Colors.white.withOpacity(.8),
                               ),
                             ),
                             style: const TextStyle(
-                              fontSize: 17,
+                              fontSize: 15.5,
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
                             ),
@@ -549,14 +559,14 @@ class _companyComponentCommentState extends State<companyComponentComment> {
                               ),
                               // hintMaxLines: 1,
 
-                              hintText: 'Enter your comment',
+                              hintText: LocaleKeys.your_feedback_lc.tr(),
                               hintStyle: TextStyle(
-                                fontSize: 14,
+                                fontSize: 13,
                                 color: Colors.white.withOpacity(.8),
                               ),
                             ),
                             style: const TextStyle(
-                              fontSize: 17,
+                              fontSize: 15.5,
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
                             ),
@@ -566,10 +576,10 @@ class _companyComponentCommentState extends State<companyComponentComment> {
                           alignment: Alignment.centerRight,
                           padding: const EdgeInsets.all(8),
                           child: Text(
-                              '${_commentCount.length} maximum characters(100)',
+                              '${_commentCount.length} ${LocaleKeys.maximum_characters_lc.tr()}(100)',
                               style: GoogleFonts.lato(
                                   textStyle: const TextStyle(
-                                      fontSize: 14,
+                                      fontSize: 11.5,
                                       color: Colors.white,
                                       letterSpacing: .8))),
                         ),
@@ -580,18 +590,18 @@ class _companyComponentCommentState extends State<companyComponentComment> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               SizedBox(
-                                height: 40,
-                                width: 120,
+                                height: 38,
+                                width: 110,
                                 child: DropdownButtonHideUnderline(
                                   child: DropdownButton2(
                                     isExpanded: true,
                                     hint: Row(
-                                      children: const [
+                                      children: [
                                         Expanded(
                                           child: Text(
-                                            'Select gender',
-                                            style: TextStyle(
-                                              fontSize: 12,
+                                            LocaleKeys.choose_gender_lc.tr(),
+                                            style: const TextStyle(
+                                              fontSize: 11.5,
                                               fontWeight: FontWeight.bold,
                                               color: Colors.white,
                                             ),
@@ -600,13 +610,16 @@ class _companyComponentCommentState extends State<companyComponentComment> {
                                         ),
                                       ],
                                     ),
-                                    items: ['Man', 'Woman']
+                                    items: [
+                                      LocaleKeys.man_lc.tr(),
+                                      LocaleKeys.woman_lc.tr()
+                                    ]
                                         .map((item) => DropdownMenuItem<String>(
                                               value: item,
                                               child: Text(
                                                 item,
                                                 style: const TextStyle(
-                                                  fontSize: 14,
+                                                  fontSize: 12,
                                                   fontWeight: FontWeight.bold,
                                                   color: Colors.white,
                                                 ),
@@ -618,12 +631,20 @@ class _companyComponentCommentState extends State<companyComponentComment> {
                                     onChanged: (value) {
                                       setState(() {
                                         floor = value as String;
+                                        if (floor == 'Man' ||
+                                            floor == 'Мужчина') {
+                                          position = '0';
+                                        }
+                                        if (floor == 'Woman' ||
+                                            floor == 'Девушка') {
+                                          position = '1';
+                                        }
                                       });
                                     },
                                     icon: const Icon(
                                       Icons.arrow_forward_ios_outlined,
                                     ),
-                                    iconSize: 14,
+                                    iconSize: 12,
                                     iconEnabledColor: Colors.blueAccent,
                                     iconDisabledColor: Colors.grey,
                                     buttonHeight: 50,
@@ -663,7 +684,7 @@ class _companyComponentCommentState extends State<companyComponentComment> {
                                 borderColor: Colors.white30,
                                 rating: 4,
                                 isReadOnly: false,
-                                size: 23,
+                                size: 21,
                                 filledIconData: Icons.star,
                                 halfFilledIconData: Icons.star_half,
                                 defaultIconData: Icons.star_border,
@@ -698,10 +719,10 @@ class _companyComponentCommentState extends State<companyComponentComment> {
                                       borderRadius: BorderRadius.circular(10),
                                       color: Colors.white10),
                                   child: Text(
-                                    'Cancel',
+                                    LocaleKeys.close_lc.tr(),
                                     style: GoogleFonts.lato(
                                       textStyle: const TextStyle(
-                                          fontSize: 16,
+                                          fontSize: 13.5,
                                           color: Colors.white,
                                           letterSpacing: .8),
                                     ),
@@ -715,7 +736,7 @@ class _companyComponentCommentState extends State<companyComponentComment> {
                                   if (_nameController.text.length >= 3 &&
                                       _commentController.text.length >= 3 &&
                                       ratingValue >= 1 &&
-                                      floor != null) {
+                                      position != null) {
                                     final docComment = FirebaseFirestore
                                         .instance
                                         .collection('Comment')
@@ -723,10 +744,10 @@ class _companyComponentCommentState extends State<companyComponentComment> {
 
                                     final json = {
                                       'id': docComment.id,
-                                      if (floor == 'Man')
+                                      if (position == '0')
                                         'photo':
                                             'https://firebasestorage.googleapis.com/v0/b/karakol-travel.appspot.com/o/files%2FIMG_20221010_152851_079.jpg?alt=media&token=248db8f7-74a9-43e1-83d9-5b7d07dff0b7',
-                                      if (floor == 'Woman')
+                                      if (position == '1')
                                         'photo':
                                             'https://firebasestorage.googleapis.com/v0/b/karakol-travel.appspot.com/o/files%2FIMG_20221010_152853_716.jpg?alt=media&token=dec5b47e-2ba6-43a1-9423-bf2b9ca8e947',
                                       'id_company': id,
@@ -757,10 +778,10 @@ class _companyComponentCommentState extends State<companyComponentComment> {
                                       borderRadius: BorderRadius.circular(10),
                                       color: Colors.white10),
                                   child: Text(
-                                    'Publish',
+                                    LocaleKeys.publish_lc.tr(),
                                     style: GoogleFonts.lato(
                                       textStyle: const TextStyle(
-                                          fontSize: 16,
+                                          fontSize: 13.5,
                                           color: Colors.white,
                                           letterSpacing: .8),
                                     ),
@@ -796,10 +817,10 @@ class _companyComponentCommentState extends State<companyComponentComment> {
                     borderRadius: BorderRadius.circular(10),
                     color: Colors.white10),
                 child: Text(
-                  'Reviews',
+                  LocaleKeys.reviews_lc.tr(),
                   style: GoogleFonts.lato(
                     textStyle: const TextStyle(
-                        fontSize: 16, color: Colors.white, letterSpacing: .8),
+                        fontSize: 12.5, color: Colors.white, letterSpacing: .8),
                   ),
                 ),
               ),
@@ -814,10 +835,10 @@ class _companyComponentCommentState extends State<companyComponentComment> {
                       )));
                 },
                 child: Text(
-                  'View All',
+                  LocaleKeys.view_all_lc.tr(),
                   style: GoogleFonts.lato(
                     textStyle: const TextStyle(
-                        fontSize: 13,
+                        fontSize: 12,
                         color: Colors.blueAccent,
                         letterSpacing: .8),
                   ),
@@ -826,23 +847,19 @@ class _companyComponentCommentState extends State<companyComponentComment> {
             ],
           ),
           SizedBox(
-            height: 294,
+            height: 323,
             child: AnimationLimiter(
               child: ListView.builder(
                 physics: const BouncingScrollPhysics(),
                 scrollDirection: Axis.vertical,
-                itemCount: listComment.length >= 14 ? 14 : listComment.length,
+                itemCount: listComment.length >= 20 ? 20 : listComment.length,
                 shrinkWrap: true,
                 itemBuilder: (context, index) {
                   if (listComment[index].id_devise == idDevise) {
                     return Dismissible(
+                        direction: DismissDirection.startToEnd,
                         key: UniqueKey(),
                         background: Container(
-                          color: Colors.red,
-                          alignment: Alignment.centerLeft,
-                          child: const Icon(Icons.delete, color: Colors.white),
-                        ),
-                        secondaryBackground: Container(
                           color: Colors.red,
                           alignment: Alignment.centerLeft,
                           child: const Icon(Icons.delete, color: Colors.white),
@@ -859,7 +876,7 @@ class _companyComponentCommentState extends State<companyComponentComment> {
                               duration: const Duration(milliseconds: 2000),
                               child: Padding(
                                 padding:
-                                    const EdgeInsets.only(top: 8, bottom: 14),
+                                    const EdgeInsets.only(top: 6, bottom: 14),
                                 child: Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -1136,10 +1153,10 @@ class _companyComponentCommentState extends State<companyComponentComment> {
                       borderRadius: BorderRadius.circular(10),
                       color: Colors.white10),
                   child: Text(
-                    'Leave feedback',
+                    LocaleKeys.leave_feedback_lc.tr(),
                     style: GoogleFonts.lato(
                       textStyle: const TextStyle(
-                          fontSize: 13, color: Colors.white, letterSpacing: .8),
+                          fontSize: 12, color: Colors.white, letterSpacing: .8),
                     ),
                   ),
                 ),

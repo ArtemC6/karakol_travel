@@ -5,12 +5,14 @@ class HotelModel {
   String category = "";
   var price = 0;
   double rating = 0.0;
+  int position = 0;
   String photo_main = "";
 
   HotelModel(
       {required this.name,
       required this.id,
       required this.location,
+      required this.position,
       required this.rating,
       required this.category,
       required this.photo_main,

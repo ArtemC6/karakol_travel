@@ -3,18 +3,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:karakol_travel/data/model/CommentModel.dart';
-import 'package:karakol_travel/screen/restaurant/restaurant_selection_screen.dart';
-import '../../data/cons/const.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:karakol_travel/screen/fragment_screen/menu_screen.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../../data/const/const.dart';
 import '../../data/model/OperatorModel.dart';
 import '../../data/model/RestaurantModel.dart';
 import '../../data/widget/widget_component.dart';
 import '../../data/widget/widget_slide.dart';
-import '../fragment_screen/photo_viewing_screen.dart';
+import '../../generated/locale_keys.g.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class RestaurantScreen extends StatefulWidget {
   var id;
@@ -43,17 +44,21 @@ class _RestaurantScreen extends State<RestaurantScreen>
   void readFirebase() async {
     listRestaurant = [];
     listRestaurantSimilar = [];
+
     await FirebaseFirestore.instance
         .collection('Restaurant')
+        .doc(id)
         .get()
-        .then((QuerySnapshot querySnapshot) {
-      querySnapshot.docs.forEach((document) async {
-        Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+        .then((DocumentSnapshot documentSnapshot) {
+      if (documentSnapshot.exists) {
+        Map<String, dynamic> data =
+            documentSnapshot.data() as Map<String, dynamic>;
         if (data['id'] == id) {
           setState(() {
-            imgList = List<String>.from(document['images']);
-            imaListMenu = List<String>.from(document['menu']);
+            imgList = List<String>.from(data['images']);
+            imaListMenu = List<String>.from(data['menu']);
             listRestaurant.add(RestaurantModel(
+                position: data['position'],
                 name: data['name'],
                 category: data['category'],
                 id: data['id'],
@@ -63,17 +68,32 @@ class _RestaurantScreen extends State<RestaurantScreen>
                 photo_main: data['photo']));
           });
         }
+      }
+    });
 
-        if (data['id'] != id) {
-          if (data['category'] == listRestaurant[0].category) {
-            listRestaurantSimilar.add(RestaurantModel(
-                name: data['name'],
-                category: data['category'],
-                id: data['id'],
-                location: data['location'],
-                rating: data['rating'],
-                price: data['price'],
-                photo_main: data['photo']));
+    FirebaseFirestore.instance
+        .collection('Restaurant')
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      querySnapshot.docs.forEach((document) async {
+        Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+        if (listRestaurant.isNotEmpty) {
+          if (data['id'] != id) {
+            if (data['category'] == listRestaurant[0].category) {
+              print(data['name']);
+
+              setState(() {
+                listRestaurantSimilar.add(RestaurantModel(
+                    position: data['position'],
+                    name: data['name'],
+                    category: data['category'],
+                    id: data['id'],
+                    location: data['location'],
+                    rating: data['rating'],
+                    price: data['price'],
+                    photo_main: data['photo']));
+              });
+            }
           }
         }
       });
@@ -81,49 +101,48 @@ class _RestaurantScreen extends State<RestaurantScreen>
 
     await FirebaseFirestore.instance
         .collection('Comment')
+        .limit(20)
         .get()
         .then((QuerySnapshot querySnapshot) {
       querySnapshot.docs.forEach((document) async {
         Map<String, dynamic> data = document.data() as Map<String, dynamic>;
-        if (listComment.length <= 14) {
-          if (data['id_company'] == id) {
-            final Timestamp timestampStart = data['date'] as Timestamp;
-            final DateTime dateTimeStart = timestampStart.toDate();
+        if (data['id_company'] == id) {
+          final Timestamp timestampStart = data['date'] as Timestamp;
+          final DateTime dateTimeStart = timestampStart.toDate();
 
-            var timeStart = DateTime(
-              dateTimeStart.year,
-              dateTimeStart.month,
-              dateTimeStart.day,
-            );
+          var timeStart = DateTime(
+            dateTimeStart.year,
+            dateTimeStart.month,
+            dateTimeStart.day,
+          );
 
-            DateTime currentDate = DateTime.now();
-            var currentTimeDay = DateTime(
-              currentDate.year,
-              currentDate.month,
-              currentDate.day - 7,
-            );
+          DateTime currentDate = DateTime.now();
+          var currentTimeDay = DateTime(
+            currentDate.year,
+            currentDate.month,
+            currentDate.day - 7,
+          );
 
-            DateTime start = currentTimeDay;
-            DateTime end = timeStart;
+          DateTime start = currentTimeDay;
+          DateTime end = timeStart;
 
-            start = start.subtract(const Duration(seconds: 1));
-            end = end.add(const Duration(days: 1));
-            end = end.subtract(const Duration(seconds: 1));
+          start = start.subtract(const Duration(seconds: 1));
+          end = end.add(const Duration(days: 1));
+          end = end.subtract(const Duration(seconds: 1));
 
-            if (timeStart.isAfter(start) && timeStart.isBefore(end)) {
-              setState(() {
-                listComment.add(CommentModel(
-                  name: data['name'],
-                  id_devise: data['id_devise'],
-                  id: data['id'],
-                  rating: data['rating'],
-                  dateTime: data['date'],
-                  id_company: data['id_company'],
-                  photo_profile: data['photo'],
-                  comment: data['comment'],
-                ));
-              });
-            }
+          if (timeStart.isAfter(start) && timeStart.isBefore(end)) {
+            setState(() {
+              listComment.add(CommentModel(
+                name: data['name'],
+                id_devise: data['id_devise'],
+                id: data['id'],
+                rating: data['rating'],
+                dateTime: data['date'],
+                id_company: data['id_company'],
+                photo_profile: data['photo'],
+                comment: data['comment'],
+              ));
+            });
           }
         }
       });
@@ -152,7 +171,7 @@ class _RestaurantScreen extends State<RestaurantScreen>
               if (imgList.isNotEmpty) {
                 Navigator.push(
                     context,
-                    FadeRouteAnimation(PhotoViewingScreen(
+                    FadeRouteAnimation(MenuScreen(
                       listMenu: imgList,
                     )));
               }
@@ -185,7 +204,7 @@ class _RestaurantScreen extends State<RestaurantScreen>
           headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
             return <Widget>[
               SliverAppBar(
-                expandedHeight: 240,
+                expandedHeight: 220,
                 floating: true,
                 forceElevated: innerBoxIsScrolled,
                 pinned: true,
@@ -209,6 +228,7 @@ class _RestaurantScreen extends State<RestaurantScreen>
                               curve: Curves.easeOut,
                               duration: const Duration(milliseconds: 2000),
                               child: Stack(
+                                // fit: StackFit.loose,
                                 children: [
                                   CarouselSlider(
                                     items: imageSliders,
@@ -217,7 +237,7 @@ class _RestaurantScreen extends State<RestaurantScreen>
                                       autoPlay: true,
                                       disableCenter: false,
                                       viewportFraction: 1,
-                                      aspectRatio: 1.5,
+                                      aspectRatio: 1.6,
                                       onPageChanged: (index, reason) {
                                         setState(
                                           () {
@@ -228,7 +248,7 @@ class _RestaurantScreen extends State<RestaurantScreen>
                                     ),
                                   ),
                                   Container(
-                                    padding: const EdgeInsets.only(bottom: 20),
+                                    padding: const EdgeInsets.only(bottom: 12),
                                     alignment: Alignment.bottomCenter,
                                     child: Row(
                                       mainAxisAlignment:
@@ -271,6 +291,8 @@ class _RestaurantScreen extends State<RestaurantScreen>
             ];
           },
           body: RefreshIndicator(
+            // edgeOffset: 64,
+
             backgroundColor: black_86,
             color: Colors.blueAccent,
             onRefresh: () async {
@@ -280,6 +302,7 @@ class _RestaurantScreen extends State<RestaurantScreen>
                       builder: (context) => RestaurantScreen(id: id)));
             },
             child: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -303,6 +326,7 @@ class _RestaurantScreen extends State<RestaurantScreen>
                             ),
                           ),
                           child: TabBar(
+                            indicatorColor: Colors.red,
                             controller: _tabController,
                             indicator: BoxDecoration(
                               border: Border.all(
@@ -314,19 +338,19 @@ class _RestaurantScreen extends State<RestaurantScreen>
                             ),
                             labelColor: Colors.white,
                             unselectedLabelColor: Colors.blueAccent,
-                            tabs: const [
+                            tabs: [
                               Tab(
-                                text: 'Reviews',
+                                text: LocaleKeys.reviews_lc.tr(),
                               ),
                               Tab(
-                                text: 'Gallery',
+                                text: LocaleKeys.gallery_lc.tr(),
                               ),
                             ],
                           ),
                         ),
                         // tab bar view here
                         SizedBox(
-                          height: 410,
+                          height: 430,
                           child: TabBarView(
                             controller: _tabController,
                             children: [
@@ -351,13 +375,11 @@ class _RestaurantScreen extends State<RestaurantScreen>
                               border:
                                   Border.all(width: 0.5, color: Colors.white30),
                               color: Colors.white10),
-                          // alignment: Alignment.centerLeft,
-                          // padding: EdgeInsets.only(top: 10, bottom: 10, left: 14),
                           child: Text(
-                            'Similar coffees',
+                            LocaleKeys.is_similar_restaurant_lc.tr(),
                             style: GoogleFonts.lato(
                               textStyle: const TextStyle(
-                                  fontSize: 15,
+                                  fontSize: 13,
                                   color: Colors.white,
                                   letterSpacing: .8),
                             ),
@@ -367,20 +389,16 @@ class _RestaurantScreen extends State<RestaurantScreen>
                           splashColor: Colors.transparent,
                           highlightColor: Colors.transparent,
                           onTap: () {
-                            Navigator.push(
-                                context,
-                                FadeRouteAnimation(
-                                    const RestaurantSelectionScreen()));
                           },
                           child: Container(
                             margin: const EdgeInsets.only(
                                 bottom: 20, left: 14, right: 20),
                             padding: const EdgeInsets.all(8),
                             child: Text(
-                              'See all',
+                              LocaleKeys.see_all_lc.tr(),
                               style: GoogleFonts.lato(
                                 textStyle: const TextStyle(
-                                    fontSize: 15,
+                                    fontSize: 12,
                                     color: Colors.blueAccent,
                                     letterSpacing: .8),
                               ),
@@ -390,7 +408,7 @@ class _RestaurantScreen extends State<RestaurantScreen>
                       ],
                     ),
                   if (listRestaurantSimilar.isNotEmpty)
-                    companyComponentSimilar(listRestaurantSimilar),
+                    companyComponentSimilar(listRestaurantSimilar, 'Restaurant'),
                 ],
               ),
             ),

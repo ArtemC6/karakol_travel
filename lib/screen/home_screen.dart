@@ -1,10 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:karakol_travel/data/model/StartingDataModel.dart';
-import '../data/cons/const.dart';
+import '../data/const/const.dart';
 import '../data/widget/widget_home.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'dart:io';
+import '../generated/locale_keys.g.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -16,14 +19,23 @@ class _HomeScreen extends State<HomeScreen> {
   bool isVisible = false, isVisibleNature = false;
   List<StartingDataModel> listStartingDataTop = [],
       listStartingDataHotel = [],
-      listStartingDataFood = [];
+      listStartingDataCafe = [];
   List<String> listStartingDataNature = [];
-
   List<String> listWelcomeImage = [], listWelcomeName = [];
-  List<String> listHotelImage = [], listHotelName = [];
-  List<String> listFoodImage = [], listFoodName = [];
+  List<String> listHotelImage = [], listHotelName = [], listHotelId = [];
+  List<String> listCafeImage = [], listCafeName = [], listCafeId = [];
 
   void readFirebase() async {
+    Future.delayed(const Duration(milliseconds: 250), () {
+      setState(() {
+        if (Platform.localeName.substring(0, 2) == 'ru') {
+          context.setLocale(const Locale('ru'));
+        } else {
+          context.setLocale(const Locale('en'));
+        }
+      });
+    });
+
     FirebaseFirestore.instance
         .collection('Starting_photos_top')
         .get()
@@ -34,7 +46,9 @@ class _HomeScreen extends State<HomeScreen> {
         setState(() {
           for (int i = 0; i < listWelcomeImage.length; i++) {
             listStartingDataTop.add(StartingDataModel(
-                name: listWelcomeName[i], image_uri: listWelcomeImage[i]));
+                name_comapny: listWelcomeName[i],
+                image_uri: listWelcomeImage[i],
+                id_comapny: ''));
           }
         });
       });
@@ -47,26 +61,32 @@ class _HomeScreen extends State<HomeScreen> {
       querySnapshot.docs.forEach((document) async {
         listHotelImage = List<String>.from(document['images_hotel']);
         listHotelName = List<String>.from(document['name_hotel']);
+        listHotelId = List<String>.from(document['id_hotel']);
         setState(() {
           for (int i = 0; i < listHotelImage.length; i++) {
             listStartingDataHotel.add(StartingDataModel(
-                name: listHotelName[i], image_uri: listHotelImage[i]));
+                name_comapny: listHotelName[i],
+                image_uri: listHotelImage[i],
+                id_comapny: listHotelId[i]));
           }
         });
       });
     });
 
     FirebaseFirestore.instance
-        .collection('Starting_photos_food')
+        .collection('Starting_photos_cafe')
         .get()
         .then((QuerySnapshot querySnapshot) {
       querySnapshot.docs.forEach((document) async {
-        listFoodImage = List<String>.from(document['images_food']);
-        listFoodName = List<String>.from(document['name_food']);
+        listCafeImage = List<String>.from(document['images_cafe']);
+        listCafeName = List<String>.from(document['name_cafe']);
+        listCafeId = List<String>.from(document['id_company']);
         setState(() {
-          for (int i = 0; i < listFoodImage.length; i++) {
-            listStartingDataFood.add(StartingDataModel(
-                name: listFoodName[i], image_uri: listFoodImage[i]));
+          for (int i = 0; i < listCafeImage.length; i++) {
+            listStartingDataCafe.add(StartingDataModel(
+                name_comapny: listCafeName[i],
+                image_uri: listCafeImage[i],
+                id_comapny: listCafeId[i]));
           }
         });
       });
@@ -127,7 +147,8 @@ class _HomeScreen extends State<HomeScreen> {
                 actionsIconTheme: const IconThemeData(opacity: 0.0),
                 title: const SizedBox(),
                 flexibleSpace: FlexibleSpaceBar(
-                  background: slideHomeTop(listStartingDataTop),
+                  background:
+                      slideHomeTop(listStartingDataTop, listStartingDataNature),
                 ),
               ),
             ];
@@ -140,16 +161,20 @@ class _HomeScreen extends State<HomeScreen> {
                   MaterialPageRoute(builder: (context) => HomeScreen()));
             },
             child: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
               child: Column(
                 children: <Widget>[
                   const SizedBox(
-                    height: 14,
+                    height: 8,
                   ),
-                  sampleProductOnTap('Hotel'),
+                  sampleProductOnTap(LocaleKeys.hotel_lc.tr(),
+                      LocaleKeys.view_all_lc.tr(), '0', listStartingDataNature),
                   slideHomeMulti(listStartingDataHotel, 'Hotel'),
-                  sampleProductOnTap('Food'),
-                  slideHomeMulti(listStartingDataFood, 'Food'),
-                  sampleProductOnTap('Nature'),
+                  sampleProductOnTap(LocaleKeys.cafe_lc.tr(),
+                      LocaleKeys.view_all_lc.tr(), '1', listStartingDataNature),
+                  slideHomeMulti(listStartingDataCafe, 'Food'),
+                  sampleProductOnTap(LocaleKeys.nature_lc.tr(),
+                      LocaleKeys.view_all_lc.tr(), '2', listStartingDataNature),
                   if (isVisibleNature) showNatureCard(listStartingDataNature),
                 ],
               ),

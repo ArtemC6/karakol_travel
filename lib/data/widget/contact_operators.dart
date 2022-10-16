@@ -1,8 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:device_info_plus/device_info_plus.dart';
-import '../cons/const.dart';
-import  'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_launch/flutter_launch.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
@@ -10,6 +9,9 @@ import 'package:telegram/telegram.dart';
 import '../../data/model/OperatorModel.dart';
 import 'dart:io';
 import '../../data/model/RestaurantModel.dart';
+import '../../generated/locale_keys.g.dart';
+import '../const/const.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class ContactsOperator extends StatefulWidget {
   List<RestaurantModel> listCompany = [];
@@ -98,10 +100,10 @@ class _ContactsOperatorState extends State<ContactsOperator> {
                   alignment: Alignment.centerLeft,
                   child: TextButton(
                       onPressed: () {},
-                      child: Text('Connect with us ',
+                      child: Text(LocaleKeys.connect_with_us_lc.tr(),
                           style: GoogleFonts.lato(
                             textStyle: const TextStyle(
-                                fontSize: 19,
+                                fontSize: 17,
                                 color: Colors.white,
                                 letterSpacing: .8),
                           )))),
@@ -119,6 +121,7 @@ class _ContactsOperatorState extends State<ContactsOperator> {
                   onPressed: () async {
                     final docCall =
                         FirebaseFirestore.instance.collection('Call').doc();
+
                     int randomIndex = getRandomElement(listOperator.length);
                     final json = {
                       'id': docCall.id,
@@ -135,15 +138,15 @@ class _ContactsOperatorState extends State<ContactsOperator> {
                     });
                   },
                   icon: Image.asset(
-                    'images/karakol/ic_phone.png',
+                    'assets/images/icon/ic_phone.png',
                     height: 65,
                     width: 65,
                   ),
                   label: Text(
-                    'Call the phone               ',
+                    '${LocaleKeys.contact_phone_lc.tr()}           ',
                     style: GoogleFonts.lato(
                         textStyle: const TextStyle(
-                            fontSize: 18,
+                            fontSize: 15,
                             color: Colors.white,
                             letterSpacing: .8)),
                   ),
@@ -176,25 +179,25 @@ class _ContactsOperatorState extends State<ContactsOperator> {
                     docCall.set(json);
                     Navigator.pop(context);
 
-                    bool whatsapp =
-                        await FlutterLaunch.hasApp(name: "whatsapp");
-                    if (whatsapp) {
-                      await FlutterLaunch.launchWhatsapp(
-                          phone: list[randomIndex].whitsApp,
-                          message:
-                              'Hello, would you like to know more about ${listCompany[0].name}');
-                    }
+                    // bool whatsapp =
+                    //     await FlutterLaunch.hasApp(name: "whatsapp");
+                    // if (whatsapp) {
+                    await FlutterLaunch.launchWhatsapp(
+                        phone: list[randomIndex].whitsApp,
+                        message:
+                            '${LocaleKeys.company_question_lc.tr()} \"${listCompany[0].name}\"');
+                    // }
                   },
                   icon: Image.asset(
-                    'images/karakol/ic_whatsapp.png',
+                    'assets/images/icon/ic_whatsapp.png',
                     height: 60,
                     width: 60,
                   ),
                   label: Text(
-                    'Contact via Whatsapp',
+                    LocaleKeys.contact_whatsApp_lc.tr(),
                     style: GoogleFonts.lato(
                         textStyle: const TextStyle(
-                            fontSize: 18,
+                            fontSize: 15,
                             color: Colors.white,
                             letterSpacing: .8)),
                   ),
@@ -227,21 +230,21 @@ class _ContactsOperatorState extends State<ContactsOperator> {
                       Telegram.send(
                         username: list[randomIndex].telegram,
                         message:
-                            'Hello, would you like to know more about ${listCompany[0].name}',
+                            '${LocaleKeys.company_question_lc.tr()} \"${listCompany[0].name}\"',
                       );
                       Navigator.pop(context);
                     });
                   },
                   icon: Image.asset(
-                    'images/karakol/ic_telegram.png',
+                    'assets/images/icon/ic_telegram.png',
                     height: 65,
                     width: 65,
                   ),
                   label: Text(
-                    'Contact via Telegram',
+                    LocaleKeys.contact_telegram_lc.tr(),
                     style: GoogleFonts.lato(
                         textStyle: const TextStyle(
-                            fontSize: 18,
+                            fontSize: 15,
                             color: Colors.white,
                             letterSpacing: .8)),
                   ),
@@ -276,7 +279,7 @@ class _ContactsOperatorState extends State<ContactsOperator> {
               onPressed: () {
                 Navigator.pop(context);
               },
-              child: Text('Попрубуйте позже',
+              child: Text(LocaleKeys.try_later_lc.tr(),
                   style: GoogleFonts.lato(
                     textStyle: const TextStyle(
                         fontSize: 18, color: Colors.white, letterSpacing: .8),

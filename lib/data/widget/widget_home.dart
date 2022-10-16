@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:karakol_travel/screen/hotel/hotel_screen.dart';
 import 'package:karakol_travel/screen/restaurant/restaurant_selection_screen.dart';
-import '../cons/const.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../../screen/Nature/nature_screen.dart';
 import '../../screen/hotel/hotel_selection_screen.dart';
@@ -10,12 +10,15 @@ import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter_carousel_slider/carousel_slider_transforms.dart';
 import 'package:flutter_carousel_slider/carousel_slider.dart';
+import '../../screen/restaurant/restaurant_screen.dart';
+import '../const/const.dart';
 import '../model/StartingDataModel.dart';
 
 class slideHomeTop extends StatelessWidget {
   List<StartingDataModel> listStartingDataTop = [];
+  List<String> listNature = [];
 
-  slideHomeTop(this.listStartingDataTop, {super.key});
+  slideHomeTop(this.listStartingDataTop, this.listNature, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -52,8 +55,11 @@ class slideHomeTop extends StatelessWidget {
                                   FadeRouteAnimation(
                                       const RestaurantSelectionScreen()));
                             } else if (index == 2) {
-                              Navigator.push(context,
-                                  FadeRouteAnimation(const NatureScreen()));
+                              Navigator.push(
+                                  context,
+                                  FadeRouteAnimation(NatureScreen(
+                                    listImage: listNature,
+                                  )));
                             }
                           },
                           child: Stack(
@@ -96,9 +102,12 @@ class slideHomeTop extends StatelessWidget {
 }
 
 class sampleProductOnTap extends StatelessWidget {
-  late String nameProduct;
+  late String nameProduct, view, position;
+  List<String> listNature = [];
 
-  sampleProductOnTap(this.nameProduct, {super.key});
+  sampleProductOnTap(
+      this.nameProduct, this.view, this.position, this.listNature,
+      {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -106,13 +115,18 @@ class sampleProductOnTap extends StatelessWidget {
       splashColor: Colors.transparent,
       highlightColor: Colors.transparent,
       onTap: () {
-        if (nameProduct == 'Hotel') {
-          Navigator.push(context, FadeRouteAnimation(HotelSelectionScreen()));
-        } else if (nameProduct == 'Food') {
+        if (position == '0') {
+          Navigator.push(
+              context, FadeRouteAnimation(const HotelSelectionScreen()));
+        } else if (position == '1') {
           Navigator.push(
               context, FadeRouteAnimation(const RestaurantSelectionScreen()));
-        } else if (nameProduct == 'Nature') {
-          Navigator.push(context, FadeRouteAnimation(const NatureScreen()));
+        } else if (position == '2') {
+          Navigator.push(
+              context,
+              FadeRouteAnimation(NatureScreen(
+                listImage: listNature,
+              )));
         }
       },
       child: Padding(
@@ -122,45 +136,49 @@ class sampleProductOnTap extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             Container(
-              padding: const EdgeInsets.all(10),
+              padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                  border: Border.all(width: 0.5, color: Colors.white30),
+                  border: Border.all(width: 0.5, color: Colors.white38),
                   borderRadius: BorderRadius.circular(10),
-                  color: Colors.white10),
+                  color: Colors.white12),
               child: Row(
                 children: [
-                  if (nameProduct == 'Hotel')
+                  if (position == '0')
                     const Padding(
                       padding: EdgeInsets.only(right: 6),
                       child: Icon(
                         Icons.home_outlined,
                         color: Colors.white70,
-                        size: 22,
+                        size: 20,
                       ),
                     ),
-                  if (nameProduct == 'Food')
+                  if (position == '1')
                     const Padding(
                       padding: EdgeInsets.only(right: 6),
                       child: Icon(
                         Icons.fastfood_rounded,
                         color: Colors.white70,
-                        size: 20,
+                        size: 18,
                       ),
                     ),
-                  if (nameProduct == 'Nature')
+                  if (position == '2')
                     const Padding(
                       padding: EdgeInsets.only(right: 6),
                       child: Icon(
                         Icons.nature_people_outlined,
                         color: Colors.white70,
-                        size: 20,
+                        size: 18,
                       ),
                     ),
-                  Text(
-                    nameProduct,
-                    style: GoogleFonts.lato(
-                      textStyle: const TextStyle(
-                          color: Colors.white, fontSize: 16, letterSpacing: .9),
+                  RichText(
+                    text: TextSpan(
+                      text: nameProduct,
+                      style: GoogleFonts.lato(
+                        textStyle: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 13.5,
+                            letterSpacing: .9),
+                      ),
                     ),
                   ),
                 ],
@@ -170,12 +188,12 @@ class sampleProductOnTap extends StatelessWidget {
               text: TextSpan(
                 children: [
                   TextSpan(
-                    text: 'View all',
+                    text: view,
                     style: GoogleFonts.lato(
                       textStyle: const TextStyle(
                           color: Colors.blueAccent,
-                          fontSize: 13,
-                          letterSpacing: .9),
+                          fontSize: 10.5,
+                          letterSpacing: .6),
                     ),
                   ),
                   const WidgetSpan(
@@ -184,7 +202,7 @@ class sampleProductOnTap extends StatelessWidget {
                       child: Icon(
                         Icons.keyboard_arrow_right,
                         color: Colors.blueAccent,
-                        size: 17,
+                        size: 16,
                       ),
                     ),
                   ),
@@ -231,13 +249,17 @@ class slideHomeMulti extends StatelessWidget {
                       highlightColor: Colors.transparent,
                       onTap: () {
                         if (isProduct == 'Hotel') {
-                          Navigator.push(context,
-                              FadeRouteAnimation(HotelSelectionScreen()));
+                          Navigator.push(
+                              context,
+                              FadeRouteAnimation(HotelScreen(
+                                id: listStartingData[index].id_comapny,
+                              )));
                         } else {
                           Navigator.push(
                               context,
-                              FadeRouteAnimation(
-                                  const RestaurantSelectionScreen()));
+                              FadeRouteAnimation(RestaurantScreen(
+                                id: listStartingData[index].id_comapny,
+                              )));
                         }
                       },
                       child: Container(
@@ -280,12 +302,16 @@ class slideHomeMulti extends StatelessWidget {
                             ),
                             Padding(
                               padding: const EdgeInsets.only(
-                                  left: 6, right: 4, top: 4),
-                              child: Text(
-                                listStartingData[index].name,
-                                style: GoogleFonts.lato(
-                                  textStyle: const TextStyle(
-                                      color: Colors.white, letterSpacing: .9),
+                                  left: 8, right: 4, top: 3),
+                              child: RichText(
+                                text: TextSpan(
+                                  text: listStartingData[index].name_comapny,
+                                  style: GoogleFonts.lato(
+                                    textStyle: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 12,
+                                        letterSpacing: .9),
+                                  ),
                                 ),
                               ),
                             ),
@@ -313,9 +339,10 @@ class showNatureCard extends StatelessWidget {
       padding: const EdgeInsets.only(left: 6, bottom: 24, right: 6),
       child: AnimationLimiter(
         child: AnimationConfiguration.staggeredList(
-          position: 1,
+          position: 2,
           delay: const Duration(milliseconds: 400),
           child: SlideAnimation(
+            horizontalOffset: 120,
             duration: const Duration(milliseconds: 3000),
             verticalOffset: 260,
             curve: Curves.ease,
@@ -324,8 +351,8 @@ class showNatureCard extends StatelessWidget {
               duration: const Duration(milliseconds: 3500),
               child: MasonryGridView.count(
                   itemCount: list.length,
-                  mainAxisSpacing: 14,
-                  crossAxisSpacing: 14,
+                  mainAxisSpacing: 4,
+                  crossAxisSpacing: 4,
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
                   crossAxisCount: 2,
@@ -334,8 +361,13 @@ class showNatureCard extends StatelessWidget {
                       splashColor: Colors.transparent,
                       highlightColor: Colors.transparent,
                       onTap: () {
-                        Navigator.push(
-                            context, FadeRouteAnimation(const NatureScreen()));
+                        if (list.isNotEmpty) {
+                          Navigator.push(
+                              context,
+                              FadeRouteAnimation(NatureScreen(
+                                listImage: list,
+                              )));
+                        }
                       },
                       child: SizedBox(
                         height: masonryCardHeights[index % 3],

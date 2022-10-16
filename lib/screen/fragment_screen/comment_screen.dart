@@ -6,7 +6,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:karakol_travel/data/model/CommentModel.dart';
-import '../../data/cons/const.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -14,6 +13,10 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'dart:io';
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:easy_localization/easy_localization.dart';
+
+import '../../data/const/const.dart';
+import '../../generated/locale_keys.g.dart';
 
 class CommentScreen extends StatefulWidget {
   var id, time, selectData;
@@ -46,13 +49,13 @@ class _CommentScreenState extends State<CommentScreen> {
     listComment = [];
     await FirebaseFirestore.instance
         .collection('Comment')
+        .limit(100)
         .get()
         .then((QuerySnapshot querySnapshot) {
       querySnapshot.docs.forEach((document) async {
         Map<String, dynamic> data = document.data() as Map<String, dynamic>;
-        if (listComment.length <= 100) {
-          if (data['id_company'] == id) {
-            print(time);
+        if (data['id_company'] == id) {
+          if (time != null) {
             final Timestamp timestampStart = data['date'] as Timestamp;
             final DateTime dateTimeStart = timestampStart.toDate();
 
@@ -90,45 +93,45 @@ class _CommentScreenState extends State<CommentScreen> {
                 ));
               });
             }
+          }
 
-            if (time == null) {
-              final Timestamp timestampStart = data['date'] as Timestamp;
-              final DateTime dateTimeStart = timestampStart.toDate();
+          if (time == null) {
+            final Timestamp timestampStart = data['date'] as Timestamp;
+            final DateTime dateTimeStart = timestampStart.toDate();
 
-              var timeStart = DateTime(
-                dateTimeStart.year,
-                dateTimeStart.month,
-                dateTimeStart.day,
-              );
+            var timeStart = DateTime(
+              dateTimeStart.year,
+              dateTimeStart.month,
+              dateTimeStart.day,
+            );
 
-              DateTime currentDate = DateTime.now();
-              var currentTimeDay = DateTime(
-                currentDate.year,
-                currentDate.month,
-                currentDate.day - 7,
-              );
+            DateTime currentDate = DateTime.now();
+            var currentTimeDay = DateTime(
+              currentDate.year,
+              currentDate.month,
+              currentDate.day - 7,
+            );
 
-              DateTime start = currentTimeDay;
-              DateTime end = timeStart;
+            DateTime start = currentTimeDay;
+            DateTime end = timeStart;
 
-              start = start.subtract(const Duration(seconds: 1));
-              end = end.add(const Duration(days: 1));
-              end = end.subtract(const Duration(seconds: 1));
+            start = start.subtract(const Duration(seconds: 1));
+            end = end.add(const Duration(days: 1));
+            end = end.subtract(const Duration(seconds: 1));
 
-              if (timeStart.isAfter(start) && timeStart.isBefore(end)) {
-                setState(() {
-                  listComment.add(CommentModel(
-                    name: data['name'],
-                    id_devise: data['id_devise'],
-                    id: data['id'],
-                    rating: data['rating'],
-                    dateTime: data['date'],
-                    id_company: data['id_company'],
-                    photo_profile: data['photo'],
-                    comment: data['comment'],
-                  ));
-                });
-              }
+            if (timeStart.isAfter(start) && timeStart.isBefore(end)) {
+              setState(() {
+                listComment.add(CommentModel(
+                  name: data['name'],
+                  id_devise: data['id_devise'],
+                  id: data['id'],
+                  rating: data['rating'],
+                  dateTime: data['date'],
+                  id_company: data['id_company'],
+                  photo_profile: data['photo'],
+                  comment: data['comment'],
+                ));
+              });
             }
           }
         }
@@ -179,9 +182,9 @@ class _CommentScreenState extends State<CommentScreen> {
                     ),
                     Expanded(
                       child: Text(
-                        selectData ?? 'Choose time',
+                        selectData ?? LocaleKeys.choose_time_lc.tr(),
                         style: const TextStyle(
-                          fontSize: 14,
+                          fontSize: 12.5,
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
                         ),
@@ -282,7 +285,7 @@ class _CommentScreenState extends State<CommentScreen> {
                               ),
                               child: AnimationConfiguration.staggeredList(
                                 position: index,
-                                delay: const Duration(milliseconds: 300),
+                                delay: const Duration(milliseconds: 250),
                                 child: SlideAnimation(
                                   duration: const Duration(milliseconds: 1500),
                                   horizontalOffset: 100,

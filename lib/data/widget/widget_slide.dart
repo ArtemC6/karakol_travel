@@ -1,17 +1,19 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
-import '../cons/const.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:karakol_travel/screen/hotel/hotel_screen.dart';
 import '../../data/model/RestaurantModel.dart';
 import '../../screen/restaurant/restaurant_screen.dart';
+import '../const/const.dart';
 
 class companyComponentSimilar extends StatelessWidget {
   List<RestaurantModel> listCompany = [];
+  String isCompany;
 
-  companyComponentSimilar(this.listCompany, {super.key});
+  companyComponentSimilar(this.listCompany, this.isCompany, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -39,11 +41,19 @@ class companyComponentSimilar extends StatelessWidget {
                       splashColor: Colors.transparent,
                       highlightColor: Colors.transparent,
                       onTap: () {
-                        Navigator.push(
-                            context,
-                            FadeRouteAnimation(RestaurantScreen(
-                              id: listCompany[index].id,
-                            )));
+                        if (isCompany == 'Restaurant') {
+                          Navigator.push(
+                              context,
+                              FadeRouteAnimation(RestaurantScreen(
+                                id: listCompany[index].id,
+                              )));
+                        } else {
+                          Navigator.push(
+                              context,
+                              FadeRouteAnimation(HotelScreen(
+                                id: listCompany[index].id,
+                              )));
+                        }
                       },
                       child: Container(
                         width: MediaQuery.of(context).size.width * 0.40,

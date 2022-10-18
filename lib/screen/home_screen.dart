@@ -138,7 +138,7 @@ class _HomeScreen extends State<HomeScreen> {
           headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
             return <Widget>[
               SliverAppBar(
-                expandedHeight: 220,
+                expandedHeight: MediaQuery.of(context).size.height * 0.28,
                 floating: true,
                 forceElevated: innerBoxIsScrolled,
                 automaticallyImplyLeading: false,
@@ -165,7 +165,7 @@ class _HomeScreen extends State<HomeScreen> {
               child: Column(
                 children: <Widget>[
                   const SizedBox(
-                    height: 8,
+                    height: 6,
                   ),
                   sampleProductOnTap(LocaleKeys.hotel_lc.tr(),
                       LocaleKeys.view_all_lc.tr(), '0', listStartingDataNature),

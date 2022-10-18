@@ -1,11 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
-import 'package:flutter/services.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:photo_view/photo_view.dart';
+import 'package:zoomable_photo_gallery/zoomable_photo_gallery.dart';
 import '../../data/const/const.dart';
+import 'package:zoomable_photo_gallery/zoomable_photo_gallery_widget.dart';
 
 class MenuScreen extends StatefulWidget {
   List<String> listMenu;
@@ -21,55 +20,11 @@ class _MenuScreen extends State<MenuScreen> {
 
   _MenuScreen(this.listMenu);
 
-  final CarouselController _controllerMenu = CarouselController();
-  int _currentMenu = 0;
+  int currentPageIndex = 0;
+  ZoomablePhotoController controller = ZoomablePhotoController();
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> imageSlidersMenu = listMenu
-        .map(
-          (item) => Container(
-            padding: const EdgeInsets.all(12),
-            child: Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                  border: Border.all(width: 0.5, color: Colors.white38),
-                  borderRadius: BorderRadius.circular(26),
-                  color: black_86),
-              child: CachedNetworkImage(
-                imageBuilder: (context, imageProvider) => PhotoView(
-                  // basePosition: Alignment.topCenter,
-                  // customSize:
-                  // Size.fromWidth(10),
-                  // customSize:Size.copy( )
-                  // Size.square(100),
-                  // customSize: ,
-
-                  imageProvider: imageProvider,
-                  backgroundDecoration: BoxDecoration(
-                    color: black_86,
-                    // borderRadius: BorderRadius.circular(28),
-                    //   border: Border.all(width: 0.5, color: Colors.white38),
-                  ),
-                ),
-                imageUrl: item,
-                progressIndicatorBuilder: (context, url, progress) => Center(
-                  child: SizedBox(
-                    height: 30,
-                    width: 30,
-                    child: CircularProgressIndicator(
-                      color: Colors.white,
-                      strokeWidth: 0.8,
-                      value: progress.progress,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        )
-        .toList();
-
     return Scaffold(
       backgroundColor: black_93,
       body: SingleChildScrollView(
@@ -94,58 +49,80 @@ class _MenuScreen extends State<MenuScreen> {
                             child: FadeInAnimation(
                               curve: Curves.easeOut,
                               duration: const Duration(milliseconds: 2000),
-                              child: Stack(
-                                children: [
-                                  CarouselSlider(
-                                    items: imageSlidersMenu,
-                                    carouselController: _controllerMenu,
-                                    options: CarouselOptions(
-                                      height:
-                                          MediaQuery.of(context).size.height,
-                                      // autoPlay: true,
-                                      disableCenter: false,
-                                      viewportFraction: 1,
-                                      onPageChanged: (index, reason) {
-                                        setState(
-                                          () {
-                                            _currentMenu = index;
-                                          },
-                                        );
-                                      },
+                              child: ZoomablePhotoGallery(
+                                controller: controller,
+                                initIndex: 0,
+                                backColor: black_86,
+                                maxZoom: 5,
+                                minZoom: 0.5,
+                                // location: IndicatorLocation.BOTTOM_CENTER,
+                                changePage: (int index) {
+                                  setState(() {
+                                    currentPageIndex = index;
+                                  });
+                                },
+
+                                indicator: List.generate(
+                                  listMenu.length,
+                                  (index) => Container(
+                                    margin: const EdgeInsets.only(
+                                        left: 2.5, right: 2.5, bottom: 14),
+                                    width: 8.5,
+                                    height: 8.5,
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                          width: 0.8, color: Colors.white),
+                                      shape: BoxShape.circle,
+                                      color: index == currentPageIndex
+                                          ? Colors.white
+                                          : Colors.transparent,
                                     ),
                                   ),
-                                  Container(
-                                    padding: const EdgeInsets.only(bottom: 24),
-                                    alignment: Alignment.bottomCenter,
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children:
-                                          listMenu.asMap().entries.map((entry) {
-                                        return Container(
-                                          width: 9.0,
-                                          height: 9.0,
-                                          margin: const EdgeInsets.symmetric(
-                                              vertical: 8.0, horizontal: 3.2),
-                                          decoration: BoxDecoration(
-                                              shape: BoxShape.circle,
-                                              border: Border.all(
-                                                  width: 0.8,
-                                                  color: Colors.white),
-                                              color: (Theme.of(context)
-                                                              .brightness ==
-                                                          Brightness.dark
-                                                      ? Colors.white
-                                                      : Colors.white)
-                                                  .withOpacity(
-                                                      _currentMenu == entry.key
-                                                          ? 1
-                                                          : 0.0)),
-                                        );
-                                      }).toList(),
-                                    ),
-                                  ),
-                                ],
+                                ).toList(),
+
+                                imageList: List.generate(
+                                    listMenu.length,
+                                    (index) => Padding(
+                                          padding: const EdgeInsets.all(10),
+                                          child: CachedNetworkImage(
+                                            imageUrl: listMenu[index],
+                                            imageBuilder:
+                                                ((context, imageProvider) {
+                                              return Container(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          left: 10,
+                                                          right: 10,
+                                                          top: 10,
+                                                          bottom: 10),
+                                                  decoration: BoxDecoration(
+                                                      border: Border.all(
+                                                          width: 0.6,
+                                                          color:
+                                                              Colors.white54),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              32),
+                                                      color: black_86),
+                                                  child: Image(
+                                                      image: imageProvider));
+                                            }),
+                                            progressIndicatorBuilder:
+                                                (context, url, progress) =>
+                                                    Center(
+                                              child: SizedBox(
+                                                height: 30,
+                                                width: 30,
+                                                child:
+                                                    CircularProgressIndicator(
+                                                  color: Colors.white,
+                                                  strokeWidth: 0.8,
+                                                  value: progress.progress,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        )),
                               ),
                             ),
                           ),
@@ -181,8 +158,7 @@ class _MenuScreen extends State<MenuScreen> {
                                 highlightColor: Colors.transparent,
                                 onTap: () {
                                   setState(() {
-                                    _currentMenu = index;
-                                    _controllerMenu.jumpToPage(_currentMenu);
+                                    controller.jumpToPage(index);
                                   });
                                 },
                                 child: Container(
@@ -197,12 +173,17 @@ class _MenuScreen extends State<MenuScreen> {
                                         shadowColor: Colors.white30,
                                         color: black_86,
                                         shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(8),
-                                            side: const BorderSide(
-                                              width: 0.6,
-                                              color: Colors.white38,
-                                            )),
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                          side: BorderSide(
+                                            width: index == currentPageIndex
+                                                ? 0.7
+                                                : 1,
+                                            color: index == currentPageIndex
+                                                ? Colors.white
+                                                : Colors.white38,
+                                          ),
+                                        ),
                                         elevation: 16,
                                         child: ClipRRect(
                                           borderRadius:

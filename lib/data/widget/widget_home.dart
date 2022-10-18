@@ -29,14 +29,14 @@ class slideHomeTop extends StatelessWidget {
           child: AnimationLimiter(
             child: AnimationConfiguration.staggeredList(
               position: 1,
-              delay: const Duration(milliseconds: 550),
+              delay: const Duration(milliseconds: 250),
               child: SlideAnimation(
-                duration: const Duration(milliseconds: 2300),
-                horizontalOffset: 160,
+                duration: const Duration(milliseconds: 3200),
+                horizontalOffset: 250,
                 curve: Curves.ease,
                 child: FadeInAnimation(
                   curve: Curves.easeOut,
-                  duration: const Duration(milliseconds: 2000),
+                  duration: const Duration(milliseconds: 3500),
                   child: CarouselSlider.builder(
                       keepPage: true,
                       enableAutoSlider: true,
@@ -47,8 +47,10 @@ class slideHomeTop extends StatelessWidget {
                           highlightColor: Colors.transparent,
                           onTap: () {
                             if (index == 0) {
-                              Navigator.push(context,
-                                  FadeRouteAnimation(HotelSelectionScreen()));
+                              Navigator.push(
+                                  context,
+                                  FadeRouteAnimation(
+                                      const HotelSelectionScreen()));
                             } else if (index == 1) {
                               Navigator.push(
                                   context,
@@ -101,7 +103,7 @@ class slideHomeTop extends StatelessWidget {
   }
 }
 
-class sampleProductOnTap extends StatelessWidget {
+class sampleProductOnTap extends StatefulWidget {
   late String nameProduct, view, position;
   List<String> listNature = [];
 
@@ -110,109 +112,243 @@ class sampleProductOnTap extends StatelessWidget {
       {super.key});
 
   @override
+  State<sampleProductOnTap> createState() =>
+      _sampleProductOnTapState(nameProduct, view, position);
+}
+
+class _sampleProductOnTapState extends State<sampleProductOnTap> {
+  late String nameProduct, view, position;
+  List<String> listNature = [];
+
+  _sampleProductOnTapState(String nameProduct, String view, String position);
+
+  @override
   Widget build(BuildContext context) {
-    return InkWell(
-      splashColor: Colors.transparent,
-      highlightColor: Colors.transparent,
-      onTap: () {
-        if (position == '0') {
-          Navigator.push(
-              context, FadeRouteAnimation(const HotelSelectionScreen()));
-        } else if (position == '1') {
-          Navigator.push(
-              context, FadeRouteAnimation(const RestaurantSelectionScreen()));
-        } else if (position == '2') {
-          Navigator.push(
-              context,
-              FadeRouteAnimation(NatureScreen(
-                listImage: listNature,
-              )));
-        }
-      },
-      child: Padding(
-        padding:
-            const EdgeInsets.only(top: 14, bottom: 22, left: 16, right: 16),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                  border: Border.all(width: 0.5, color: Colors.white38),
-                  borderRadius: BorderRadius.circular(10),
-                  color: Colors.white12),
-              child: Row(
-                children: [
-                  if (position == '0')
-                    const Padding(
-                      padding: EdgeInsets.only(right: 6),
-                      child: Icon(
-                        Icons.home_outlined,
-                        color: Colors.white70,
-                        size: 20,
-                      ),
-                    ),
-                  if (position == '1')
-                    const Padding(
-                      padding: EdgeInsets.only(right: 6),
-                      child: Icon(
-                        Icons.fastfood_rounded,
-                        color: Colors.white70,
-                        size: 18,
-                      ),
-                    ),
-                  if (position == '2')
-                    const Padding(
-                      padding: EdgeInsets.only(right: 6),
-                      child: Icon(
-                        Icons.nature_people_outlined,
-                        color: Colors.white70,
-                        size: 18,
-                      ),
-                    ),
-                  RichText(
-                    text: TextSpan(
-                      text: nameProduct,
-                      style: GoogleFonts.lato(
-                        textStyle: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 13.5,
-                            letterSpacing: .9),
-                      ),
+    return SizedBox(
+      width: MediaQuery.of(context).size.width,
+      child: AnimationLimiter(
+        child: AnimationConfiguration.staggeredList(
+          position: 1,
+          delay: const Duration(milliseconds: 250),
+          child: SlideAnimation(
+            duration: const Duration(milliseconds: 2200),
+            horizontalOffset: 120,
+            curve: Curves.ease,
+            child: FadeInAnimation(
+                curve: Curves.easeIn,
+                duration: const Duration(milliseconds: 1700),
+                child: InkWell(
+                  splashColor: Colors.transparent,
+                  highlightColor: Colors.transparent,
+                  onTap: () {
+                    if (widget.position == '0') {
+                      Navigator.push(context,
+                          FadeRouteAnimation(const HotelSelectionScreen()));
+                    } else if (widget.position == '1') {
+                      Navigator.push(
+                          context,
+                          FadeRouteAnimation(
+                              const RestaurantSelectionScreen()));
+                    } else if (widget.position == '2') {
+                      Navigator.push(
+                          context,
+                          FadeRouteAnimation(NatureScreen(
+                            listImage: widget.listNature,
+                          )));
+                    }
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                        top: 14, bottom: 22, left: 16, right: 16),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                              border:
+                                  Border.all(width: 0.5, color: Colors.white38),
+                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.white12),
+                          child: Row(
+                            children: [
+                              if (widget.position == '0')
+                                const Padding(
+                                  padding: EdgeInsets.only(right: 6),
+                                  child: Icon(
+                                    Icons.home_outlined,
+                                    color: Colors.white70,
+                                    size: 20,
+                                  ),
+                                ),
+                              if (widget.position == '1')
+                                const Padding(
+                                  padding: EdgeInsets.only(right: 6),
+                                  child: Icon(
+                                    Icons.fastfood_rounded,
+                                    color: Colors.white70,
+                                    size: 18,
+                                  ),
+                                ),
+                              if (widget.position == '2')
+                                const Padding(
+                                  padding: EdgeInsets.only(right: 6),
+                                  child: Icon(
+                                    Icons.nature_people_outlined,
+                                    color: Colors.white70,
+                                    size: 18,
+                                  ),
+                                ),
+                              RichText(
+                                text: TextSpan(
+                                  text: widget.nameProduct,
+                                  style: GoogleFonts.lato(
+                                    textStyle: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 13,
+                                        letterSpacing: .9),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        RichText(
+                          text: TextSpan(
+                            children: [
+                              TextSpan(
+                                text: widget.view,
+                                style: GoogleFonts.lato(
+                                  textStyle: const TextStyle(
+                                      color: Colors.blueAccent,
+                                      fontSize: 10.5,
+                                      letterSpacing: .6),
+                                ),
+                              ),
+                              const WidgetSpan(
+                                child: Padding(
+                                  padding:
+                                      EdgeInsets.symmetric(horizontal: 4.0),
+                                  child: Icon(
+                                    Icons.keyboard_arrow_right,
+                                    color: Colors.blueAccent,
+                                    size: 16,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                      ],
                     ),
                   ),
-                ],
-              ),
-            ),
-            RichText(
-              text: TextSpan(
-                children: [
-                  TextSpan(
-                    text: view,
-                    style: GoogleFonts.lato(
-                      textStyle: const TextStyle(
-                          color: Colors.blueAccent,
-                          fontSize: 10.5,
-                          letterSpacing: .6),
-                    ),
-                  ),
-                  const WidgetSpan(
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 4.0),
-                      child: Icon(
-                        Icons.keyboard_arrow_right,
-                        color: Colors.blueAccent,
-                        size: 16,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            )
-          ],
+                )),
+          ),
         ),
       ),
     );
+    // return InkWell(
+    //   splashColor: Colors.transparent,
+    //   highlightColor: Colors.transparent,
+    //   onTap: () {
+    //     if (widget.position == '0') {
+    //       Navigator.push(
+    //           context, FadeRouteAnimation(const HotelSelectionScreen()));
+    //     } else if (widget.position == '1') {
+    //       Navigator.push(
+    //           context, FadeRouteAnimation(const RestaurantSelectionScreen()));
+    //     } else if (widget.position == '2') {
+    //       Navigator.push(
+    //           context,
+    //           FadeRouteAnimation(NatureScreen(
+    //             listImage: widget.listNature,
+    //           )));
+    //     }
+    //   },
+    //   child: Padding(
+    //     padding:
+    //         const EdgeInsets.only(top: 14, bottom: 22, left: 16, right: 16),
+    //     child: Row(
+    //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    //       children: <Widget>[
+    //         Container(
+    //           padding: const EdgeInsets.all(8),
+    //           decoration: BoxDecoration(
+    //               border: Border.all(width: 0.5, color: Colors.white38),
+    //               borderRadius: BorderRadius.circular(10),
+    //               color: Colors.white12),
+    //           child: Row(
+    //             children: [
+    //               if (widget.position == '0')
+    //                 const Padding(
+    //                   padding: EdgeInsets.only(right: 6),
+    //                   child: Icon(
+    //                     Icons.home_outlined,
+    //                     color: Colors.white70,
+    //                     size: 20,
+    //                   ),
+    //                 ),
+    //               if (widget.position == '1')
+    //                 const Padding(
+    //                   padding: EdgeInsets.only(right: 6),
+    //                   child: Icon(
+    //                     Icons.fastfood_rounded,
+    //                     color: Colors.white70,
+    //                     size: 18,
+    //                   ),
+    //                 ),
+    //               if (widget.position == '2')
+    //                 const Padding(
+    //                   padding: EdgeInsets.only(right: 6),
+    //                   child: Icon(
+    //                     Icons.nature_people_outlined,
+    //                     color: Colors.white70,
+    //                     size: 18,
+    //                   ),
+    //                 ),
+    //               RichText(
+    //                 text: TextSpan(
+    //                   text: widget.nameProduct,
+    //                   style: GoogleFonts.lato(
+    //                     textStyle: const TextStyle(
+    //                         color: Colors.white,
+    //                         fontSize: 13,
+    //                         letterSpacing: .9),
+    //                   ),
+    //                 ),
+    //               ),
+    //             ],
+    //           ),
+    //         ),
+    //         RichText(
+    //           text: TextSpan(
+    //             children: [
+    //               TextSpan(
+    //                 text: widget.view,
+    //                 style: GoogleFonts.lato(
+    //                   textStyle: const TextStyle(
+    //                       color: Colors.blueAccent,
+    //                       fontSize: 10.5,
+    //                       letterSpacing: .6),
+    //                 ),
+    //               ),
+    //               const WidgetSpan(
+    //                 child: Padding(
+    //                   padding: EdgeInsets.symmetric(horizontal: 4.0),
+    //                   child: Icon(
+    //                     Icons.keyboard_arrow_right,
+    //                     color: Colors.blueAccent,
+    //                     size: 16,
+    //                   ),
+    //                 ),
+    //               ),
+    //             ],
+    //           ),
+    //         )
+    //       ],
+    //     ),
+    //   ),
+    // );
   }
 }
 
@@ -236,14 +372,14 @@ class slideHomeMulti extends StatelessWidget {
             itemBuilder: (context, index) {
               return AnimationConfiguration.staggeredList(
                 position: index,
-                delay: const Duration(milliseconds: 400),
+                delay: const Duration(milliseconds: 600),
                 child: SlideAnimation(
-                  duration: const Duration(milliseconds: 2000),
-                  horizontalOffset: 140,
+                  duration: const Duration(milliseconds: 2200),
+                  horizontalOffset: 170,
                   curve: Curves.ease,
                   child: FadeInAnimation(
                     curve: Curves.easeOut,
-                    duration: const Duration(milliseconds: 2000),
+                    duration: const Duration(milliseconds: 2200),
                     child: InkWell(
                       splashColor: Colors.transparent,
                       highlightColor: Colors.transparent,
@@ -263,8 +399,8 @@ class slideHomeMulti extends StatelessWidget {
                         }
                       },
                       child: Container(
-                        width: MediaQuery.of(context).size.width * 0.35,
-                        margin: const EdgeInsets.only(left: 16),
+                        width: MediaQuery.of(context).size.width * 0.34,
+                        margin: const EdgeInsets.only(left: 6),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
@@ -309,7 +445,7 @@ class slideHomeMulti extends StatelessWidget {
                                   style: GoogleFonts.lato(
                                     textStyle: const TextStyle(
                                         color: Colors.white,
-                                        fontSize: 12,
+                                        fontSize: 11.5,
                                         letterSpacing: .9),
                                   ),
                                 ),

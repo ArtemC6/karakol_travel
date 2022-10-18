@@ -1,92 +1,100 @@
-import 'dart:ui';
-import 'package:flutter/material.dart';
-import 'dart:math';
-
-class MyCustomWidget extends StatefulWidget {
-  @override
-  _MyCustomWidgetState createState() => new _MyCustomWidgetState();
-}
-
-class _MyCustomWidgetState extends State<MyCustomWidget> {
-  double _page = 10;
-
-  @override
-  Widget build(BuildContext context) {
-
-    double width = MediaQuery.of(context).size.width;
-    PageController pageController;
-    pageController = PageController(initialPage: 20);
-    pageController.addListener(
-      () {
-        setState(
-          () {
-            _page = pageController.page!;
-          },
-        );
-      },
-    );
-
-    return Scaffold(
-      body: Center(
-        child: Stack(
-          children: [
-            SizedBox(
-              height: width,
-              width: width * .95,
-              child: LayoutBuilder(
-                builder: (context, boxConstraints) {
-                  List<Widget> cards = [];
-
-                  for (int i = 0; i <= 11; i++) {
-                    double currentPageValue = i - _page;
-                    bool pageLocation = currentPageValue > 0;
-
-                    double start = 20 +
-                        max(
-                            (boxConstraints.maxWidth - width * .75) -
-                                ((boxConstraints.maxWidth - width * .75) / 2) *
-                                    -currentPageValue *
-                                    (pageLocation ? 9 : 1),
-                            0.0);
-
-                    var customizableCard = Positioned.directional(
-                      top: 20 + 30 * max(-currentPageValue, 0.0),
-                      bottom: 20 + 30 * max(-currentPageValue, 0.0),
-                      start: start,
-                      textDirection: TextDirection.ltr,
-                      child: Container(
-                          height: width * .67,
-                          width: width * .67,
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                              color: Colors.teal,
-                              borderRadius: BorderRadius.circular(20),
-                              boxShadow: [
-                                BoxShadow(
-                                    color: Colors.black.withOpacity(.15),
-                                    blurRadius: 10)
-                              ])),
-                    );
-                    cards.add(customizableCard);
-                  }
-                  return Stack(children: cards);
-                },
-              ),
-            ),
-            Positioned.fill(
-              child: PageView.builder(
-                physics: BouncingScrollPhysics(
-                    parent: AlwaysScrollableScrollPhysics()),
-                itemCount: 11,
-                controller: pageController,
-                itemBuilder: (context, index) {
-                  return SizedBox();
-                },
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
+// import 'package:animations/animations.dart';
+// import 'package:flutter/cupertino.dart';
+// import 'package:flutter/material.dart';
+//
+// class MyCustomWidget extends StatefulWidget {
+//   @override
+//   _MyCustomWidgetState createState() => _MyCustomWidgetState();
+// }
+//
+// class _MyCustomWidgetState extends State<MyCustomWidget>
+//     with SingleTickerProviderStateMixin {
+//   late AnimationController _controller;
+//
+//   @override
+//   void initState() {
+//     _controller = AnimationController(
+//         value: 0.0,
+//         duration: const Duration(milliseconds: 1000),
+//         reverseDuration: const Duration(milliseconds: 400),
+//         vsync: this)
+//       ..addStatusListener((status) {
+//         setState(() {});
+//       });
+//     super.initState();
+//   }
+//
+//   @override
+//   void dispose() {
+//     _controller.dispose();
+//     super.dispose();
+//   }
+//
+//   bool get _BlahBlah {
+//     switch (_controller.status) {
+//       case AnimationStatus.forward:
+//       case AnimationStatus.completed:
+//         return true;
+//       case AnimationStatus.reverse:
+//       case AnimationStatus.dismissed:
+//         return false;
+//     }
+//   }
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     double width = MediaQuery.of(context).size.width;
+//     return Scaffold(
+//       body: Center(
+//         child: Column(
+//           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//           children: [
+//             AnimatedBuilder(
+//               animation: _controller,
+//               builder: (context, child) {
+//                 return FadeScaleTransition(
+//                     animation: _controller, child: child);
+//               },
+//               child: Container(
+//                 height: 200,
+//                 width: 200,
+//                 color: Colors.deepPurpleAccent,
+//               ),
+//             ),
+//             InkWell(
+//               splashColor: Colors.transparent,
+//               highlightColor: Colors.transparent,
+//               onTap: () {
+//                 if (_BlahBlah) {
+//                   _controller.reverse();
+//                 } else {
+//                   _controller.forward();
+//                 }
+//               },
+//               child: Container(
+//                 height: 55,
+//                 width: 120,
+//                 decoration: BoxDecoration(
+//                   color: Colors.white,
+//                   borderRadius: BorderRadius.all(Radius.circular(20)),
+//                   boxShadow: [
+//                     BoxShadow(
+//                       color: Colors.black.withOpacity(0.3),
+//                       blurRadius: 20,
+//                     )
+//                   ],
+//                 ),
+//                 child: Center(
+//                   child: Text(
+//                     _BlahBlah ? 'HIDE' : 'SHOW',
+//                     style: const TextStyle(color: Colors.black, fontSize: 17),
+//                   ),
+//                 ),
+//               ),
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }

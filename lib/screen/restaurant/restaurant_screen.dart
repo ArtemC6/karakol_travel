@@ -6,6 +6,7 @@ import 'package:karakol_travel/data/model/CommentModel.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:karakol_travel/screen/fragment_screen/menu_screen.dart';
+import 'package:karakol_travel/screen/restaurant/restaurant_selection_screen.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -18,9 +19,9 @@ import '../../generated/locale_keys.g.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 class RestaurantScreen extends StatefulWidget {
-  var id;
+  String id;
 
-  RestaurantScreen({Key? key, @required this.id}) : super(key: key);
+  RestaurantScreen({Key? key, required this.id}) : super(key: key);
 
   @override
   _RestaurantScreen createState() => _RestaurantScreen(id);
@@ -58,13 +59,12 @@ class _RestaurantScreen extends State<RestaurantScreen>
             imgList = List<String>.from(data['images']);
             imaListMenu = List<String>.from(data['menu']);
             listRestaurant.add(RestaurantModel(
+                welcome_message: data['welcome_message'],
                 position: data['position'],
                 name: data['name'],
-                category: data['category'],
                 id: data['id'],
                 location: data['location'],
                 rating: data['rating'],
-                price: data['price'],
                 photo_main: data['photo']));
           });
         }
@@ -79,21 +79,18 @@ class _RestaurantScreen extends State<RestaurantScreen>
         Map<String, dynamic> data = document.data() as Map<String, dynamic>;
         if (listRestaurant.isNotEmpty) {
           if (data['id'] != id) {
-            if (data['category'] == listRestaurant[0].category) {
-              print(data['name']);
+            print(data['name']);
 
-              setState(() {
-                listRestaurantSimilar.add(RestaurantModel(
-                    position: data['position'],
-                    name: data['name'],
-                    category: data['category'],
-                    id: data['id'],
-                    location: data['location'],
-                    rating: data['rating'],
-                    price: data['price'],
-                    photo_main: data['photo']));
-              });
-            }
+            setState(() {
+              listRestaurantSimilar.add(RestaurantModel(
+                  welcome_message: data['welcome_message'],
+                  position: data['position'],
+                  name: data['name'],
+                  id: data['id'],
+                  location: data['location'],
+                  rating: data['rating'],
+                  photo_main: data['photo']));
+            });
           }
         }
       });
@@ -204,7 +201,7 @@ class _RestaurantScreen extends State<RestaurantScreen>
           headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
             return <Widget>[
               SliverAppBar(
-                expandedHeight: 220,
+                expandedHeight: 210,
                 floating: true,
                 forceElevated: innerBoxIsScrolled,
                 pinned: true,
@@ -237,7 +234,7 @@ class _RestaurantScreen extends State<RestaurantScreen>
                                       autoPlay: true,
                                       disableCenter: false,
                                       viewportFraction: 1,
-                                      aspectRatio: 1.6,
+                                      aspectRatio: 1.7,
                                       onPageChanged: (index, reason) {
                                         setState(
                                           () {
@@ -340,17 +337,37 @@ class _RestaurantScreen extends State<RestaurantScreen>
                             unselectedLabelColor: Colors.blueAccent,
                             tabs: [
                               Tab(
-                                text: LocaleKeys.reviews_lc.tr(),
+                                child: RichText(
+                                  text: TextSpan(
+                                    text: LocaleKeys.reviews_lc.tr(),
+                                    style: GoogleFonts.lato(
+                                      textStyle: const TextStyle(
+                                          fontSize: 13,
+                                          color: Colors.white,
+                                          letterSpacing: .8),
+                                    ),
+                                  ),
+                                ),
                               ),
                               Tab(
-                                text: LocaleKeys.gallery_lc.tr(),
+                                child: RichText(
+                                  text: TextSpan(
+                                    text: LocaleKeys.gallery_lc.tr(),
+                                    style: GoogleFonts.lato(
+                                      textStyle: const TextStyle(
+                                          fontSize: 13,
+                                          color: Colors.white,
+                                          letterSpacing: .8),
+                                    ),
+                                  ),
+                                ),
                               ),
                             ],
                           ),
                         ),
                         // tab bar view here
                         SizedBox(
-                          height: 430,
+                          height: 434,
                           child: TabBarView(
                             controller: _tabController,
                             children: [
@@ -375,13 +392,15 @@ class _RestaurantScreen extends State<RestaurantScreen>
                               border:
                                   Border.all(width: 0.5, color: Colors.white30),
                               color: Colors.white10),
-                          child: Text(
-                            LocaleKeys.is_similar_restaurant_lc.tr(),
-                            style: GoogleFonts.lato(
-                              textStyle: const TextStyle(
-                                  fontSize: 13,
-                                  color: Colors.white,
-                                  letterSpacing: .8),
+                          child: RichText(
+                            text: TextSpan(
+                              text: LocaleKeys.is_similar_restaurant_lc.tr(),
+                              style: GoogleFonts.lato(
+                                textStyle: const TextStyle(
+                                    fontSize: 13,
+                                    color: Colors.white,
+                                    letterSpacing: .8),
+                              ),
                             ),
                           ),
                         ),
@@ -389,18 +408,24 @@ class _RestaurantScreen extends State<RestaurantScreen>
                           splashColor: Colors.transparent,
                           highlightColor: Colors.transparent,
                           onTap: () {
+                            Navigator.push(
+                                context,
+                                FadeRouteAnimation(
+                                    const RestaurantSelectionScreen()));
                           },
                           child: Container(
                             margin: const EdgeInsets.only(
                                 bottom: 20, left: 14, right: 20),
                             padding: const EdgeInsets.all(8),
-                            child: Text(
-                              LocaleKeys.see_all_lc.tr(),
-                              style: GoogleFonts.lato(
-                                textStyle: const TextStyle(
-                                    fontSize: 12,
-                                    color: Colors.blueAccent,
-                                    letterSpacing: .8),
+                            child: RichText(
+                              text: TextSpan(
+                                text: LocaleKeys.see_all_lc.tr(),
+                                style: GoogleFonts.lato(
+                                  textStyle: const TextStyle(
+                                      fontSize: 10.5,
+                                      color: Colors.blueAccent,
+                                      letterSpacing: .8),
+                                ),
                               ),
                             ),
                           ),
@@ -408,7 +433,8 @@ class _RestaurantScreen extends State<RestaurantScreen>
                       ],
                     ),
                   if (listRestaurantSimilar.isNotEmpty)
-                    companyComponentSimilar(listRestaurantSimilar, 'Restaurant'),
+                    companyComponentSimilar(
+                        listRestaurantSimilar, 'Restaurant'),
                 ],
               ),
             ),

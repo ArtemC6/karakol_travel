@@ -181,14 +181,16 @@ class _CommentScreenState extends State<CommentScreen> {
                       width: 4,
                     ),
                     Expanded(
-                      child: Text(
-                        selectData ?? LocaleKeys.choose_time_lc.tr(),
-                        style: const TextStyle(
-                          fontSize: 12.5,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                      child: RichText(
+                        text: TextSpan(
+                          text: selectData ?? LocaleKeys.choose_time_lc.tr(),
+                          style: const TextStyle(
+                            fontSize: 12.5,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                          // overflow: TextOverflow.ellipsis,
                         ),
-                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
                   ],
@@ -196,14 +198,16 @@ class _CommentScreenState extends State<CommentScreen> {
                 items: items
                     .map((item) => DropdownMenuItem<String>(
                           value: item,
-                          child: Text(
-                            item,
-                            style: const TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
+                          child: RichText(
+                            text: TextSpan(
+                              text: item,
+                              style: const TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                              // overflow: TextOverflow.ellipsis,
                             ),
-                            overflow: TextOverflow.ellipsis,
                           ),
                         ))
                     .toList(),
@@ -270,6 +274,7 @@ class _CommentScreenState extends State<CommentScreen> {
                       itemBuilder: (context, index) {
                         if (listComment[index].id_devise == idDevise) {
                           return Dismissible(
+                              direction: DismissDirection.startToEnd,
                               key: UniqueKey(),
                               background: Container(
                                 color: Colors.red,
@@ -277,15 +282,9 @@ class _CommentScreenState extends State<CommentScreen> {
                                 child: const Icon(Icons.delete,
                                     color: Colors.white),
                               ),
-                              secondaryBackground: Container(
-                                color: Colors.red,
-                                alignment: Alignment.centerLeft,
-                                child: const Icon(Icons.delete,
-                                    color: Colors.white),
-                              ),
                               child: AnimationConfiguration.staggeredList(
                                 position: index,
-                                delay: const Duration(milliseconds: 250),
+                                delay: const Duration(milliseconds: 300),
                                 child: SlideAnimation(
                                   duration: const Duration(milliseconds: 1500),
                                   horizontalOffset: 100,
@@ -296,7 +295,7 @@ class _CommentScreenState extends State<CommentScreen> {
                                         const Duration(milliseconds: 2000),
                                     child: Padding(
                                       padding: const EdgeInsets.only(
-                                          top: 8, bottom: 14),
+                                          top: 6, bottom: 14),
                                       child: Row(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
@@ -343,13 +342,20 @@ class _CommentScreenState extends State<CommentScreen> {
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
                                               children: [
-                                                Text(
-                                                  listComment[index].name,
-                                                  style: GoogleFonts.lato(
-                                                    textStyle: const TextStyle(
-                                                        fontSize: 12,
-                                                        color: Colors.white,
-                                                        letterSpacing: .8),
+                                                RichText(
+                                                  maxLines: 1,
+                                                  text: TextSpan(
+                                                    text:
+                                                        listComment[index].name,
+                                                    style: GoogleFonts.lato(
+                                                      textStyle:
+                                                          const TextStyle(
+                                                              fontSize: 12,
+                                                              color:
+                                                                  Colors.white,
+                                                              letterSpacing:
+                                                                  .8),
+                                                    ),
                                                   ),
                                                 ),
                                                 Row(
@@ -385,18 +391,23 @@ class _CommentScreenState extends State<CommentScreen> {
                                                             direction:
                                                                 Axis.horizontal,
                                                           ),
-                                                          Text(
-                                                            '    ${getDataTimeDate(listComment[index].dateTime).day.toString()}'
-                                                            ' ${months[getDataTimeDate(listComment[index].dateTime).month - 1]}'
-                                                            ' ${getDataTimeDate(listComment[index].dateTime).year.toString()}  ',
-                                                            style: GoogleFonts
-                                                                .lato(
-                                                              textStyle: const TextStyle(
-                                                                  fontSize: 12,
-                                                                  color: Colors
-                                                                      .white,
-                                                                  letterSpacing:
-                                                                      .8),
+                                                          RichText(
+                                                            maxLines: 1,
+                                                            text: TextSpan(
+                                                              text:
+                                                                  '    ${getDataTimeDate(listComment[index].dateTime).day.toString()}'
+                                                                  ' ${months[getDataTimeDate(listComment[index].dateTime).month - 1]}'
+                                                                  ' ${getDataTimeDate(listComment[index].dateTime).year.toString()}  ',
+                                                              style: GoogleFonts
+                                                                  .lato(
+                                                                textStyle: const TextStyle(
+                                                                    fontSize:
+                                                                        12,
+                                                                    color: Colors
+                                                                        .white,
+                                                                    letterSpacing:
+                                                                        .8),
+                                                              ),
                                                             ),
                                                           ),
                                                         ],
@@ -412,18 +423,21 @@ class _CommentScreenState extends State<CommentScreen> {
                                                           .size
                                                           .width /
                                                       1.7,
-                                                  child: Text(
+                                                  child: RichText(
                                                     softWrap: true,
                                                     textAlign: TextAlign.start,
-                                                    listComment[index].comment,
-                                                    style: GoogleFonts.lato(
-                                                      textStyle:
-                                                          const TextStyle(
-                                                              fontSize: 13,
-                                                              color:
-                                                                  Colors.white,
-                                                              letterSpacing:
-                                                                  .8),
+                                                    text: TextSpan(
+                                                      text: listComment[index]
+                                                          .comment,
+                                                      style: GoogleFonts.lato(
+                                                        textStyle:
+                                                            const TextStyle(
+                                                                fontSize: 12,
+                                                                color: Colors
+                                                                    .white,
+                                                                letterSpacing:
+                                                                    .8),
+                                                      ),
                                                     ),
                                                   ),
                                                 )
@@ -457,7 +471,7 @@ class _CommentScreenState extends State<CommentScreen> {
                               duration: const Duration(milliseconds: 2000),
                               child: Padding(
                                 padding:
-                                    const EdgeInsets.only(top: 8, bottom: 14),
+                                    const EdgeInsets.only(top: 6, bottom: 14),
                                 child: Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -498,13 +512,16 @@ class _CommentScreenState extends State<CommentScreen> {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          Text(
-                                            listComment[index].name,
-                                            style: GoogleFonts.lato(
-                                              textStyle: const TextStyle(
-                                                  fontSize: 12,
-                                                  color: Colors.white,
-                                                  letterSpacing: .8),
+                                          RichText(
+                                            maxLines: 1,
+                                            text: TextSpan(
+                                              text: listComment[index].name,
+                                              style: GoogleFonts.lato(
+                                                textStyle: const TextStyle(
+                                                    fontSize: 12,
+                                                    color: Colors.white,
+                                                    letterSpacing: .8),
+                                              ),
                                             ),
                                           ),
                                           Row(
@@ -534,18 +551,22 @@ class _CommentScreenState extends State<CommentScreen> {
                                                       direction:
                                                           Axis.horizontal,
                                                     ),
-                                                    Text(
-                                                      '    ${getDataTimeDate(listComment[index].dateTime).day.toString()}'
-                                                      ' ${months[getDataTimeDate(listComment[index].dateTime).month - 1]}'
-                                                      ' ${getDataTimeDate(listComment[index].dateTime).year.toString()}  ',
-                                                      style: GoogleFonts.lato(
-                                                        textStyle:
-                                                            const TextStyle(
-                                                                fontSize: 12,
-                                                                color: Colors
-                                                                    .white,
-                                                                letterSpacing:
-                                                                    .8),
+                                                    RichText(
+                                                      maxLines: 1,
+                                                      text: TextSpan(
+                                                        text:
+                                                            '    ${getDataTimeDate(listComment[index].dateTime).day.toString()}'
+                                                            ' ${months[getDataTimeDate(listComment[index].dateTime).month - 1]}'
+                                                            ' ${getDataTimeDate(listComment[index].dateTime).year.toString()}  ',
+                                                        style: GoogleFonts.lato(
+                                                          textStyle:
+                                                              const TextStyle(
+                                                                  fontSize: 12,
+                                                                  color: Colors
+                                                                      .white,
+                                                                  letterSpacing:
+                                                                      .8),
+                                                        ),
                                                       ),
                                                     ),
                                                   ],
@@ -560,15 +581,18 @@ class _CommentScreenState extends State<CommentScreen> {
                                                     .size
                                                     .width /
                                                 1.7,
-                                            child: Text(
+                                            child: RichText(
                                               softWrap: true,
                                               textAlign: TextAlign.start,
-                                              listComment[index].comment,
-                                              style: GoogleFonts.lato(
-                                                textStyle: const TextStyle(
-                                                    fontSize: 13,
-                                                    color: Colors.white,
-                                                    letterSpacing: .8),
+                                              text: TextSpan(
+                                                text:
+                                                    listComment[index].comment,
+                                                style: GoogleFonts.lato(
+                                                  textStyle: const TextStyle(
+                                                      fontSize: 12,
+                                                      color: Colors.white,
+                                                      letterSpacing: .8),
+                                                ),
                                               ),
                                             ),
                                           )

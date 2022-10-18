@@ -3,9 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:flutter_launch/flutter_launch.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
-import 'package:telegram/telegram.dart';
 import '../../data/model/OperatorModel.dart';
 import 'dart:io';
 import '../../data/model/RestaurantModel.dart';
@@ -31,6 +30,8 @@ class _ContactsOperatorState extends State<ContactsOperator> {
   String _phoneInfo = '';
 
   readFirebaseOperator() async {
+    // print(TelegramLink(phoneNumber: '+996550386380', message: 'fdfs').toString());
+
     listOperator = [];
     await FirebaseFirestore.instance
         .collection('Operator')
@@ -75,6 +76,50 @@ class _ContactsOperatorState extends State<ContactsOperator> {
     }
   }
 
+  openWhatsApp(String phone, String message) async {
+    String whatsappURlAndroid = "whatsapp://send?phone=$phone&text=$message}";
+    var whatsAppURLIos = "https://wa.me/$phone?text=${Uri.parse(message)}";
+    if (Platform.isIOS) {
+      if (await canLaunch(whatsAppURLIos)) {
+        await launch(whatsAppURLIos, forceSafariVC: false);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("whatsapp no installed")));
+      }
+    } else {
+      // android , web
+      // ignore: deprecated_member_use
+      if (await canLaunch(whatsappURlAndroid)) {
+        // ignore: deprecated_member_use
+        await launch(whatsappURlAndroid);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("whatsapp no installed")));
+      }
+    }
+  }
+
+  openTelegram(String name, String message) async {
+    // String whatsappURlAndroid = "whatsapp://send?phone=$phone&text=$message}";
+    String telegramURlAndroid = "http://t.me/$name?text=$message";
+    // var whatsAppURLIos = "https://wa.me/$phone?text=${Uri.parse(message)}";
+    if (Platform.isIOS) {
+      // if (await canLaunch(whatsAppURLIos)) {
+      //   await launch(whatsAppURLIos, forceSafariVC: false);
+      // } else {
+      //   ScaffoldMessenger.of(context)
+      //       .showSnackBar(SnackBar(content: new Text("whatsapp no installed")));
+      // }
+    } else {
+      if (await canLaunch(telegramURlAndroid)) {
+        await launch(telegramURlAndroid);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("telegram no installed")));
+      }
+    }
+  }
+
   @override
   void initState() {
     getNamePhone();
@@ -99,14 +144,19 @@ class _ContactsOperatorState extends State<ContactsOperator> {
               Align(
                   alignment: Alignment.centerLeft,
                   child: TextButton(
-                      onPressed: () {},
-                      child: Text(LocaleKeys.connect_with_us_lc.tr(),
-                          style: GoogleFonts.lato(
-                            textStyle: const TextStyle(
-                                fontSize: 17,
-                                color: Colors.white,
-                                letterSpacing: .8),
-                          )))),
+                    onPressed: () {},
+                    child: RichText(
+                      text: TextSpan(
+                        text: LocaleKeys.connect_with_us_lc.tr(),
+                        style: GoogleFonts.lato(
+                          textStyle: const TextStyle(
+                              fontSize: 17,
+                              color: Colors.white,
+                              letterSpacing: .8),
+                        ),
+                      ),
+                    ),
+                  )),
               Container(
                 padding: const EdgeInsets.only(top: 10),
                 width: MediaQuery.of(context).size.width,
@@ -142,18 +192,19 @@ class _ContactsOperatorState extends State<ContactsOperator> {
                     height: 65,
                     width: 65,
                   ),
-                  label: Text(
-                    '${LocaleKeys.contact_phone_lc.tr()}           ',
-                    style: GoogleFonts.lato(
-                        textStyle: const TextStyle(
-                            fontSize: 15,
-                            color: Colors.white,
-                            letterSpacing: .8)),
+                  label: RichText(
+                    text: TextSpan(
+                      text: '${LocaleKeys.contact_phone_lc.tr()}           ',
+                      style: GoogleFonts.lato(
+                          textStyle: const TextStyle(
+                              fontSize: 15,
+                              color: Colors.white,
+                              letterSpacing: .8)),
+                    ),
                   ),
                 ),
               ),
               Container(
-                // alignment: Alignment.centerLeft,
                 padding: const EdgeInsets.only(top: 10),
                 width: MediaQuery.of(context).size.width,
                 height: 65,
@@ -178,28 +229,23 @@ class _ContactsOperatorState extends State<ContactsOperator> {
                     };
                     docCall.set(json);
                     Navigator.pop(context);
-
-                    // bool whatsapp =
-                    //     await FlutterLaunch.hasApp(name: "whatsapp");
-                    // if (whatsapp) {
-                    await FlutterLaunch.launchWhatsapp(
-                        phone: list[randomIndex].whitsApp,
-                        message:
-                            '${LocaleKeys.company_question_lc.tr()} \"${listCompany[0].name}\"');
-                    // }
+                    openWhatsApp(list[randomIndex].whitsApp,
+                        listCompany[0].welcome_message);
                   },
                   icon: Image.asset(
                     'assets/images/icon/ic_whatsapp.png',
                     height: 60,
                     width: 60,
                   ),
-                  label: Text(
-                    LocaleKeys.contact_whatsApp_lc.tr(),
-                    style: GoogleFonts.lato(
-                        textStyle: const TextStyle(
-                            fontSize: 15,
-                            color: Colors.white,
-                            letterSpacing: .8)),
+                  label: RichText(
+                    text: TextSpan(
+                      text: LocaleKeys.contact_whatsApp_lc.tr(),
+                      style: GoogleFonts.lato(
+                          textStyle: const TextStyle(
+                              fontSize: 15,
+                              color: Colors.white,
+                              letterSpacing: .8)),
+                    ),
                   ),
                 ),
               ),
@@ -227,11 +273,8 @@ class _ContactsOperatorState extends State<ContactsOperator> {
                       'action': 'telegram',
                     };
                     docCall.set(json).then((value) {
-                      Telegram.send(
-                        username: list[randomIndex].telegram,
-                        message:
-                            '${LocaleKeys.company_question_lc.tr()} \"${listCompany[0].name}\"',
-                      );
+                      openTelegram(list[randomIndex].telegram,
+                          listCompany[0].welcome_message);
                       Navigator.pop(context);
                     });
                   },
@@ -240,13 +283,15 @@ class _ContactsOperatorState extends State<ContactsOperator> {
                     height: 65,
                     width: 65,
                   ),
-                  label: Text(
-                    LocaleKeys.contact_telegram_lc.tr(),
-                    style: GoogleFonts.lato(
-                        textStyle: const TextStyle(
-                            fontSize: 15,
-                            color: Colors.white,
-                            letterSpacing: .8)),
+                  label: RichText(
+                    text: TextSpan(
+                      text: LocaleKeys.contact_telegram_lc.tr(),
+                      style: GoogleFonts.lato(
+                          textStyle: const TextStyle(
+                              fontSize: 15,
+                              color: Colors.white,
+                              letterSpacing: .8)),
+                    ),
                   ),
                 ),
               ),

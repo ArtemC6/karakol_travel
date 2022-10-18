@@ -36,8 +36,8 @@ class _NatureScreen extends State<NatureScreen> {
   @override
   void initState() {
     controller = FixedExtentScrollController();
-    Future.delayed(const Duration(milliseconds: 1750), () {
-      controller.animateToItem(controller.selectedItem + 1,
+    Future.delayed(const Duration(milliseconds: 2000), () {
+        controller.animateToItem(controller.selectedItem + 1,
           duration: const Duration(milliseconds: 1300),
           // curve: Curves.decelerate);
           curve: Curves.easeInOut);
@@ -76,16 +76,17 @@ class _NatureScreen extends State<NatureScreen> {
               child: AnimationLimiter(
                 child: AnimationConfiguration.staggeredList(
                     position: 1,
-                    delay: const Duration(milliseconds: 300),
+                    delay: const Duration(milliseconds: 100),
                     child: SlideAnimation(
-                      duration: const Duration(milliseconds: 2000),
-                      horizontalOffset: 100,
+                      duration: const Duration(milliseconds: 1700),
+                      horizontalOffset: 400,
                       curve: Curves.ease,
                       child: FadeInAnimation(
                         curve: Curves.easeOut,
-                        duration: const Duration(milliseconds: 2500),
+                        duration: const Duration(milliseconds: 2300),
                         child: Center(
                           child: ListWheelScrollView.useDelegate(
+
                             controller: controller,
                             physics: const FixedExtentScrollPhysics(),
                             // perspective: 0.003,
@@ -93,6 +94,7 @@ class _NatureScreen extends State<NatureScreen> {
                             squeeze: 1.0,
                             itemExtent: 250,
                             childDelegate: ListWheelChildBuilderDelegate(
+
                                 childCount: listStartingDataNature.length,
                                 builder: (context, index) {
                                   return Padding(

@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:karakol_travel/data/model/CommentModel.dart';
+import 'package:karakol_travel/screen/map/map_screen.dart';
 import '../../generated/locale_keys.g.dart';
 
 import 'package:dropdown_button2/dropdown_button2.dart';
@@ -46,12 +47,16 @@ class _companyComponent_1State extends State<companyComponent_1> {
             children: [
               Padding(
                 padding: const EdgeInsets.all(1.5),
-                child: Text(
-                  widget.listCompany[0].name,
-                  style: GoogleFonts.lato(
-                    textStyle: const TextStyle(
-                        overflow: TextOverflow.fade,
-                        fontSize: 17, color: Colors.white, letterSpacing: .9),
+                child: RichText(
+                  text: TextSpan(
+                    text: widget.listCompany[0].name,
+                    style: GoogleFonts.lato(
+                      textStyle: const TextStyle(
+                          overflow: TextOverflow.fade,
+                          fontSize: 16,
+                          color: Colors.white,
+                          letterSpacing: .9),
+                    ),
                   ),
                 ),
               ),
@@ -69,13 +74,15 @@ class _companyComponent_1State extends State<companyComponent_1> {
                     ),
                     SizedBox(
                       width: MediaQuery.of(context).size.width / 2,
-                      child: Text(
-                        widget.listCompany[0].location,
-                        style: GoogleFonts.lato(
-                          textStyle: const TextStyle(
-                              fontSize: 13,
-                              color: Colors.white,
-                              letterSpacing: .8),
+                      child: RichText(
+                        text: TextSpan(
+                          text: widget.listCompany[0].location,
+                          style: GoogleFonts.lato(
+                            textStyle: const TextStyle(
+                                fontSize: 11.5,
+                                color: Colors.white,
+                                letterSpacing: .8),
+                          ),
                         ),
                       ),
                     ),
@@ -89,7 +96,13 @@ class _companyComponent_1State extends State<companyComponent_1> {
               InkWell(
                 highlightColor: Colors.transparent,
                 splashColor: Colors.transparent,
-                onTap: () {},
+                onTap: () {
+
+                  Navigator.push(
+                      context,
+                      FadeRouteAnimation(
+                          MapScreen(id: widget.listCompany[0].id,)));
+                },
                 child: Container(
                   margin: const EdgeInsets.only(left: 4, top: 10, right: 4),
                   decoration: BoxDecoration(
@@ -186,28 +199,6 @@ class companyComponent_2 extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    LocaleKeys.price_lc.tr(),
-                    style: TextStyle(
-                        fontSize: 14, color: Colors.white, letterSpacing: .8),
-                  ),
-                  Padding(
-                      padding: const EdgeInsets.only(top: 4, bottom: 4),
-                      child: Text(
-                        '${listCompany[0].price.toString()} ${LocaleKeys.som_lc.tr()}',
-                        style: GoogleFonts.lato(
-                          textStyle: const TextStyle(
-                              fontSize: 13.5,
-                              color: Colors.white,
-                              letterSpacing: .8),
-                        ),
-                      ))
-                ],
-              ),
               const Padding(padding: EdgeInsets.only(left: 20)),
               Column(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -215,45 +206,42 @@ class companyComponent_2 extends StatelessWidget {
                 children: [
                   Container(
                     padding: const EdgeInsets.only(right: 12),
-                    child: Text(
-                      LocaleKeys.rating_lc.tr(),
-                      style: GoogleFonts.lato(
-                        textStyle: const TextStyle(
-                            fontSize: 13.5,
-                            color: Colors.white,
-                            letterSpacing: .8),
+                    child: RichText(
+                      text: TextSpan(
+                        text: LocaleKeys.rating_lc.tr(),
+                        style: GoogleFonts.lato(
+                          textStyle: const TextStyle(
+                              fontSize: 13.5,
+                              color: Colors.white,
+                              letterSpacing: .8),
+                        ),
                       ),
                     ),
                   ),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Container(
-                        alignment: Alignment.centerRight,
-                        padding: const EdgeInsets.only(top: 4, bottom: 4),
-                        child: Row(
-                          children: [
-                            Text(listCompany[0].rating.toString(),
-                                style: GoogleFonts.lato(
-                                    textStyle: const TextStyle(
-                                        fontSize: 13.5,
-                                        color: Colors.white,
-                                        letterSpacing: .8))),
-                            const SizedBox(
-                              width: 3,
-                            ),
-                            RatingBarIndicator(
-                              unratedColor: Colors.white30,
-                              rating: listCompany[0].rating,
-                              itemBuilder: (context, index) => const Icon(
-                                Icons.star,
-                                color: Colors.amber,
-                              ),
-                              itemSize: 15,
-                              direction: Axis.horizontal,
-                            ),
-                          ],
+                      RichText(
+                        text: TextSpan(
+                          text: listCompany[0].rating.toString(),
+                          style: GoogleFonts.lato(
+                              textStyle: const TextStyle(
+                                  fontSize: 13.5,
+                                  color: Colors.white,
+                                  letterSpacing: .8)),
                         ),
+                      ),
+                      SizedBox(
+                        width: 4,
+                      ),
+                      RatingBarIndicator(
+                        unratedColor: Colors.white30,
+                        rating: listCompany[0].rating,
+                        itemBuilder: (context, index) => const Icon(
+                          Icons.star,
+                          color: Colors.amber,
+                        ),
+                        itemSize: 15,
+                        direction: Axis.horizontal,
                       ),
                     ],
                   ),
@@ -288,16 +276,20 @@ class companyComponent_2 extends StatelessWidget {
                           ? Icons.restaurant_menu
                           : Icons.menu_book,
                       color: Colors.white,
-                      size: 17,
+                      size: 18,
                     ),
                   ),
-                  Text(
-                    isCompany == 'Restaurant'
-                        ? LocaleKeys.is_menu_lc.tr()
-                        : LocaleKeys.is_catalog_lc.tr(),
-                    style: GoogleFonts.lato(
-                      textStyle: const TextStyle(
-                          fontSize: 12, color: Colors.white, letterSpacing: .8),
+                  RichText(
+                    text: TextSpan(
+                      text: isCompany == 'Restaurant'
+                          ? LocaleKeys.is_menu_lc.tr()
+                          : LocaleKeys.is_catalog_lc.tr(),
+                      style: GoogleFonts.lato(
+                        textStyle: const TextStyle(
+                            fontSize: 14,
+                            color: Colors.white,
+                            letterSpacing: .8),
+                      ),
                     ),
                   ),
                 ],
@@ -334,23 +326,40 @@ class companyComponentGallery extends StatelessWidget {
                     border: Border.all(width: 0.5, color: Colors.white30),
                     borderRadius: BorderRadius.circular(10),
                     color: Colors.white10),
-                child: Text(
-                  LocaleKeys.gallery_lc.tr(),
-                  style: GoogleFonts.lato(
-                    textStyle: const TextStyle(
-                        fontSize: 12.5, color: Colors.white, letterSpacing: .8),
+                child: RichText(
+                  text: TextSpan(
+                    text: LocaleKeys.gallery_lc.tr(),
+                    style: GoogleFonts.lato(
+                      textStyle: const TextStyle(
+                          fontSize: 12.5,
+                          color: Colors.white,
+                          letterSpacing: .8),
+                    ),
                   ),
                 ),
               ),
-              Text(
-                LocaleKeys.view_all_lc.tr(),
-                style: GoogleFonts.lato(
-                  textStyle: const TextStyle(
-                      fontSize: 12,
-                      color: Colors.blueAccent,
-                      letterSpacing: .8),
+              InkWell(
+                splashColor: Colors.transparent,
+                highlightColor: Colors.transparent,
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      FadeRouteAnimation(MenuScreen(
+                        listMenu: listImages,
+                      )));
+                },
+                child: RichText(
+                  text: TextSpan(
+                    text: LocaleKeys.view_all_lc.tr(),
+                    style: GoogleFonts.lato(
+                      textStyle: const TextStyle(
+                          fontSize: 11.5,
+                          color: Colors.blueAccent,
+                          letterSpacing: .8),
+                    ),
+                  ),
                 ),
-              )
+              ),
             ],
           ),
         ),
@@ -360,7 +369,7 @@ class companyComponentGallery extends StatelessWidget {
             child: GridView.count(
               physics: const BouncingScrollPhysics(
                   parent: AlwaysScrollableScrollPhysics()),
-              padding: EdgeInsets.all(1),
+              padding: const EdgeInsets.all(1),
               crossAxisCount: 3,
               children: List.generate(
                 listImages.length,
@@ -575,13 +584,17 @@ class _companyComponentCommentState extends State<companyComponentComment> {
                         Container(
                           alignment: Alignment.centerRight,
                           padding: const EdgeInsets.all(8),
-                          child: Text(
-                              '${_commentCount.length} ${LocaleKeys.maximum_characters_lc.tr()}(100)',
+                          child: RichText(
+                            text: TextSpan(
+                              text:
+                                  '${_commentCount.length} ${LocaleKeys.maximum_characters_lc.tr()}(100)',
                               style: GoogleFonts.lato(
                                   textStyle: const TextStyle(
                                       fontSize: 11.5,
                                       color: Colors.white,
-                                      letterSpacing: .8))),
+                                      letterSpacing: .8)),
+                            ),
+                          ),
                         ),
                         Padding(
                           padding: const EdgeInsets.only(top: 20),
@@ -598,14 +611,17 @@ class _companyComponentCommentState extends State<companyComponentComment> {
                                     hint: Row(
                                       children: [
                                         Expanded(
-                                          child: Text(
-                                            LocaleKeys.choose_gender_lc.tr(),
-                                            style: const TextStyle(
-                                              fontSize: 11.5,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.white,
+                                          child: RichText(
+                                            maxLines: 1,
+                                            text: TextSpan(
+                                              text: LocaleKeys.choose_gender_lc
+                                                  .tr(),
+                                              style: const TextStyle(
+                                                fontSize: 11.5,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white,
+                                              ),
                                             ),
-                                            // overflow: TextOverflow.ellipsis,
                                           ),
                                         ),
                                       ],
@@ -616,14 +632,16 @@ class _companyComponentCommentState extends State<companyComponentComment> {
                                     ]
                                         .map((item) => DropdownMenuItem<String>(
                                               value: item,
-                                              child: Text(
-                                                item,
-                                                style: const TextStyle(
-                                                  fontSize: 12,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.white,
+                                              child: RichText(
+                                                maxLines: 1,
+                                                text: TextSpan(
+                                                  text: item,
+                                                  style: const TextStyle(
+                                                    fontSize: 12,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.white,
+                                                  ),
                                                 ),
-                                                overflow: TextOverflow.ellipsis,
                                               ),
                                             ))
                                         .toList(),
@@ -718,13 +736,16 @@ class _companyComponentCommentState extends State<companyComponentComment> {
                                           width: 0.5, color: Colors.white30),
                                       borderRadius: BorderRadius.circular(10),
                                       color: Colors.white10),
-                                  child: Text(
-                                    LocaleKeys.close_lc.tr(),
-                                    style: GoogleFonts.lato(
-                                      textStyle: const TextStyle(
-                                          fontSize: 13.5,
-                                          color: Colors.white,
-                                          letterSpacing: .8),
+                                  child: RichText(
+                                    maxLines: 1,
+                                    text: TextSpan(
+                                      text: LocaleKeys.close_lc.tr(),
+                                      style: GoogleFonts.lato(
+                                        textStyle: const TextStyle(
+                                            fontSize: 13.5,
+                                            color: Colors.white,
+                                            letterSpacing: .8),
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -777,13 +798,16 @@ class _companyComponentCommentState extends State<companyComponentComment> {
                                           width: 0.5, color: Colors.blueAccent),
                                       borderRadius: BorderRadius.circular(10),
                                       color: Colors.white10),
-                                  child: Text(
-                                    LocaleKeys.publish_lc.tr(),
-                                    style: GoogleFonts.lato(
-                                      textStyle: const TextStyle(
-                                          fontSize: 13.5,
-                                          color: Colors.white,
-                                          letterSpacing: .8),
+                                  child: RichText(
+                                    maxLines: 1,
+                                    text: TextSpan(
+                                      text: LocaleKeys.publish_lc.tr(),
+                                      style: GoogleFonts.lato(
+                                        textStyle: const TextStyle(
+                                            fontSize: 13.5,
+                                            color: Colors.white,
+                                            letterSpacing: .8),
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -816,11 +840,16 @@ class _companyComponentCommentState extends State<companyComponentComment> {
                     border: Border.all(width: 0.5, color: Colors.white30),
                     borderRadius: BorderRadius.circular(10),
                     color: Colors.white10),
-                child: Text(
-                  LocaleKeys.reviews_lc.tr(),
-                  style: GoogleFonts.lato(
-                    textStyle: const TextStyle(
-                        fontSize: 12.5, color: Colors.white, letterSpacing: .8),
+                child: RichText(
+                  maxLines: 1,
+                  text: TextSpan(
+                    text: LocaleKeys.reviews_lc.tr(),
+                    style: GoogleFonts.lato(
+                      textStyle: const TextStyle(
+                          fontSize: 12.5,
+                          color: Colors.white,
+                          letterSpacing: .8),
+                    ),
                   ),
                 ),
               ),
@@ -834,13 +863,16 @@ class _companyComponentCommentState extends State<companyComponentComment> {
                         id: id,
                       )));
                 },
-                child: Text(
-                  LocaleKeys.view_all_lc.tr(),
-                  style: GoogleFonts.lato(
-                    textStyle: const TextStyle(
-                        fontSize: 12,
-                        color: Colors.blueAccent,
-                        letterSpacing: .8),
+                child: RichText(
+                  maxLines: 1,
+                  text: TextSpan(
+                    text: LocaleKeys.view_all_lc.tr(),
+                    style: GoogleFonts.lato(
+                      textStyle: const TextStyle(
+                          fontSize: 11.5,
+                          color: Colors.blueAccent,
+                          letterSpacing: .8),
+                    ),
                   ),
                 ),
               )
@@ -917,13 +949,16 @@ class _companyComponentCommentState extends State<companyComponentComment> {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          Text(
-                                            listComment[index].name,
-                                            style: GoogleFonts.lato(
-                                              textStyle: const TextStyle(
-                                                  fontSize: 12,
-                                                  color: Colors.white,
-                                                  letterSpacing: .8),
+                                          RichText(
+                                            maxLines: 1,
+                                            text: TextSpan(
+                                              text: listComment[index].name,
+                                              style: GoogleFonts.lato(
+                                                textStyle: const TextStyle(
+                                                    fontSize: 12,
+                                                    color: Colors.white,
+                                                    letterSpacing: .8),
+                                              ),
                                             ),
                                           ),
                                           Row(
@@ -954,18 +989,22 @@ class _companyComponentCommentState extends State<companyComponentComment> {
                                                       direction:
                                                           Axis.horizontal,
                                                     ),
-                                                    Text(
-                                                      '    ${getDataTimeDate(listComment[index].dateTime).day.toString()}'
-                                                      ' ${months[getDataTimeDate(listComment[index].dateTime).month - 1]}'
-                                                      ' ${getDataTimeDate(listComment[index].dateTime).year.toString()}  ',
-                                                      style: GoogleFonts.lato(
-                                                        textStyle:
-                                                            const TextStyle(
-                                                                fontSize: 12,
-                                                                color: Colors
-                                                                    .white,
-                                                                letterSpacing:
-                                                                    .8),
+                                                    RichText(
+                                                      maxLines: 1,
+                                                      text: TextSpan(
+                                                        text:
+                                                            '    ${getDataTimeDate(listComment[index].dateTime).day.toString()}'
+                                                            ' ${months[getDataTimeDate(listComment[index].dateTime).month - 1]}'
+                                                            ' ${getDataTimeDate(listComment[index].dateTime).year.toString()}  ',
+                                                        style: GoogleFonts.lato(
+                                                          textStyle:
+                                                              const TextStyle(
+                                                                  fontSize: 12,
+                                                                  color: Colors
+                                                                      .white,
+                                                                  letterSpacing:
+                                                                      .8),
+                                                        ),
                                                       ),
                                                     ),
                                                   ],
@@ -980,15 +1019,18 @@ class _companyComponentCommentState extends State<companyComponentComment> {
                                                     .size
                                                     .width /
                                                 1.7,
-                                            child: Text(
+                                            child: RichText(
                                               softWrap: true,
                                               textAlign: TextAlign.start,
-                                              widget.listComment[index].comment,
-                                              style: GoogleFonts.lato(
-                                                textStyle: const TextStyle(
-                                                    fontSize: 13,
-                                                    color: Colors.white,
-                                                    letterSpacing: .8),
+                                              text: TextSpan(
+                                                text: widget
+                                                    .listComment[index].comment,
+                                                style: GoogleFonts.lato(
+                                                  textStyle: const TextStyle(
+                                                      fontSize: 12,
+                                                      color: Colors.white,
+                                                      letterSpacing: .8),
+                                                ),
                                               ),
                                             ),
                                           )
@@ -1021,7 +1063,7 @@ class _companyComponentCommentState extends State<companyComponentComment> {
                         curve: Curves.easeOut,
                         duration: const Duration(milliseconds: 2000),
                         child: Padding(
-                          padding: const EdgeInsets.only(top: 8, bottom: 14),
+                          padding: const EdgeInsets.only(top: 6, bottom: 14),
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -1059,13 +1101,16 @@ class _companyComponentCommentState extends State<companyComponentComment> {
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(
-                                      listComment[index].name,
-                                      style: GoogleFonts.lato(
-                                        textStyle: const TextStyle(
-                                            fontSize: 12,
-                                            color: Colors.white,
-                                            letterSpacing: .8),
+                                    RichText(
+                                      maxLines: 1,
+                                      text: TextSpan(
+                                        text: listComment[index].name,
+                                        style: GoogleFonts.lato(
+                                          textStyle: const TextStyle(
+                                              fontSize: 12,
+                                              color: Colors.white,
+                                              letterSpacing: .8),
+                                        ),
                                       ),
                                     ),
                                     Row(
@@ -1091,15 +1136,19 @@ class _companyComponentCommentState extends State<companyComponentComment> {
                                                 itemSize: 18,
                                                 direction: Axis.horizontal,
                                               ),
-                                              Text(
-                                                '    ${getDataTimeDate(listComment[index].dateTime).day.toString()}'
-                                                ' ${months[getDataTimeDate(listComment[index].dateTime).month - 1]}'
-                                                ' ${getDataTimeDate(listComment[index].dateTime).year.toString()}  ',
-                                                style: GoogleFonts.lato(
-                                                  textStyle: const TextStyle(
-                                                      fontSize: 12,
-                                                      color: Colors.white,
-                                                      letterSpacing: .8),
+                                              RichText(
+                                                maxLines: 1,
+                                                text: TextSpan(
+                                                  text:
+                                                      '    ${getDataTimeDate(listComment[index].dateTime).day.toString()}'
+                                                      ' ${months[getDataTimeDate(listComment[index].dateTime).month - 1]}'
+                                                      ' ${getDataTimeDate(listComment[index].dateTime).year.toString()}  ',
+                                                  style: GoogleFonts.lato(
+                                                    textStyle: const TextStyle(
+                                                        fontSize: 12,
+                                                        color: Colors.white,
+                                                        letterSpacing: .8),
+                                                  ),
                                                 ),
                                               ),
                                             ],
@@ -1111,15 +1160,18 @@ class _companyComponentCommentState extends State<companyComponentComment> {
                                       padding: const EdgeInsets.only(top: 2),
                                       width: MediaQuery.of(context).size.width /
                                           1.7,
-                                      child: Text(
+                                      child: RichText(
                                         softWrap: true,
                                         textAlign: TextAlign.start,
-                                        widget.listComment[index].comment,
-                                        style: GoogleFonts.lato(
-                                          textStyle: const TextStyle(
-                                              fontSize: 13,
-                                              color: Colors.white,
-                                              letterSpacing: .8),
+                                        text: TextSpan(
+                                          text:
+                                              widget.listComment[index].comment,
+                                          style: GoogleFonts.lato(
+                                            textStyle: const TextStyle(
+                                                fontSize: 12,
+                                                color: Colors.white,
+                                                letterSpacing: .8),
+                                          ),
                                         ),
                                       ),
                                     )
@@ -1152,11 +1204,17 @@ class _companyComponentCommentState extends State<companyComponentComment> {
                       border: Border.all(width: 0.5, color: Colors.blueAccent),
                       borderRadius: BorderRadius.circular(10),
                       color: Colors.white10),
-                  child: Text(
-                    LocaleKeys.leave_feedback_lc.tr(),
-                    style: GoogleFonts.lato(
-                      textStyle: const TextStyle(
-                          fontSize: 12, color: Colors.white, letterSpacing: .8),
+                  child: RichText(
+                    softWrap: true,
+                    textAlign: TextAlign.start,
+                    text: TextSpan(
+                      text: LocaleKeys.leave_feedback_lc.tr(),
+                      style: GoogleFonts.lato(
+                        textStyle: const TextStyle(
+                            fontSize: 11.5,
+                            color: Colors.white,
+                            letterSpacing: .8),
+                      ),
                     ),
                   ),
                 ),

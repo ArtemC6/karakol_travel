@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+// ignore_for_file: deprecated_member_use, duplicate_ignore
 import 'package:flutter/material.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -12,6 +12,7 @@ import '../../generated/locale_keys.g.dart';
 import '../const/const.dart';
 import 'package:easy_localization/easy_localization.dart';
 
+// ignore: must_be_immutable
 class ContactsOperator extends StatefulWidget {
   List<RestaurantModel> listCompany = [];
 
@@ -28,10 +29,9 @@ class _ContactsOperatorState extends State<ContactsOperator> {
 
   List<OperatorModel> listOperator = [];
   String _phoneInfo = '';
+  DateTime nowDate = DateTime.now();
 
   readFirebaseOperator() async {
-    // print(TelegramLink(phoneNumber: '+996550386380', message: 'fdfs').toString());
-
     listOperator = [];
     await FirebaseFirestore.instance
         .collection('Operator')
@@ -76,6 +76,14 @@ class _ContactsOperatorState extends State<ContactsOperator> {
     }
   }
 
+  Future<void> _launchUrlWhatsApp(String phone, String message) async {
+    Uri _url = Uri.parse("whatsapp://send?phone=$phone&text=$message}");
+    if (!await launchUrl(_url)) {
+      throw 'Could not launch $_url';
+    }
+  }
+
+
   openWhatsApp(String phone, String message) async {
     String whatsappURlAndroid = "whatsapp://send?phone=$phone&text=$message}";
     var whatsAppURLIos = "https://wa.me/$phone?text=${Uri.parse(message)}";
@@ -84,38 +92,38 @@ class _ContactsOperatorState extends State<ContactsOperator> {
         await launch(whatsAppURLIos, forceSafariVC: false);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("whatsapp no installed")));
+            const SnackBar(content: Text("Whatsapp no installed")));
       }
     } else {
-      // android , web
-      // ignore: deprecated_member_use
       if (await canLaunch(whatsappURlAndroid)) {
-        // ignore: deprecated_member_use
         await launch(whatsappURlAndroid);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("whatsapp no installed")));
+            const SnackBar(content: Text("Whatsapp no installed")));
       }
     }
   }
 
   openTelegram(String name, String message) async {
     // String whatsappURlAndroid = "whatsapp://send?phone=$phone&text=$message}";
+    // String telegramURlAndroid = "http://t.me/$name?text=$message";
     String telegramURlAndroid = "http://t.me/$name?text=$message";
     // var whatsAppURLIos = "https://wa.me/$phone?text=${Uri.parse(message)}";
     if (Platform.isIOS) {
-      // if (await canLaunch(whatsAppURLIos)) {
-      //   await launch(whatsAppURLIos, forceSafariVC: false);
-      // } else {
-      //   ScaffoldMessenger.of(context)
-      //       .showSnackBar(SnackBar(content: new Text("whatsapp no installed")));
-      // }
-    } else {
       if (await canLaunch(telegramURlAndroid)) {
         await launch(telegramURlAndroid);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("telegram no installed")));
+            const SnackBar(content: Text("Telegram no installed")));
+      }
+    } else {
+      // ignore: deprecated_member_use
+      if (await canLaunch(telegramURlAndroid)) {
+        // ignore: deprecated_member_use
+        await launch(telegramURlAndroid);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Telegram no installed")));
       }
     }
   }
@@ -178,7 +186,10 @@ class _ContactsOperatorState extends State<ContactsOperator> {
                       'company': listCompany[0].name,
                       'uid': list[randomIndex].uid,
                       'deviceInfo': _phoneInfo,
-                      'currentData': DateTime.now(),
+                      'currentData': DateTime(nowDate.year, nowDate.month,
+                              nowDate.day, nowDate.hour)
+                          .toString(),
+                      'currentDataTimestamp': DateTime.now(),
                       'action': 'call',
                     };
                     docCall.set(json).then((value) {
@@ -224,13 +235,20 @@ class _ContactsOperatorState extends State<ContactsOperator> {
                       'company': listCompany[0].name,
                       'uid': list[randomIndex].uid,
                       'deviceInfo': _phoneInfo,
-                      'currentData': DateTime.now(),
+                      'currentData': DateTime(nowDate.year, nowDate.month,
+                              nowDate.day, nowDate.hour)
+                          .toString(),
+                      'currentDataTimestamp': DateTime.now(),
                       'action': 'whatsApp',
                     };
                     docCall.set(json);
                     Navigator.pop(context);
-                    openWhatsApp(list[randomIndex].whitsApp,
+
+                    _launchUrlWhatsApp(list[randomIndex].whitsApp,
                         listCompany[0].welcome_message);
+
+                    // openWhatsApp(list[randomIndex].whitsApp,
+                    //     listCompany[0].welcome_message);
                   },
                   icon: Image.asset(
                     'assets/images/icon/ic_whatsapp.png',
@@ -269,12 +287,19 @@ class _ContactsOperatorState extends State<ContactsOperator> {
                       'company': listCompany[0].name,
                       'uid': list[randomIndex].uid,
                       'deviceInfo': _phoneInfo,
-                      'currentData': DateTime.now(),
+                      'currentData': DateTime(nowDate.year, nowDate.month,
+                              nowDate.day, nowDate.hour)
+                          .toString(),
+                      'currentDataTimestamp': DateTime.now(),
                       'action': 'telegram',
                     };
                     docCall.set(json).then((value) {
+                      // openTelegram(list[randomIndex].telegram,
+                      //     listCompany[0].welcome_message);
+
                       openTelegram(list[randomIndex].telegram,
                           listCompany[0].welcome_message);
+
                       Navigator.pop(context);
                     });
                   },

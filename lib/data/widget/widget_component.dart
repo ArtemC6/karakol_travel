@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+// ignore: unnecessary_import
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:device_info_plus/device_info_plus.dart';
@@ -5,9 +7,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:karakol_travel/data/model/CommentModel.dart';
-import 'package:karakol_travel/screen/map/map_screen.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../generated/locale_keys.g.dart';
-
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -34,6 +35,25 @@ class companyComponent_1 extends StatefulWidget {
 }
 
 class _companyComponent_1State extends State<companyComponent_1> {
+  launchURLMap(String lat, String lng) async {
+    String googleMapsLocationUrl =
+        "https://www.google.com/maps/search/?api=1&query=$lat,$lng";
+    final String encodedURl = Uri.encodeFull(googleMapsLocationUrl);
+    if (await canLaunch(encodedURl)) {
+      await launch(encodedURl);
+    } else {
+      throw 'Could not launch $encodedURl';
+    }
+  }
+
+  Future<void> _launchUrlMap(String lat, String lng) async {
+    Uri url =
+        Uri.parse("https://www.google.com/maps/search/?api=1&query=$lat,$lng");
+    if (!await launchUrl(url)) {
+      throw 'Could not launch $url';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -96,12 +116,13 @@ class _companyComponent_1State extends State<companyComponent_1> {
               InkWell(
                 highlightColor: Colors.transparent,
                 splashColor: Colors.transparent,
-                onTap: () {
-
-                  Navigator.push(
-                      context,
-                      FadeRouteAnimation(
-                          MapScreen(id: widget.listCompany[0].id,)));
+                onTap: () async {
+                  if (widget.listCompany[0].location_lat != '' &&
+                      widget.listCompany[0].location_lng != '' &&
+                      widget.listCompany[0].location_lat != null) {
+                    _launchUrlMap(widget.listCompany[0].location_lat,
+                        widget.listCompany[0].location_lng);
+                  }
                 },
                 child: Container(
                   margin: const EdgeInsets.only(left: 4, top: 10, right: 4),
@@ -230,7 +251,7 @@ class companyComponent_2 extends StatelessWidget {
                                   letterSpacing: .8)),
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 4,
                       ),
                       RatingBarIndicator(
@@ -270,7 +291,7 @@ class companyComponent_2 extends StatelessWidget {
               child: Row(
                 children: [
                   Padding(
-                    padding: EdgeInsets.only(right: 6),
+                    padding: const EdgeInsets.only(right: 6),
                     child: Icon(
                       isCompany == 'Restaurant'
                           ? Icons.restaurant_menu
@@ -370,18 +391,23 @@ class companyComponentGallery extends StatelessWidget {
               physics: const BouncingScrollPhysics(
                   parent: AlwaysScrollableScrollPhysics()),
               padding: const EdgeInsets.all(1),
+              mainAxisSpacing: 0,
+              crossAxisSpacing: 0,
               crossAxisCount: 3,
               children: List.generate(
                 listImages.length,
                 (int index) {
                   return AnimationConfiguration.staggeredGrid(
+
                     position: index,
                     duration: const Duration(milliseconds: 2200),
                     columnCount: 3,
                     child: ScaleAnimation(
+
                       duration: const Duration(milliseconds: 1200),
                       curve: Curves.linear,
                       child: FadeInAnimation(
+                        // curve: Curves.easeInOutQuint,
                         child: InkWell(
                           splashColor: Colors.transparent,
                           highlightColor: Colors.transparent,
@@ -400,8 +426,8 @@ class companyComponentGallery extends StatelessWidget {
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(4),
                                 side: const BorderSide(
-                                  width: 0.5,
-                                  color: Colors.white24,
+                                  width: 0.7,
+                                  color: Colors.white38,
                                 )),
                             elevation: 14,
                             child: ClipRRect(
@@ -898,10 +924,10 @@ class _companyComponentCommentState extends State<companyComponentComment> {
                         ),
                         child: AnimationConfiguration.staggeredList(
                           position: index,
-                          delay: const Duration(milliseconds: 300),
+                          delay: const Duration(milliseconds: 600),
                           child: SlideAnimation(
-                            duration: const Duration(milliseconds: 1500),
-                            horizontalOffset: 100,
+                            duration: const Duration(milliseconds: 1600),
+                            horizontalOffset: 120,
                             curve: Curves.ease,
                             child: FadeInAnimation(
                               curve: Curves.easeOut,
@@ -1054,10 +1080,10 @@ class _companyComponentCommentState extends State<companyComponentComment> {
 
                   return AnimationConfiguration.staggeredList(
                     position: index,
-                    delay: const Duration(milliseconds: 300),
+                    delay: const Duration(milliseconds: 600),
                     child: SlideAnimation(
-                      duration: const Duration(milliseconds: 1500),
-                      horizontalOffset: 100,
+                      duration: const Duration(milliseconds: 1600),
+                      horizontalOffset: 120,
                       curve: Curves.ease,
                       child: FadeInAnimation(
                         curve: Curves.easeOut,

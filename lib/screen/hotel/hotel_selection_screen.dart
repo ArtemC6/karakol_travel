@@ -35,6 +35,8 @@ class _HotelSelectionScreen extends State<HotelSelectionScreen> {
 
         setState(() {
           listRestaurantBestPosition.add(RestaurantModel(
+              location_lat: data['location_lat'],
+              location_lng: data['location_lng'],
               welcome_message: data['welcome_message'],
               position: data['position'],
               name: data['name'],

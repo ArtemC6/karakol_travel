@@ -155,13 +155,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.2.2"
-  cross_file:
-    dependency: transitive
-    description:
-      name: cross_file
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.3.3+2"
   crypto:
     dependency: transitive
     description:
@@ -274,13 +267,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "6.1.4"
-  file_picker:
-    dependency: "direct dev"
-    description:
-      name: file_picker
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "4.6.1"
   firebase_core:
     dependency: "direct dev"
     description:
@@ -361,13 +347,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_map:
-    dependency: "direct dev"
-    description:
-      name: flutter_map
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.2.0"
   flutter_phone_direct_caller:
     dependency: "direct dev"
     description:
@@ -375,13 +354,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.1"
-  flutter_plugin_android_lifecycle:
-    dependency: transitive
-    description:
-      name: flutter_plugin_android_lifecycle
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.0.7"
   flutter_rating_bar:
     dependency: "direct dev"
     description:
@@ -389,13 +361,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.0.1"
-  flutter_rating_stars:
-    dependency: "direct dev"
-    description:
-      name: flutter_rating_stars
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.3+4"
   flutter_staggered_animations:
     dependency: "direct dev"
     description:
@@ -448,41 +413,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.0.1"
-  image_picker:
-    dependency: "direct dev"
-    description:
-      name: image_picker
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.8.5+3"
-  image_picker_android:
-    dependency: transitive
-    description:
-      name: image_picker_android
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.8.5+3"
-  image_picker_for_web:
-    dependency: transitive
-    description:
-      name: image_picker_for_web
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.1.10"
-  image_picker_ios:
-    dependency: transitive
-    description:
-      name: image_picker_ios
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.8.6+1"
-  image_picker_platform_interface:
-    dependency: transitive
-    description:
-      name: image_picker_platform_interface
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.6.2"
   intl:
     dependency: transitive
     description:
@@ -511,13 +441,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.0"
-  lists:
-    dependency: transitive
-    description:
-      name: lists
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.1"
   loading_animation_widget:
     dependency: "direct dev"
     description:
@@ -546,13 +469,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.8.0"
-  mgrs_dart:
-    dependency: transitive
-    description:
-      name: mgrs_dart
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.0.0"
   modal_bottom_sheet:
     dependency: "direct dev"
     description:
@@ -665,20 +581,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.3"
-  polylabel:
-    dependency: transitive
-    description:
-      name: polylabel
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.1"
-  positioned_tap_detector_2:
-    dependency: transitive
-    description:
-      name: positioned_tap_detector_2
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.4"
   process:
     dependency: transitive
     description:
@@ -686,13 +588,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.2.4"
-  proj4dart:
-    dependency: transitive
-    description:
-      name: proj4dart
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.1.0"
   rxdart:
     dependency: transitive
     description:
@@ -838,13 +733,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.4.12"
-  tuple:
-    dependency: transitive
-    description:
-      name: tuple
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.0.1"
   typed_data:
     dependency: transitive
     description:
@@ -852,13 +740,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.3.1"
-  unicode:
-    dependency: transitive
-    description:
-      name: unicode
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.3.1"
   url_launcher:
     dependency: "direct dev"
     description:
@@ -936,13 +817,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.6.1"
-  wkt_parser:
-    dependency: transitive
-    description:
-      name: wkt_parser
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.0.0"
   xdg_directories:
     dependency: transitive
     description:

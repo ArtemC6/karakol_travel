@@ -133,7 +133,6 @@ class _MenuScreen extends State<MenuScreen> {
                 ),
               ),
               Expanded(
-                // height: MediaQuery.of(context).size.height / 6,
                 flex: 2,
                 child: AnimationLimiter(
                   child: ListView.builder(

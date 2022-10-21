@@ -6,6 +6,8 @@ class RestaurantModel {
   double rating = 0.0;
   int position = 0;
   String photo_main = "";
+  String location_lat = "";
+  String location_lng = "";
 
   RestaurantModel({
     required this.name,
@@ -15,5 +17,7 @@ class RestaurantModel {
     required this.rating,
     required this.photo_main,
     required this.welcome_message,
+    required this.location_lat,
+    required this.location_lng,
   });
 }

@@ -42,7 +42,9 @@ class _RestaurantSelectionScreen extends State<RestaurantSelectionScreen> {
               id: data['id'],
               location: data['location'],
               rating: data['rating'],
-              photo_main: data['photo']));
+              photo_main: data['photo'],
+              location_lat: data['location_lat'],
+              location_lng: data['location_lng']));
         });
       });
     });

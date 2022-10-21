@@ -59,6 +59,8 @@ class _RestaurantScreen extends State<RestaurantScreen>
             imgList = List<String>.from(data['images']);
             imaListMenu = List<String>.from(data['menu']);
             listRestaurant.add(RestaurantModel(
+                location_lat: data['location_lat'],
+                location_lng: data['location_lng'],
                 welcome_message: data['welcome_message'],
                 position: data['position'],
                 name: data['name'],
@@ -83,6 +85,8 @@ class _RestaurantScreen extends State<RestaurantScreen>
 
             setState(() {
               listRestaurantSimilar.add(RestaurantModel(
+                  location_lat: data['location_lat'],
+                  location_lng: data['location_lng'],
                   welcome_message: data['welcome_message'],
                   position: data['position'],
                   name: data['name'],
@@ -218,14 +222,13 @@ class _RestaurantScreen extends State<RestaurantScreen>
                           position: 1,
                           delay: const Duration(milliseconds: 400),
                           child: SlideAnimation(
-                            duration: const Duration(milliseconds: 2000),
-                            horizontalOffset: 160,
+                            duration: const Duration(milliseconds: 2200),
+                            horizontalOffset: 220,
                             curve: Curves.ease,
                             child: FadeInAnimation(
                               curve: Curves.easeOut,
-                              duration: const Duration(milliseconds: 2000),
+                              duration: const Duration(milliseconds: 2400),
                               child: Stack(
-                                // fit: StackFit.loose,
                                 children: [
                                   CarouselSlider(
                                     items: imageSliders,
@@ -300,142 +303,167 @@ class _RestaurantScreen extends State<RestaurantScreen>
             },
             child: SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  companyComponent_1(listRestaurant),
-                  companyComponent_2(listRestaurant, imaListMenu, 'Restaurant'),
-                  Padding(
-                    padding:
-                        const EdgeInsets.only(top: 34, left: 20, right: 20),
-                    child: Column(
-                      children: [
-                        Container(
-                          margin: const EdgeInsets.only(bottom: 12),
-                          height: 45,
-                          decoration: BoxDecoration(
-                            // border:
-                            //     Border.all(width: 0.5, color: Colors.white24),
-                            color: black_86,
-                            borderRadius: BorderRadius.circular(
-                              16,
-                            ),
-                          ),
-                          child: TabBar(
-                            indicatorColor: Colors.red,
-                            controller: _tabController,
-                            indicator: BoxDecoration(
-                              border: Border.all(
-                                  width: 0.5, color: Colors.blueAccent),
-                              borderRadius: BorderRadius.circular(
-                                16,
-                              ),
-                              color: Colors.white10,
-                            ),
-                            labelColor: Colors.white,
-                            unselectedLabelColor: Colors.blueAccent,
-                            tabs: [
-                              Tab(
-                                child: RichText(
-                                  text: TextSpan(
-                                    text: LocaleKeys.reviews_lc.tr(),
-                                    style: GoogleFonts.lato(
-                                      textStyle: const TextStyle(
-                                          fontSize: 13,
-                                          color: Colors.white,
-                                          letterSpacing: .8),
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width,
+                child: AnimationLimiter(
+                  child: AnimationConfiguration.staggeredList(
+                    position: 1,
+                    delay: const Duration(milliseconds: 250),
+                    child: SlideAnimation(
+                      duration: const Duration(milliseconds: 2200),
+                      horizontalOffset: 250,
+                      curve: Curves.ease,
+                      child: FadeInAnimation(
+                        curve: Curves.easeOut,
+                        duration: const Duration(milliseconds: 2400),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            companyComponent_1(listRestaurant),
+                            companyComponent_2(
+                                listRestaurant, imaListMenu, 'Restaurant'),
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  top: 34, left: 20, right: 20),
+                              child: Column(
+                                children: [
+                                  Container(
+                                    margin: const EdgeInsets.only(bottom: 12),
+                                    height: 45,
+                                    decoration: BoxDecoration(
+                                      // border:
+                                      //     Border.all(width: 0.5, color: Colors.white24),
+                                      color: black_86,
+                                      borderRadius: BorderRadius.circular(
+                                        16,
+                                      ),
+                                    ),
+                                    child: TabBar(
+                                      indicatorColor: Colors.red,
+                                      controller: _tabController,
+                                      indicator: BoxDecoration(
+                                        border: Border.all(
+                                            width: 0.5,
+                                            color: Colors.blueAccent),
+                                        borderRadius: BorderRadius.circular(
+                                          16,
+                                        ),
+                                        color: Colors.white10,
+                                      ),
+                                      labelColor: Colors.white,
+                                      unselectedLabelColor: Colors.blueAccent,
+                                      tabs: [
+                                        Tab(
+                                          child: RichText(
+                                            text: TextSpan(
+                                              text: LocaleKeys.reviews_lc.tr(),
+                                              style: GoogleFonts.lato(
+                                                textStyle: const TextStyle(
+                                                    fontSize: 13,
+                                                    color: Colors.white,
+                                                    letterSpacing: .8),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        Tab(
+                                          child: RichText(
+                                            text: TextSpan(
+                                              text: LocaleKeys.gallery_lc.tr(),
+                                              style: GoogleFonts.lato(
+                                                textStyle: const TextStyle(
+                                                    fontSize: 13,
+                                                    color: Colors.white,
+                                                    letterSpacing: .8),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                ),
-                              ),
-                              Tab(
-                                child: RichText(
-                                  text: TextSpan(
-                                    text: LocaleKeys.gallery_lc.tr(),
-                                    style: GoogleFonts.lato(
-                                      textStyle: const TextStyle(
-                                          fontSize: 13,
-                                          color: Colors.white,
-                                          letterSpacing: .8),
+                                  // tab bar view here
+                                  SizedBox(
+                                    height: 434,
+                                    child: TabBarView(
+                                      controller: _tabController,
+                                      children: [
+                                        companyComponentComment(
+                                            listComment, id),
+                                        companyComponentGallery(
+                                            imaListMenu, imgList),
+                                      ],
                                     ),
                                   ),
-                                ),
+                                ],
                               ),
-                            ],
-                          ),
+                            ),
+                            if (listRestaurantSimilar.isNotEmpty)
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Container(
+                                    margin: const EdgeInsets.only(
+                                        bottom: 20, left: 14, top: 16),
+                                    padding: const EdgeInsets.all(8),
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        border: Border.all(
+                                            width: 0.5, color: Colors.white30),
+                                        color: Colors.white10),
+                                    child: RichText(
+                                      text: TextSpan(
+                                        text: LocaleKeys
+                                            .is_similar_restaurant_lc
+                                            .tr(),
+                                        style: GoogleFonts.lato(
+                                          textStyle: const TextStyle(
+                                              fontSize: 13,
+                                              color: Colors.white,
+                                              letterSpacing: .8),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  InkWell(
+                                    splashColor: Colors.transparent,
+                                    highlightColor: Colors.transparent,
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          FadeRouteAnimation(
+                                              const RestaurantSelectionScreen()));
+                                    },
+                                    child: Container(
+                                      margin: const EdgeInsets.only(
+                                          bottom: 20, left: 14, right: 20),
+                                      padding: const EdgeInsets.all(8),
+                                      child: RichText(
+                                        text: TextSpan(
+                                          text: LocaleKeys.see_all_lc.tr(),
+                                          style: GoogleFonts.lato(
+                                            textStyle: const TextStyle(
+                                                fontSize: 10.5,
+                                                color: Colors.blueAccent,
+                                                letterSpacing: .8),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            if (listRestaurantSimilar.isNotEmpty)
+                              companyComponentSimilar(
+                                  listRestaurantSimilar, 'Restaurant'),
+                          ],
                         ),
-                        // tab bar view here
-                        SizedBox(
-                          height: 434,
-                          child: TabBarView(
-                            controller: _tabController,
-                            children: [
-                              companyComponentComment(listComment, id),
-                              companyComponentGallery(imaListMenu, imgList),
-                            ],
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
                   ),
-                  if (listRestaurantSimilar.isNotEmpty)
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(
-                          margin: const EdgeInsets.only(
-                              bottom: 20, left: 14, top: 16),
-                          padding: const EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              border:
-                                  Border.all(width: 0.5, color: Colors.white30),
-                              color: Colors.white10),
-                          child: RichText(
-                            text: TextSpan(
-                              text: LocaleKeys.is_similar_restaurant_lc.tr(),
-                              style: GoogleFonts.lato(
-                                textStyle: const TextStyle(
-                                    fontSize: 13,
-                                    color: Colors.white,
-                                    letterSpacing: .8),
-                              ),
-                            ),
-                          ),
-                        ),
-                        InkWell(
-                          splashColor: Colors.transparent,
-                          highlightColor: Colors.transparent,
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                FadeRouteAnimation(
-                                    const RestaurantSelectionScreen()));
-                          },
-                          child: Container(
-                            margin: const EdgeInsets.only(
-                                bottom: 20, left: 14, right: 20),
-                            padding: const EdgeInsets.all(8),
-                            child: RichText(
-                              text: TextSpan(
-                                text: LocaleKeys.see_all_lc.tr(),
-                                style: GoogleFonts.lato(
-                                  textStyle: const TextStyle(
-                                      fontSize: 10.5,
-                                      color: Colors.blueAccent,
-                                      letterSpacing: .8),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  if (listRestaurantSimilar.isNotEmpty)
-                    companyComponentSimilar(
-                        listRestaurantSimilar, 'Restaurant'),
-                ],
+                ),
               ),
             ),
           ),

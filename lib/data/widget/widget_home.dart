@@ -13,6 +13,7 @@ import 'package:flutter_carousel_slider/carousel_slider.dart';
 import '../../screen/restaurant/restaurant_screen.dart';
 import '../const/const.dart';
 import '../model/StartingDataModel.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 class slideHomeTop extends StatelessWidget {
   List<StartingDataModel> listStartingDataTop = [];
@@ -247,108 +248,6 @@ class _sampleProductOnTapState extends State<sampleProductOnTap> {
         ),
       ),
     );
-    // return InkWell(
-    //   splashColor: Colors.transparent,
-    //   highlightColor: Colors.transparent,
-    //   onTap: () {
-    //     if (widget.position == '0') {
-    //       Navigator.push(
-    //           context, FadeRouteAnimation(const HotelSelectionScreen()));
-    //     } else if (widget.position == '1') {
-    //       Navigator.push(
-    //           context, FadeRouteAnimation(const RestaurantSelectionScreen()));
-    //     } else if (widget.position == '2') {
-    //       Navigator.push(
-    //           context,
-    //           FadeRouteAnimation(NatureScreen(
-    //             listImage: widget.listNature,
-    //           )));
-    //     }
-    //   },
-    //   child: Padding(
-    //     padding:
-    //         const EdgeInsets.only(top: 14, bottom: 22, left: 16, right: 16),
-    //     child: Row(
-    //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    //       children: <Widget>[
-    //         Container(
-    //           padding: const EdgeInsets.all(8),
-    //           decoration: BoxDecoration(
-    //               border: Border.all(width: 0.5, color: Colors.white38),
-    //               borderRadius: BorderRadius.circular(10),
-    //               color: Colors.white12),
-    //           child: Row(
-    //             children: [
-    //               if (widget.position == '0')
-    //                 const Padding(
-    //                   padding: EdgeInsets.only(right: 6),
-    //                   child: Icon(
-    //                     Icons.home_outlined,
-    //                     color: Colors.white70,
-    //                     size: 20,
-    //                   ),
-    //                 ),
-    //               if (widget.position == '1')
-    //                 const Padding(
-    //                   padding: EdgeInsets.only(right: 6),
-    //                   child: Icon(
-    //                     Icons.fastfood_rounded,
-    //                     color: Colors.white70,
-    //                     size: 18,
-    //                   ),
-    //                 ),
-    //               if (widget.position == '2')
-    //                 const Padding(
-    //                   padding: EdgeInsets.only(right: 6),
-    //                   child: Icon(
-    //                     Icons.nature_people_outlined,
-    //                     color: Colors.white70,
-    //                     size: 18,
-    //                   ),
-    //                 ),
-    //               RichText(
-    //                 text: TextSpan(
-    //                   text: widget.nameProduct,
-    //                   style: GoogleFonts.lato(
-    //                     textStyle: const TextStyle(
-    //                         color: Colors.white,
-    //                         fontSize: 13,
-    //                         letterSpacing: .9),
-    //                   ),
-    //                 ),
-    //               ),
-    //             ],
-    //           ),
-    //         ),
-    //         RichText(
-    //           text: TextSpan(
-    //             children: [
-    //               TextSpan(
-    //                 text: widget.view,
-    //                 style: GoogleFonts.lato(
-    //                   textStyle: const TextStyle(
-    //                       color: Colors.blueAccent,
-    //                       fontSize: 10.5,
-    //                       letterSpacing: .6),
-    //                 ),
-    //               ),
-    //               const WidgetSpan(
-    //                 child: Padding(
-    //                   padding: EdgeInsets.symmetric(horizontal: 4.0),
-    //                   child: Icon(
-    //                     Icons.keyboard_arrow_right,
-    //                     color: Colors.blueAccent,
-    //                     size: 16,
-    //                   ),
-    //                 ),
-    //               ),
-    //             ],
-    //           ),
-    //         )
-    //       ],
-    //     ),
-    //   ),
-    // );
   }
 }
 
@@ -375,11 +274,11 @@ class slideHomeMulti extends StatelessWidget {
                 delay: const Duration(milliseconds: 600),
                 child: SlideAnimation(
                   duration: const Duration(milliseconds: 2200),
-                  horizontalOffset: 170,
+                  horizontalOffset: 200,
                   curve: Curves.ease,
                   child: FadeInAnimation(
                     curve: Curves.easeOut,
-                    duration: const Duration(milliseconds: 2200),
+                    duration: const Duration(milliseconds: 2500),
                     child: InkWell(
                       splashColor: Colors.transparent,
                       highlightColor: Colors.transparent,
@@ -399,7 +298,7 @@ class slideHomeMulti extends StatelessWidget {
                         }
                       },
                       child: Container(
-                        width: MediaQuery.of(context).size.width * 0.34,
+                        width: MediaQuery.of(context).size.width * 0.32,
                         margin: const EdgeInsets.only(left: 6),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -432,7 +331,7 @@ class slideHomeMulti extends StatelessWidget {
                                         ),
                                     imageUrl: listStartingData[index].image_uri,
                                     fit: BoxFit.cover,
-                                    height: 174,
+                                    height: 166,
                                     width: MediaQuery.of(context).size.width),
                               ),
                             ),
@@ -545,5 +444,103 @@ class showNatureCard extends StatelessWidget {
         ),
       ),
     );
+
+  // return  Container(
+  //     padding: const EdgeInsets.only(left: 6, right: 6),
+  //     child: AnimationLimiter(
+  //       child: AnimationConfiguration.staggeredList(
+  //         position: 1,
+  //         delay: const Duration(milliseconds: 400),
+  //         child: SlideAnimation(
+  //           horizontalOffset: 120,
+  //           duration: const Duration(milliseconds: 3000),
+  //           verticalOffset: 260,
+  //           curve: Curves.ease,
+  //           child: FadeInAnimation(
+  //             curve: Curves.easeOut,
+  //             duration: const Duration(milliseconds: 3500),
+  //             child: MasonryGridView.count(
+  //                 itemCount: 1,
+  //                 mainAxisSpacing: 4,
+  //                 crossAxisSpacing: 4,
+  //                 shrinkWrap: true,
+  //                 physics: const NeverScrollableScrollPhysics(),
+  //                 crossAxisCount: 1,
+  //                 itemBuilder: (BuildContext context, int index) {
+  //                   return InkWell(
+  //                     splashColor: Colors.transparent,
+  //                     highlightColor: Colors.transparent,
+  //                     onTap: () {
+  //                       if (list.isNotEmpty) {
+  //                         Navigator.push(
+  //                             context,
+  //                             FadeRouteAnimation(NatureScreen(
+  //                               listImage: list,
+  //                             )));
+  //                       }
+  //                     },
+  //                     child: Container(
+  //                       padding: EdgeInsets.only(left: 4, right: 4),
+  //                       height: 800,
+  //                       child: GridView.custom(
+  //                         padding: EdgeInsets.only(bottom: 100),
+  //                         physics: const BouncingScrollPhysics(),
+  //
+  //                         scrollDirection: Axis.vertical,
+  //
+  //                         gridDelegate: SliverQuiltedGridDelegate(
+  //                           crossAxisCount: 4,
+  //                           mainAxisSpacing: 4,
+  //                           crossAxisSpacing: 4,
+  //                           repeatPattern: QuiltedGridRepeatPattern.inverted,
+  //                           pattern: [
+  //                             QuiltedGridTile(2, 2),
+  //                             QuiltedGridTile(1, 1),
+  //                             QuiltedGridTile(1, 1),
+  //                             QuiltedGridTile(1, 2),
+  //                           ],
+  //                         ),
+  //                         childrenDelegate: SliverChildBuilderDelegate(
+  //                           childCount: list.length,
+  //                               (context, index) {
+  //                             return ClipRRect(
+  //                               child: ClipRRect(
+  //                                 borderRadius: BorderRadius.circular(10),
+  //                                 child: CachedNetworkImage(
+  //                                   imageBuilder: ((context, imageProvider) {
+  //                                     return Container(
+  //                                         child: Image(
+  //                                             fit: BoxFit.cover,
+  //                                             image: imageProvider));
+  //                                   }),
+  //                                   // fit: BoxFit.cover,
+  //                                   progressIndicatorBuilder:
+  //                                       (context, url, progress) => Center(
+  //                                     child: SizedBox(
+  //                                       height: 24,
+  //                                       width: 24,
+  //                                       child: CircularProgressIndicator(
+  //                                         color: Colors.white,
+  //                                         strokeWidth: 0.8,
+  //                                         value: progress.progress,
+  //                                       ),
+  //                                     ),
+  //                                   ),
+  //                                   imageUrl: list[index],
+  //                                 ),
+  //                               ),
+  //                             );
+  //                           },
+  //                         ),
+  //                       ),
+  //                     ),
+  //                   );
+  //                 }),
+  //           ),
+  //         ),
+  //       ),
+  //     ),
+  //   );
+
   }
 }

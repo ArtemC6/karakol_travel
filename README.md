@@ -1,16 +1,25 @@
-# karakol_travel
+# Karakol Travel
+#### This project was created to showcase the city of Karakol
++ Firebase database
+  + Firebase Authentication
+  + Firebase Cloud-Storage 
+  + Firebase Realtime Database 
 
-A new Flutter project.
+[Anroid Apk](https://drive.google.com/drive/folders/1kdL_o0ozYhf0ZlFrPHEERw10Z9_HzDyg?usp=sharing) 
 
-## Getting Started
+ 
+ 
+<table>
+  <tr>
+     <td>Home</td>
+     <td>Story</td>
+     <td>Profile</td>
+  </tr>
+  <tr>
+    <td valign="top"><img src="https://user-images.githubusercontent.com/105007162/199481684-dc4ae52e-acd1-40ea-8180-470c88d6b1b7.gif"></td>
+    <td valign="top"><img src="https://user-images.githubusercontent.com/105007162/199483931-a492d056-96ec-4470-99c5-2be13ec1037d.gif"></td>
+    <td valign="top"><img src="https://user-images.githubusercontent.com/105007162/199486391-c7f30b7b-2099-4098-81ca-dfcffc851ca0.gif"></td>
+  </tr>
+ </table>
 
-This project is a starting point for a Flutter application.
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.

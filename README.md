@@ -11,9 +11,9 @@
  
 <table>
   <tr>
-     <td>Home</td>
-     <td>Story</td>
-     <td>Profile</td>
+     <td></td>
+     <td></td>
+     <td></td>
   </tr>
   <tr>
     <td valign="top"><img src="https://user-images.githubusercontent.com/105007162/199481684-dc4ae52e-acd1-40ea-8180-470c88d6b1b7.gif"></td>

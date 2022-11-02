@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:karakol_travel/screen/hotel/hotel_screen.dart';
 import 'package:karakol_travel/screen/restaurant/restaurant_selection_screen.dart';
@@ -11,9 +10,8 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter_carousel_slider/carousel_slider_transforms.dart';
 import 'package:flutter_carousel_slider/carousel_slider.dart';
 import '../../screen/restaurant/restaurant_screen.dart';
-import '../const/const.dart';
+import '../data/const/const.dart';
 import '../model/StartingDataModel.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 class slideHomeTop extends StatelessWidget {
   List<StartingDataModel> listStartingDataTop = [];
@@ -444,103 +442,5 @@ class showNatureCard extends StatelessWidget {
         ),
       ),
     );
-
-  // return  Container(
-  //     padding: const EdgeInsets.only(left: 6, right: 6),
-  //     child: AnimationLimiter(
-  //       child: AnimationConfiguration.staggeredList(
-  //         position: 1,
-  //         delay: const Duration(milliseconds: 400),
-  //         child: SlideAnimation(
-  //           horizontalOffset: 120,
-  //           duration: const Duration(milliseconds: 3000),
-  //           verticalOffset: 260,
-  //           curve: Curves.ease,
-  //           child: FadeInAnimation(
-  //             curve: Curves.easeOut,
-  //             duration: const Duration(milliseconds: 3500),
-  //             child: MasonryGridView.count(
-  //                 itemCount: 1,
-  //                 mainAxisSpacing: 4,
-  //                 crossAxisSpacing: 4,
-  //                 shrinkWrap: true,
-  //                 physics: const NeverScrollableScrollPhysics(),
-  //                 crossAxisCount: 1,
-  //                 itemBuilder: (BuildContext context, int index) {
-  //                   return InkWell(
-  //                     splashColor: Colors.transparent,
-  //                     highlightColor: Colors.transparent,
-  //                     onTap: () {
-  //                       if (list.isNotEmpty) {
-  //                         Navigator.push(
-  //                             context,
-  //                             FadeRouteAnimation(NatureScreen(
-  //                               listImage: list,
-  //                             )));
-  //                       }
-  //                     },
-  //                     child: Container(
-  //                       padding: EdgeInsets.only(left: 4, right: 4),
-  //                       height: 800,
-  //                       child: GridView.custom(
-  //                         padding: EdgeInsets.only(bottom: 100),
-  //                         physics: const BouncingScrollPhysics(),
-  //
-  //                         scrollDirection: Axis.vertical,
-  //
-  //                         gridDelegate: SliverQuiltedGridDelegate(
-  //                           crossAxisCount: 4,
-  //                           mainAxisSpacing: 4,
-  //                           crossAxisSpacing: 4,
-  //                           repeatPattern: QuiltedGridRepeatPattern.inverted,
-  //                           pattern: [
-  //                             QuiltedGridTile(2, 2),
-  //                             QuiltedGridTile(1, 1),
-  //                             QuiltedGridTile(1, 1),
-  //                             QuiltedGridTile(1, 2),
-  //                           ],
-  //                         ),
-  //                         childrenDelegate: SliverChildBuilderDelegate(
-  //                           childCount: list.length,
-  //                               (context, index) {
-  //                             return ClipRRect(
-  //                               child: ClipRRect(
-  //                                 borderRadius: BorderRadius.circular(10),
-  //                                 child: CachedNetworkImage(
-  //                                   imageBuilder: ((context, imageProvider) {
-  //                                     return Container(
-  //                                         child: Image(
-  //                                             fit: BoxFit.cover,
-  //                                             image: imageProvider));
-  //                                   }),
-  //                                   // fit: BoxFit.cover,
-  //                                   progressIndicatorBuilder:
-  //                                       (context, url, progress) => Center(
-  //                                     child: SizedBox(
-  //                                       height: 24,
-  //                                       width: 24,
-  //                                       child: CircularProgressIndicator(
-  //                                         color: Colors.white,
-  //                                         strokeWidth: 0.8,
-  //                                         value: progress.progress,
-  //                                       ),
-  //                                     ),
-  //                                   ),
-  //                                   imageUrl: list[index],
-  //                                 ),
-  //                               ),
-  //                             );
-  //                           },
-  //                         ),
-  //                       ),
-  //                     ),
-  //                   );
-  //                 }),
-  //           ),
-  //         ),
-  //       ),
-  //     ),
-  //   );
-
   }
 }

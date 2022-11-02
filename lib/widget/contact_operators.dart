@@ -1,16 +1,15 @@
-// ignore_for_file: deprecated_member_use, duplicate_ignore
 import 'package:flutter/material.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
-import '../../data/model/OperatorModel.dart';
 import 'dart:io';
-import '../../data/model/RestaurantModel.dart';
 import '../../generated/locale_keys.g.dart';
-import '../const/const.dart';
 import 'package:easy_localization/easy_localization.dart';
+import '../data/const/const.dart';
+import '../model/OperatorModel.dart';
+import '../model/RestaurantModel.dart';
 
 // ignore: must_be_immutable
 class ContactsOperator extends StatefulWidget {
@@ -77,9 +76,9 @@ class _ContactsOperatorState extends State<ContactsOperator> {
   }
 
   Future<void> _launchUrlWhatsApp(String phone, String message) async {
-    Uri _url = Uri.parse("whatsapp://send?phone=$phone&text=$message}");
-    if (!await launchUrl(_url)) {
-      throw 'Could not launch $_url';
+    Uri url = Uri.parse("whatsapp://send?phone=$phone&text=$message}");
+    if (!await launchUrl(url)) {
+      throw 'Could not launch $url';
     }
   }
 

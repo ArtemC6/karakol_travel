@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:karakol_travel/data/model/CommentModel.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -17,6 +16,7 @@ import 'package:easy_localization/easy_localization.dart';
 
 import '../../data/const/const.dart';
 import '../../generated/locale_keys.g.dart';
+import '../../model/CommentModel.dart';
 
 class CommentScreen extends StatefulWidget {
   var id, time, selectData;

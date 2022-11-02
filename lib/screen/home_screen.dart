@@ -1,15 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:karakol_travel/data/model/StartingDataModel.dart';
 import '../data/const/const.dart';
-import '../data/widget/widget_home.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'dart:io';
 import '../generated/locale_keys.g.dart';
+import '../model/StartingDataModel.dart';
+import '../widget/widget_home.dart';
 
 class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
+
   @override
   _HomeScreen createState() => _HomeScreen();
 }
@@ -39,7 +41,7 @@ class _HomeScreen extends State<HomeScreen> {
     FirebaseFirestore.instance
         .collection('Starting_photos_top')
         .get()
-        .then((QuerySnapshot querySnapshot) {
+        .then((QuerySnapshot querySnapshot)  {
       querySnapshot.docs.forEach((document) async {
         listWelcomeImage = List<String>.from(document['images_welcome']);
         listWelcomeName = List<String>.from(document['name_welcome']);
@@ -158,7 +160,7 @@ class _HomeScreen extends State<HomeScreen> {
             color: Colors.blueAccent,
             onRefresh: () async {
               Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (context) => HomeScreen()));
+                  MaterialPageRoute(builder: (context) => const HomeScreen()));
             },
             child: SingleChildScrollView(
               physics: const BouncingScrollPhysics(),

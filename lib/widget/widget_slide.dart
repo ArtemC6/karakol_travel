@@ -4,9 +4,9 @@ import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:karakol_travel/screen/hotel/hotel_screen.dart';
-import '../../data/model/RestaurantModel.dart';
 import '../../screen/restaurant/restaurant_screen.dart';
-import '../const/const.dart';
+import '../data/const/const.dart';
+import '../model/RestaurantModel.dart';
 
 class companyComponentSimilar extends StatelessWidget {
   List<RestaurantModel> listCompany = [];
@@ -97,27 +97,25 @@ class companyComponentSimilar extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 Container(
-                                  width: MediaQuery.of(context).size.width * 0.34,
-                                  padding: const EdgeInsets.only(left: 2, top: 4),
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.34,
+                                  padding:
+                                      const EdgeInsets.only(left: 2, top: 4),
                                   child: RichText(
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                     text: TextSpan(
-
-                                        text:
-                                            '${listCompany[index].name} (${listCompany[index].rating}) ',
-                                        style: GoogleFonts.lato(
-                                          textStyle: const TextStyle(
-
-                                              color: Colors.white,
-                                              fontSize: 11.0,
-
-                                              letterSpacing: .6),
-                                        ),
-                                       ),
+                                      text:
+                                          '${listCompany[index].name} (${listCompany[index].rating}) ',
+                                      style: GoogleFonts.lato(
+                                        textStyle: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 11.0,
+                                            letterSpacing: .6),
+                                      ),
+                                    ),
                                   ),
                                 ),
-
                                 const Icon(
                                   Icons.star,
                                   color: Colors.amber,

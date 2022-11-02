@@ -6,7 +6,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
 import '../../screen/fragment_screen/comment_screen.dart';
 
 class FirebaseApi {
@@ -21,7 +20,6 @@ class FirebaseApi {
 }
 
 const black_93 = Color(0xFF161616);
-// const black_86 = Color(0xFF2D2D2D);
 const black_86 = Color(0xFF222327);
 
 class FadeRouteAnimation extends PageRouteBuilder {

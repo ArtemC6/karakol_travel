@@ -1,9 +1,11 @@
 # Karakol Travel
 #### This project was created to showcase the city of Karakol
-+ Firebase database
+
++ Backend is built on
   + Firebase Authentication
-  + Firebase Cloud-Storage 
-  + Firebase Realtime Database 
+  + Firebase Cloud-Storage
+  + Firebase Realtime Database
+
 
 [Anroid Apk](https://drive.google.com/drive/folders/1kdL_o0ozYhf0ZlFrPHEERw10Z9_HzDyg?usp=sharing) 
 

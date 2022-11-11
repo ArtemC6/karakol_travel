@@ -2,7 +2,6 @@
 #### This project was created to showcase the city of Karakol
 
 + Backend is built on
-  + Firebase Authentication
   + Firebase Cloud-Storage
   + Firebase Realtime Database
 
